@@ -1,0 +1,5 @@
+in case of missing serial ports wihle trying to detect them do the following:
+
+copy the RXTX library files from the arduino folder ("/usr/share/arduino/lib") into the plugin folder of your eclipse verison
+
+now just add the library to your project and every thing should be fine
