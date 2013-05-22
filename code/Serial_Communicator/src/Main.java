@@ -18,9 +18,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 
 
 public class Main extends ApplicationWindow {
@@ -50,10 +52,10 @@ public class Main extends ApplicationWindow {
 		Group grpSetup = new Group(container, SWT.NONE);
 		grpSetup.setText("Setup");
 		FormData fd_grpSetup = new FormData();
+		fd_grpSetup.bottom = new FormAttachment(0, 111);
 		fd_grpSetup.top = new FormAttachment(0, 10);
-		fd_grpSetup.left = new FormAttachment(0, 10);
-		fd_grpSetup.bottom = new FormAttachment(100, -292);
 		fd_grpSetup.right = new FormAttachment(0, 843);
+		fd_grpSetup.left = new FormAttachment(0, 10);
 		grpSetup.setLayoutData(fd_grpSetup);
 		
 		Combo combo = new Combo(grpSetup, SWT.NONE);
@@ -70,26 +72,40 @@ public class Main extends ApplicationWindow {
 		lblBps.setBounds(10, 57, 65, 15);
 		lblBps.setText("Bps:");
 		
-		message_field = new Text(container, SWT.BORDER | SWT.CENTER);
-		message_field.setToolTipText("type your message here");
+		message_field = new Text(container, SWT.BORDER);
 		FormData fd_message_field = new FormData();
-		fd_message_field.right = new FormAttachment(grpSetup, 0, SWT.RIGHT);
 		fd_message_field.top = new FormAttachment(grpSetup, 6);
-		fd_message_field.left = new FormAttachment(0, 10);
+		fd_message_field.left = new FormAttachment(grpSetup, 0, SWT.LEFT);
+		fd_message_field.right = new FormAttachment(0, 843);
 		message_field.setLayoutData(fd_message_field);
+		message_field.setToolTipText("type your message here");
 		
 		Button send_btn = new Button(container, SWT.NONE);
+		send_btn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				message_field.setText("Hello World.");
+			}
+		});
+		FormData fd_send_btn = new FormData();
+		fd_send_btn.top = new FormAttachment(message_field, 6);
+		fd_send_btn.right = new FormAttachment(grpSetup, 0, SWT.RIGHT);
+		fd_send_btn.left = new FormAttachment(0, 10);
+		send_btn.setLayoutData(fd_send_btn);
 		send_btn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		FormData fd_send_btn = new FormData();
-		fd_send_btn.right = new FormAttachment(grpSetup, 0, SWT.RIGHT);
-		fd_send_btn.top = new FormAttachment(message_field, 6);
-		fd_send_btn.left = new FormAttachment(0, 10);
-		send_btn.setLayoutData(fd_send_btn);
 		send_btn.setText("Send");
+		
+		List list = new List(container, SWT.BORDER);
+		FormData fd_list = new FormData();
+		fd_list.right = new FormAttachment(0, 843);
+		fd_list.bottom = new FormAttachment(send_btn, 388, SWT.BOTTOM);
+		fd_list.top = new FormAttachment(send_btn, 6);
+		fd_list.left = new FormAttachment(0, 10);
+		list.setLayoutData(fd_list);
 
 		return container;
 	}
@@ -161,6 +177,6 @@ public class Main extends ApplicationWindow {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(845, 655);
 	}
 }
