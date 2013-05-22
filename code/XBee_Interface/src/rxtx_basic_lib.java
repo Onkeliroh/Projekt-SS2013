@@ -1,3 +1,6 @@
+/* 
+ * Author: Daniel Pollack
+ */
 import gnu.io.CommPortIdentifier;
 
 import java.util.ArrayList;
@@ -5,10 +8,11 @@ import java.util.Enumeration;
 import java.util.List;
 
 
-public class serial_basic_lib {
-	@SuppressWarnings({ "unused", "null", "rawtypes" })
+public class rxtx_basic_lib {
+	
+	//searches for all devices connected with a serial port on the pc
+	@SuppressWarnings({ "rawtypes" })
 	public static Enumeration get_ports() {		
-		@SuppressWarnings("rawtypes")
 		Enumeration enumComm = CommPortIdentifier.getPortIdentifiers();
 	    
 	    if (enumComm != null)
@@ -21,7 +25,7 @@ public class serial_basic_lib {
 	    }
 	}
 	
-	@SuppressWarnings("null")
+	//creates list of all the serial port names, which are connected
 	public static List<String> get_port_names()
 	{
 		Enumeration device_list = get_ports();
