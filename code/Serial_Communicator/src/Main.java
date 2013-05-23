@@ -3,30 +3,34 @@ import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+//eigentlich cooler, aber beist sich mit org.eclipse.swt.widgets.List
+//import java.util.List;
+import java.util.ArrayList;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 
 public class Main extends ApplicationWindow {
 	private Text message_field;
+	private boolean connected = false;
 
 	/**
 	 * Create the application window.
@@ -58,11 +62,18 @@ public class Main extends ApplicationWindow {
 		fd_grpSetup.left = new FormAttachment(0, 10);
 		grpSetup.setLayoutData(fd_grpSetup);
 		
-		Combo combo = new Combo(grpSetup, SWT.NONE);
-		combo.setBounds(81, 26, 185, 25);
+		final Combo device_combo = new Combo(grpSetup, SWT.NONE);
+		//set items
+		java.util.List<String> port_list = rxtx_basic_lib.get_port_names();
+		device_combo.setItems(port_list.toArray(new String[port_list.size()]));
 		
-		Combo combo_1 = new Combo(grpSetup, SWT.NONE);
-		combo_1.setBounds(81, 57, 185, 25);
+		device_combo.setBounds(81, 26, 185, 25);
+		device_combo.select(0);
+		
+		final Combo bps_combo = new Combo(grpSetup, SWT.NONE);
+		bps_combo.setItems(new String[] {"300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "38400", "57600", "115200"});
+		bps_combo.setBounds(81, 57, 185, 25);
+		bps_combo.select(5);
 		
 		Label lblDevice = new Label(grpSetup, SWT.NONE);
 		lblDevice.setBounds(10, 26, 65, 15);
@@ -90,13 +101,52 @@ public class Main extends ApplicationWindow {
 		FormData fd_send_btn = new FormData();
 		fd_send_btn.top = new FormAttachment(message_field, 6);
 		fd_send_btn.right = new FormAttachment(grpSetup, 0, SWT.RIGHT);
-		fd_send_btn.left = new FormAttachment(0, 10);
-		send_btn.setLayoutData(fd_send_btn);
-		send_btn.addSelectionListener(new SelectionAdapter() {
+		
+		Button btnConnect = new Button(grpSetup, SWT.NONE);
+		btnConnect.addMouseListener(new MouseAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void mouseDown(MouseEvent e) {
+				try {
+					connected = rxtx_basic_lib.connect( device_combo.getItem(device_combo.getSelectionIndex()), Integer.parseInt(bps_combo.getItem(bps_combo.getSelectionIndex())));
+				} catch (NumberFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
+		btnConnect.setBounds(361, 24, 84, 27);
+		btnConnect.setText("Connect");
+		
+		Label lblconnection_status = new Label(grpSetup, SWT.NONE);
+		
+		lblconnection_status.setBounds(361, 57, 210, 15);
+		
+		Button btnRefresh = new Button(grpSetup, SWT.NONE);
+		btnRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				java.util.List<String> port_list = rxtx_basic_lib.get_port_names();
+				device_combo.setItems(port_list.toArray(new String[port_list.size()]));
+			}
+		});
+		btnRefresh.setBounds(451, 24, 84, 27);
+		btnRefresh.setText("Refresh");
+		if (connected)
+		{
+			lblconnection_status.setText("connected");
+			lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
+		}
+		else
+		{
+			lblconnection_status.setText("not connected");
+			lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		}
+		fd_send_btn.left = new FormAttachment(0, 10);
+		
+		send_btn.setLayoutData(fd_send_btn);
 		send_btn.setText("Send");
 		
 		List list = new List(container, SWT.BORDER);
@@ -107,6 +157,8 @@ public class Main extends ApplicationWindow {
 		fd_list.left = new FormAttachment(0, 10);
 		list.setLayoutData(fd_list);
 
+		//run_setup();
+		
 		return container;
 	}
 

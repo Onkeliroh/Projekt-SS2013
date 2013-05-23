@@ -14,5 +14,10 @@
 	<classpathentry kind="lib" path="/home/onkeliroh/eclipse_indigo/plugins/org.eclipse.ui.workbench_3.7.1.v20120104-1859.jar" sourcepath="/home/onkeliroh/eclipse_indigo/plugins/org.eclipse.ui.workbench_3.7.1.v20120104-1859.jar"/>
 	<classpathentry kind="lib" path="/home/onkeliroh/eclipse_indigo/plugins/com.ibm.icu_4.4.2.v20110823.jar" sourcepath="/home/onkeliroh/eclipse_indigo/plugins/com.ibm.icu_4.4.2.v20110823.jar"/>
 	<classpathentry kind="lib" path="/home/onkeliroh/eclipse_indigo/plugins/org.eclipse.ui.forms_3.5.101.v20111011-1919.jar" sourcepath="/home/onkeliroh/eclipse_indigo/plugins/org.eclipse.ui.forms_3.5.101.v20111011-1919.jar"/>
+	<classpathentry kind="lib" path="/home/onkeliroh/eclipse_indigo/plugins/rxtx/RXTXcomm.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/onkeliroh/eclipse_indigo/plugins/rxtx"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
