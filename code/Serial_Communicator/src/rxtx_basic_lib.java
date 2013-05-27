@@ -15,6 +15,10 @@ import java.util.List;
 
 public class rxtx_basic_lib {
 	
+	public InputStream in = null;
+	public OutputStream out = null;
+	public static boolean connected = false;
+	
 	//searches for all devices connected with a serial port on the pc
 	@SuppressWarnings({ "rawtypes" })
 	public static Enumeration get_ports() {		
@@ -82,36 +86,33 @@ public class rxtx_basic_lib {
 	    
 	public static boolean connect ( String portName, int bps ) throws Exception
 	{
-		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
-		if ( portIdentifier.isCurrentlyOwned() )
-		{
-			System.err.println("Error: Port is currently in use");
-			return false;
-		}
-		else
-		{
-			CommPort commPort = portIdentifier.open(portIdentifier.getClass().getName(),bps);
-
-			if ( commPort instanceof SerialPort )
+			CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+			if ( portIdentifier.isCurrentlyOwned() )
 			{
-				SerialPort serialPort = (SerialPort) commPort;
-//				serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-				serialPort.setSerialPortParams(bps,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-
-				InputStream in = serialPort.getInputStream();
-				OutputStream out = serialPort.getOutputStream();
-
-				System.out.println("Begin read/write");
-				(new Thread(new SerialReader(in))).start();
-				(new Thread(new SerialWriter(out))).start();
-
-				return true;
+				System.err.println("Error: Port is currently in use");
+				return false;
 			}
 			else
 			{
-				return false;				
+				CommPort commPort = portIdentifier.open(portIdentifier.getClass().getName(),bps);
+	
+				if ( commPort instanceof SerialPort )
+				{
+					connected = true;
+					SerialPort serialPort = (SerialPort) commPort;
+					serialPort.setSerialPortParams(bps,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+	
+					InputStream in = serialPort.getInputStream();
+					OutputStream out = serialPort.getOutputStream();
+	
+					System.out.println("Begin read/write");
+					(new Thread(new SerialReader(in))).start();
+					(new Thread(new SerialWriter(out))).start();
+	
+					return true;
+				}
 			}
-		}     
+		return false;
 	}
 
 	/** */

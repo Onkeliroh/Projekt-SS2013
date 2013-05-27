@@ -30,7 +30,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Main extends ApplicationWindow {
 	private Text message_field;
-	private boolean connected = false;
 
 	/**
 	 * Create the application window.
@@ -61,6 +60,11 @@ public class Main extends ApplicationWindow {
 		fd_grpSetup.right = new FormAttachment(0, 843);
 		fd_grpSetup.left = new FormAttachment(0, 10);
 		grpSetup.setLayoutData(fd_grpSetup);
+		
+		final Label lblconnection_status = new Label(grpSetup, SWT.NONE);
+		lblconnection_status.setBounds(361, 57, 210, 15);
+		lblconnection_status.setText("not connected");
+		lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		
 		final Combo device_combo = new Combo(grpSetup, SWT.NONE);
 		//set items
@@ -106,23 +110,33 @@ public class Main extends ApplicationWindow {
 		btnConnect.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
+				if (device_combo.getItemCount() > 0)
 				try {
-					connected = rxtx_basic_lib.connect( device_combo.getItem(device_combo.getSelectionIndex()), Integer.parseInt(bps_combo.getItem(bps_combo.getSelectionIndex())));
+					rxtx_basic_lib.connect( device_combo.getItem(device_combo.getSelectionIndex()), Integer.parseInt(bps_combo.getItem(bps_combo.getSelectionIndex())));
+					if (rxtx_basic_lib.connected)
+					{
+						lblconnection_status.setText("connected");
+						lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
+					}
+					else
+					{
+						lblconnection_status.setText("not connected");
+						lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+					}
 				} catch (NumberFormatException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
 			}
 		});
 		btnConnect.setBounds(361, 24, 84, 27);
 		btnConnect.setText("Connect");
 		
-		Label lblconnection_status = new Label(grpSetup, SWT.NONE);
+		//Label lblconnection_status = new Label(grpSetup, SWT.NONE);
 		
-		lblconnection_status.setBounds(361, 57, 210, 15);
+		//lblconnection_status.setBounds(361, 57, 210, 15);
 		
 		Button btnRefresh = new Button(grpSetup, SWT.NONE);
 		btnRefresh.addMouseListener(new MouseAdapter() {
@@ -130,20 +144,11 @@ public class Main extends ApplicationWindow {
 			public void mouseDown(MouseEvent e) {
 				java.util.List<String> port_list = rxtx_basic_lib.get_port_names();
 				device_combo.setItems(port_list.toArray(new String[port_list.size()]));
+				device_combo.select(0);
 			}
 		});
 		btnRefresh.setBounds(451, 24, 84, 27);
 		btnRefresh.setText("Refresh");
-		if (connected)
-		{
-			lblconnection_status.setText("connected");
-			lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
-		}
-		else
-		{
-			lblconnection_status.setText("not connected");
-			lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		}
 		fd_send_btn.left = new FormAttachment(0, 10);
 		
 		send_btn.setLayoutData(fd_send_btn);
