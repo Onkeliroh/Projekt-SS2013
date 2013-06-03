@@ -156,8 +156,7 @@ public class rxtx_basic_lib
 	                buffer[len++] = (byte) data;
 	            }
 	            str = new String(buffer,0,len);
-	            System.out.print(str);
-	            windoof.getList().add(str);
+	            windoof.write(str);
 	        }
 	        catch ( IOException e )
 	        {
@@ -166,22 +165,7 @@ public class rxtx_basic_lib
 	        }   
 		}
 	}
-	
-//	public boolean initListener()
-//    {
-//        try
-//        {
-//            serialPort.addEventListener(this);
-//            serialPort.notifyOnDataAvailable(true);
-//            
-//            return true;
-//        }
-//        catch (TooManyListenersException e)
-//        {
-//        	System.err.println("ERROR: Too Many ListenerExceptions in initListener.");
-//        	return false;
-//    	}	
-//    }
+
 	
 	//open the input and output streams
     //pre: an open port

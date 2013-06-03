@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
@@ -35,15 +36,19 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.jface.text.TextViewer;
 
 
 public class Window extends ApplicationWindow implements SerialPortEventListener{
 	private Text message_field;
-	private List list;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private rxtx_basic_lib serial_com;
 	private Window window;
 	private static Display display;
+	private StyledText styledText;
 
 	
 
@@ -52,7 +57,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 */
 	public Window() {
 		super(null);
-		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE);
+		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER);
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
@@ -68,64 +73,82 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayout(new FormLayout());
+		container.setLayout(new GridLayout(1, true));
 		
 		Group grpSetup = new Group(container, SWT.NONE);
+		grpSetup.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		grpSetup.setText("Setup");
-		FormData fd_grpSetup = new FormData();
-		fd_grpSetup.bottom = new FormAttachment(0, 111);
-		fd_grpSetup.top = new FormAttachment(0, 10);
-		fd_grpSetup.right = new FormAttachment(0, 843);
-		fd_grpSetup.left = new FormAttachment(0, 10);
-		grpSetup.setLayoutData(fd_grpSetup);
+		grpSetup.setLayout(new FormLayout());
 		
 		final Label lblconnection_status = new Label(grpSetup, SWT.NONE);
-		lblconnection_status.setBounds(361, 57, 210, 15);
+		FormData fd_lblconnection_status = new FormData();
+		fd_lblconnection_status.bottom = new FormAttachment(0, 53);
+		fd_lblconnection_status.right = new FormAttachment(0, 570);
+		fd_lblconnection_status.top = new FormAttachment(0, 38);
+		fd_lblconnection_status.left = new FormAttachment(0, 360);
+		lblconnection_status.setLayoutData(fd_lblconnection_status);
 		lblconnection_status.setText("not connected");
 		lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		
 		final Combo device_combo = new Combo(grpSetup, SWT.NONE);
+		FormData fd_device_combo = new FormData();
+		fd_device_combo.right = new FormAttachment(0, 265);
+		device_combo.setLayoutData(fd_device_combo);
 		//set items
 		java.util.List<String> port_list = serial_com.get_port_names();
 		device_combo.setItems(port_list.toArray(new String[port_list.size()]));
-		
-		device_combo.setBounds(81, 26, 185, 25);
 		device_combo.select(0);
 		
 		final Combo bps_combo = new Combo(grpSetup, SWT.NONE);
+		fd_device_combo.left = new FormAttachment(bps_combo, 0, SWT.LEFT);
+		FormData fd_bps_combo = new FormData();
+		fd_bps_combo.right = new FormAttachment(0, 265);
+		fd_bps_combo.top = new FormAttachment(0, 38);
+		fd_bps_combo.left = new FormAttachment(0, 80);
+		bps_combo.setLayoutData(fd_bps_combo);
 		bps_combo.setItems(new String[] {"300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "38400", "57600", "115200"});
-		bps_combo.setBounds(81, 57, 185, 25);
 		bps_combo.select(5);
 		
 		Label lblDevice = new Label(grpSetup, SWT.NONE);
-		lblDevice.setBounds(10, 26, 65, 15);
+		fd_device_combo.top = new FormAttachment(lblDevice, 0, SWT.TOP);
+		FormData fd_lblDevice = new FormData();
+		fd_lblDevice.top = new FormAttachment(0, 7);
+		fd_lblDevice.right = new FormAttachment(0, 74);
+		lblDevice.setLayoutData(fd_lblDevice);
 		lblDevice.setText("Device:");
 		
 		Label lblBps = new Label(grpSetup, SWT.NONE);
-		lblBps.setBounds(10, 57, 65, 15);
+		fd_lblDevice.bottom = new FormAttachment(lblBps, -16);
+		fd_lblDevice.left = new FormAttachment(lblBps, 0, SWT.LEFT);
+		FormData fd_lblBps = new FormData();
+		fd_lblBps.bottom = new FormAttachment(0, 53);
+		fd_lblBps.right = new FormAttachment(0, 74);
+		fd_lblBps.top = new FormAttachment(0, 38);
+		fd_lblBps.left = new FormAttachment(0, 9);
+		lblBps.setLayoutData(fd_lblBps);
 		lblBps.setText("Bps:");
 		
 		message_field = new Text(container, SWT.BORDER);
-		FormData fd_message_field = new FormData();
-		fd_message_field.top = new FormAttachment(grpSetup, 6);
-		fd_message_field.left = new FormAttachment(grpSetup, 0, SWT.LEFT);
-		fd_message_field.right = new FormAttachment(0, 843);
-		message_field.setLayoutData(fd_message_field);
+		message_field.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		message_field.setToolTipText("type your message here");
 		
 		Button send_btn = new Button(container, SWT.NONE);
+		send_btn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		send_btn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				write_list(message_field.getText());
+				write(message_field.getText());
 				message_field.setText("");
 			}
 		});
-		FormData fd_send_btn = new FormData();
-		fd_send_btn.top = new FormAttachment(message_field, 6);
-		fd_send_btn.right = new FormAttachment(grpSetup, 0, SWT.RIGHT);
 		
 		final Button btnConnect = new Button(grpSetup, SWT.NONE);
+		FormData fd_btnConnect = new FormData();
+		fd_btnConnect.bottom = new FormAttachment(0, 32);
+		fd_btnConnect.right = new FormAttachment(0, 444);
+		fd_btnConnect.top = new FormAttachment(0, 5);
+		fd_btnConnect.left = new FormAttachment(0, 360);
+		btnConnect.setLayoutData(fd_btnConnect);
 		btnConnect.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -176,11 +199,16 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 				}
 			}
 		});
-		btnConnect.setBounds(361, 24, 84, 27);
 		btnConnect.setText("Connect");
 
 		
 		Button btnRefresh = new Button(grpSetup, SWT.NONE);
+		FormData fd_btnRefresh = new FormData();
+		fd_btnRefresh.bottom = new FormAttachment(0, 32);
+		fd_btnRefresh.right = new FormAttachment(0, 534);
+		fd_btnRefresh.top = new FormAttachment(0, 5);
+		fd_btnRefresh.left = new FormAttachment(0, 450);
+		btnRefresh.setLayoutData(fd_btnRefresh);
 		btnRefresh.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -189,21 +217,22 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 				device_combo.select(0);
 			}
 		});
-		btnRefresh.setBounds(451, 24, 84, 27);
 		btnRefresh.setText("Refresh");
-		fd_send_btn.left = new FormAttachment(0, 10);
-		
-		send_btn.setLayoutData(fd_send_btn);
 		send_btn.setText("Send");
 		
-		list = new List(container, SWT.BORDER | SWT.V_SCROLL);
-		
-		FormData fd_list = new FormData();
-		fd_list.right = new FormAttachment(0, 843);
-		fd_list.bottom = new FormAttachment(send_btn, 209, SWT.BOTTOM);
-		fd_list.top = new FormAttachment(send_btn, 6);
-		fd_list.left = new FormAttachment(0, 10);
-		list.setLayoutData(fd_list);
+		TextViewer textViewer = new TextViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.READ_ONLY);
+		textViewer.setEditable(false);
+		styledText = textViewer.getTextWidget();
+		styledText.setLeftMargin(1);
+		styledText.setWrapIndent(1);
+		styledText.setFont(SWTResourceManager.getFont("Source Sans Pro", 9, SWT.NORMAL));
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		formToolkit.paintBordersFor(styledText);
+		styledText.addListener(SWT.Modify, new Listener(){
+		    public void handleEvent(Event arg0){
+		        styledText.setTopIndex(styledText.getLineCount() - 1);
+		    }
+		});
 
 		//run_setup();
 		
@@ -260,16 +289,10 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		return new Point(845, 655);
 	}
 	
-	public void write_list(String string)
-    {
-    		System.out.println("CALL");
-    		
-    		String str = string;
+	//a method to make changing the output widget easier
+	public void write(String string) {
+    		getStyledText().append(string);
     }
-	
-	public List getList() {
-		return list;
-	}
 	
 	public static void main(String args[]) {
 		try {
@@ -285,7 +308,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	
 	public void serialEvent(SerialPortEvent evt) 
 	{ 
-		System.out.println("EVENT");
 		try {
 			rxtx_basic_lib.com_listener horcher = new rxtx_basic_lib.com_listener(serial_com, window, serial_com.get_inputstream());
 			Thread read = new Thread(horcher);
@@ -294,4 +316,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 			e.printStackTrace();
 		}
     }
+	public StyledText getStyledText() {
+		return styledText;
+	}
 }
