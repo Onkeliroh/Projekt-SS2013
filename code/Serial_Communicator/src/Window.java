@@ -43,6 +43,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private rxtx_basic_lib serial_com;
 	private Window window;
+	private static Display display;
 
 	
 
@@ -130,7 +131,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 			public void mouseDown(MouseEvent e) {
 				if (!serial_com.is_connected()) 
 				{
-					btnConnect.setText("Disconnect");
 					if (device_combo.getItemCount() > 0)
 					try {
 						serial_com.connect( 
@@ -139,6 +139,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 										);
 				
 						if (serial_com.is_connected()){
+							btnConnect.setText("Disconnect");
 							lblconnection_status.setText("connected");
 							lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
 							if (serial_com.initIOStream() == true) {
@@ -220,7 +221,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 * Create the menu manager.
 	 * @return the menu manager
 	 */
-	@Override
 	protected MenuManager createMenuManager() {
 		MenuManager menuManager = new MenuManager("menu");
 		return menuManager;
@@ -230,7 +230,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 * Create the toolbar manager.
 	 * @return the toolbar manager
 	 */
-	@Override
 	protected ToolBarManager createToolBarManager(int style) {
 		ToolBarManager toolBarManager = new ToolBarManager(style);
 		return toolBarManager;
@@ -240,7 +239,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 * Create the status line manager.
 	 * @return the status line manager
 	 */
-	@Override
 	protected StatusLineManager createStatusLineManager() {
 		StatusLineManager statusLineManager = new StatusLineManager();
 		return statusLineManager;
@@ -250,7 +248,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 * Configure the shell.
 	 * @param newShell
 	 */
-	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText("Serial Communicator of Doom");
@@ -259,7 +256,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	/**
 	 * Return the initial size of the window.
 	 */
-	@Override
 	protected Point getInitialSize() {
 		return new Point(845, 655);
 	}
@@ -280,25 +276,22 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 			Window window = new Window();
 			window.setBlockOnOpen(true);
 			window.open();
+			display = Display.getCurrent();
 			Display.getCurrent().dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	//what happens when data is received
-    //pre: serial event is triggered
-    //post: processing on the data it reads
 	public void serialEvent(SerialPortEvent evt) 
 	{ 
 		System.out.println("EVENT");
-		this.notify();
-		/*Display.getCurrent().asyncExec(new Runnable() {
-			public void run()
-			{
-				window.getList().add("Meh");
-			}
-		});
-		*/
+		try {
+			rxtx_basic_lib.com_listener horcher = new rxtx_basic_lib.com_listener(serial_com, window, serial_com.get_inputstream());
+			Thread read = new Thread(horcher);
+			this.getShell().getDisplay().asyncExec(read);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 }
