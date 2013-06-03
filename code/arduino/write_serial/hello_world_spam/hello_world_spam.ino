@@ -15,4 +15,5 @@
    Serial.print("Hello World!\t");
    Serial.println(i);
    ++i;
+   delay(1000);
  }

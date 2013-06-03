@@ -5,8 +5,6 @@ import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -19,28 +17,47 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 //eigentlich cooler, aber beist sich mit org.eclipse.swt.widgets.List
 //import java.util.List;
-import java.util.ArrayList;
+import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.TooManyListenersException;
+
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.jface.viewers.ListViewer;
 
 
-public class Main extends ApplicationWindow {
+public class Window extends ApplicationWindow implements SerialPortEventListener{
 	private Text message_field;
+	private List list;
+	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
+	private rxtx_basic_lib serial_com;
+	private Window window;
+
+	
 
 	/**
 	 * Create the application window.
 	 */
-	public Main() {
+	public Window() {
 		super(null);
 		setShellStyle(SWT.CLOSE | SWT.MIN | SWT.MAX | SWT.TITLE);
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
 		addStatusLine();
+		this.serial_com = new rxtx_basic_lib( this );
+		this.window = this;
 	}
 
 	/**
@@ -68,7 +85,7 @@ public class Main extends ApplicationWindow {
 		
 		final Combo device_combo = new Combo(grpSetup, SWT.NONE);
 		//set items
-		java.util.List<String> port_list = rxtx_basic_lib.get_port_names();
+		java.util.List<String> port_list = serial_com.get_port_names();
 		device_combo.setItems(port_list.toArray(new String[port_list.size()]));
 		
 		device_combo.setBounds(81, 26, 185, 25);
@@ -99,50 +116,74 @@ public class Main extends ApplicationWindow {
 		send_btn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				message_field.setText("Hello World.");
+				write_list(message_field.getText());
+				message_field.setText("");
 			}
 		});
 		FormData fd_send_btn = new FormData();
 		fd_send_btn.top = new FormAttachment(message_field, 6);
 		fd_send_btn.right = new FormAttachment(grpSetup, 0, SWT.RIGHT);
 		
-		Button btnConnect = new Button(grpSetup, SWT.NONE);
+		final Button btnConnect = new Button(grpSetup, SWT.NONE);
 		btnConnect.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				if (device_combo.getItemCount() > 0)
-				try {
-					rxtx_basic_lib.connect( device_combo.getItem(device_combo.getSelectionIndex()), Integer.parseInt(bps_combo.getItem(bps_combo.getSelectionIndex())));
-					if (rxtx_basic_lib.connected)
-					{
-						lblconnection_status.setText("connected");
-						lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
-					}
-					else
-					{
-						lblconnection_status.setText("not connected");
-						lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-					}
-				} catch (NumberFormatException e1) {
-					e1.printStackTrace();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+				if (!serial_com.is_connected()) 
+				{
+					btnConnect.setText("Disconnect");
+					if (device_combo.getItemCount() > 0)
+					try {
+						serial_com.connect( 
+										device_combo.getItem(device_combo.getSelectionIndex()),
+										Integer.parseInt(bps_combo.getItem(bps_combo.getSelectionIndex()))
+										);
 				
+						if (serial_com.is_connected()){
+							lblconnection_status.setText("connected");
+							lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_GREEN));
+							if (serial_com.initIOStream() == true) {
+								SerialPort serialPort = serial_com.get_connected_Port();
+								try
+						        {
+						            serialPort.addEventListener(window);
+						            serialPort.notifyOnDataAvailable(true);    
+						        }
+						        catch (TooManyListenersException e1)
+						        {
+						        	System.err.println("ERROR: Too Many ListenerExceptions in initListener.");
+						    	}	
+							}
+						}
+						else{
+							lblconnection_status.setText("not connected");
+							lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+						}
+					} catch (NumberFormatException e1) {
+						e1.printStackTrace();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				else{
+					btnConnect.setText("Connect");
+					try{
+						serial_com.exit();
+					}
+					catch (IOException e1){
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		btnConnect.setBounds(361, 24, 84, 27);
 		btnConnect.setText("Connect");
-		
-		//Label lblconnection_status = new Label(grpSetup, SWT.NONE);
-		
-		//lblconnection_status.setBounds(361, 57, 210, 15);
+
 		
 		Button btnRefresh = new Button(grpSetup, SWT.NONE);
 		btnRefresh.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				java.util.List<String> port_list = rxtx_basic_lib.get_port_names();
+				java.util.List<String> port_list = serial_com.get_port_names();
 				device_combo.setItems(port_list.toArray(new String[port_list.size()]));
 				device_combo.select(0);
 			}
@@ -154,10 +195,11 @@ public class Main extends ApplicationWindow {
 		send_btn.setLayoutData(fd_send_btn);
 		send_btn.setText("Send");
 		
-		List list = new List(container, SWT.BORDER);
+		list = new List(container, SWT.BORDER | SWT.V_SCROLL);
+		
 		FormData fd_list = new FormData();
 		fd_list.right = new FormAttachment(0, 843);
-		fd_list.bottom = new FormAttachment(send_btn, 388, SWT.BOTTOM);
+		fd_list.bottom = new FormAttachment(send_btn, 209, SWT.BOTTOM);
 		fd_list.top = new FormAttachment(send_btn, 6);
 		fd_list.left = new FormAttachment(0, 10);
 		list.setLayoutData(fd_list);
@@ -203,22 +245,7 @@ public class Main extends ApplicationWindow {
 		StatusLineManager statusLineManager = new StatusLineManager();
 		return statusLineManager;
 	}
-
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		try {
-			Main window = new Main();
-			window.setBlockOnOpen(true);
-			window.open();
-			Display.getCurrent().dispose();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	/**
 	 * Configure the shell.
 	 * @param newShell
@@ -236,4 +263,42 @@ public class Main extends ApplicationWindow {
 	protected Point getInitialSize() {
 		return new Point(845, 655);
 	}
+	
+	public void write_list(String string)
+    {
+    		System.out.println("CALL");
+    		
+    		String str = string;
+    }
+	
+	public List getList() {
+		return list;
+	}
+	
+	public static void main(String args[]) {
+		try {
+			Window window = new Window();
+			window.setBlockOnOpen(true);
+			window.open();
+			Display.getCurrent().dispose();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//what happens when data is received
+    //pre: serial event is triggered
+    //post: processing on the data it reads
+	public void serialEvent(SerialPortEvent evt) 
+	{ 
+		System.out.println("EVENT");
+		this.notify();
+		/*Display.getCurrent().asyncExec(new Runnable() {
+			public void run()
+			{
+				window.getList().add("Meh");
+			}
+		});
+		*/
+    }
 }
