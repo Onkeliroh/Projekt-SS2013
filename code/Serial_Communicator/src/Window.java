@@ -176,6 +176,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 						        {
 						        	System.err.println("ERROR: Too Many ListenerExceptions in initListener.");
 						    	}	
+								write("connected to " + serial_com.get_connected_Port().getName() + "\n");
 							}
 						}
 						else{
@@ -190,6 +191,9 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 				}
 				else{
 					btnConnect.setText("Connect");
+					write("disconnected from " + serial_com.get_connected_Port().getName() + "\n");
+					lblconnection_status.setText("not connected");
+					lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 					try{
 						serial_com.exit();
 					}
