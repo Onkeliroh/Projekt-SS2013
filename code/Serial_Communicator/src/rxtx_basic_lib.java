@@ -31,9 +31,6 @@ public class rxtx_basic_lib
 	//the serialport this instance is connected to
 	private  SerialPort serialPort;
 	
-	//instance of the main window
-	private Window window;
-	
 	//the timeout value for connecting with the port
     final static int TIMEOUT = 2000;
 
@@ -44,10 +41,8 @@ public class rxtx_basic_lib
 	
 	
 	//Constructor
-	public rxtx_basic_lib(Window win)
-	{
-		this.window = win;
-	}
+	public rxtx_basic_lib()
+	{}
 	
 	//searches for all devices connected with a serial port on the pc
 	@SuppressWarnings({ "rawtypes" })
@@ -110,8 +105,6 @@ public class rxtx_basic_lib
 				connected = true;
 				serialPort = (SerialPort) commPort;
 				serialPort.setSerialPortParams(bps,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);			
-				
-				System.out.println("Begin read/write");
 			}
 		}
 	}
@@ -119,6 +112,11 @@ public class rxtx_basic_lib
 	public InputStream get_inputstream() throws IOException
 	{
 		return in;
+	}
+	
+	public OutputStream get_outputstream() throws IOException
+	{
+		return out;
 	}
 	
 	public boolean is_connected()
@@ -156,7 +154,7 @@ public class rxtx_basic_lib
 	                buffer[len++] = (byte) data;
 	            }
 	            str = new String(buffer,0,len);
-	            windoof.write(str);
+	            windoof.write("in:\t" + str + "\n");
 	        }
 	        catch ( IOException e )
 	        {
@@ -165,6 +163,39 @@ public class rxtx_basic_lib
 	        }   
 		}
 	}
+	
+	/** */
+    public static class com_writer implements Runnable 
+    {
+        private OutputStream out;
+        private String str;
+        private Window windoof;
+        
+        public com_writer ( OutputStream out, String string, Window win )
+        {
+            this.out = out;
+            this.str = string;
+            this.windoof = win;
+        }
+        
+        public void run ()
+        {
+            try
+            {
+                this.out.write(this.str.getBytes());
+                this.out.flush();
+                
+                this.out.write(NEW_LINE_ASCII);
+                this.out.flush();
+                
+                windoof.write("out:\t" + str +"\n");
+            }
+            catch (Exception e)
+            {
+                System.err.println("Failed to write data. (" + e.toString() + ")");
+            }
+        }
+    }
 
 	
 	//open the input and output streams
@@ -176,7 +207,6 @@ public class rxtx_basic_lib
             //
             in = serialPort.getInputStream();
             out = serialPort.getOutputStream();
-            writeData(0, 0);
             
             return true;
         }
@@ -196,31 +226,4 @@ public class rxtx_basic_lib
 		
 		return true;
 	}
-
-	
-	
-	//method that can be called to send data
-    //pre: open serial port
-    //post: data sent to the other device
-    public void writeData(int leftThrottle, int rightThrottle)
-    {
-        try
-        {
-            out.write(leftThrottle);
-            out.flush();
-            //this is a delimiter for the data
-            out.write(DASH_ASCII);
-            out.flush();
-            
-            out.write(rightThrottle);
-            out.flush();
-            //will be read as a byte so it is a space key
-            out.write(SPACE_ASCII);
-            out.flush();
-        }
-        catch (Exception e)
-        {
-            System.err.format("Failed to write data. ( %s )\n", e.toString());
-        }
-    }
 }

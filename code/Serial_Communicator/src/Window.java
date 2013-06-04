@@ -3,6 +3,8 @@ import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
@@ -28,6 +30,7 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.TooManyListenersException;
@@ -40,6 +43,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.swt.events.KeyAdapter;
 
 
 public class Window extends ApplicationWindow implements SerialPortEventListener{
@@ -62,7 +66,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
 		addStatusLine();
-		this.serial_com = new rxtx_basic_lib( this );
+		this.serial_com = new rxtx_basic_lib();
 		this.window = this;
 	}
 
@@ -90,7 +94,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		lblconnection_status.setText("not connected");
 		lblconnection_status.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		
-		final Combo device_combo = new Combo(grpSetup, SWT.NONE);
+		final Combo device_combo = new Combo(grpSetup, SWT.READ_ONLY);
 		FormData fd_device_combo = new FormData();
 		fd_device_combo.right = new FormAttachment(0, 265);
 		device_combo.setLayoutData(fd_device_combo);
@@ -99,7 +103,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		device_combo.setItems(port_list.toArray(new String[port_list.size()]));
 		device_combo.select(0);
 		
-		final Combo bps_combo = new Combo(grpSetup, SWT.NONE);
+		final Combo bps_combo = new Combo(grpSetup, SWT.READ_ONLY);
 		fd_device_combo.left = new FormAttachment(bps_combo, 0, SWT.LEFT);
 		FormData fd_bps_combo = new FormData();
 		fd_bps_combo.right = new FormAttachment(0, 265);
@@ -137,7 +141,22 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		send_btn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				write(message_field.getText());
+				String str = message_field.getText();
+				
+				rxtx_basic_lib.com_writer comWriter = null;
+				
+				try {
+					comWriter = new rxtx_basic_lib.com_writer(serial_com.get_outputstream(), str, window);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+				Thread thread = new Thread(comWriter);
+				
+				//this.getShell().getDisplay().asyncExec(thread);
+				
+				Display.getCurrent().asyncExec(thread);
+				
 				message_field.setText("");
 			}
 		});
@@ -237,9 +256,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		        styledText.setTopIndex(styledText.getLineCount() - 1);
 		    }
 		});
-
-		//run_setup();
-		
 		return container;
 	}
 
@@ -282,6 +298,14 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 * @param newShell
 	 */
 	protected void configureShell(Shell newShell) {
+		newShell.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				System.out.println(e.character);
+				if (true)
+					System.out.println("BLA");
+			}
+		});
 		super.configureShell(newShell);
 		newShell.setText("Serial Communicator of Doom");
 	}
