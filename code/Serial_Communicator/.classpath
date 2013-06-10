@@ -19,5 +19,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/onkeliroh/eclipse_indigo/plugins/rxtx"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="swing2swt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

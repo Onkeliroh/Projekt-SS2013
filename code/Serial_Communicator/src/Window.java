@@ -4,7 +4,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
@@ -19,7 +18,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -32,13 +30,10 @@ import gnu.io.SerialPortEventListener;
 
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.TooManyListenersException;
 
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.custom.StyledText;
@@ -47,11 +42,12 @@ import org.eclipse.swt.events.KeyAdapter;
 
 
 public class Window extends ApplicationWindow implements SerialPortEventListener{
+	protected Shell shell;
+	
 	private Text message_field;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private rxtx_basic_lib serial_com;
 	private Window window;
-	private static Display display;
 	private StyledText styledText;
 
 	
@@ -131,35 +127,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		fd_lblBps.left = new FormAttachment(0, 9);
 		lblBps.setLayoutData(fd_lblBps);
 		lblBps.setText("Bps:");
-		
-		message_field = new Text(container, SWT.BORDER);
-		message_field.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		message_field.setToolTipText("type your message here");
-		
-		Button send_btn = new Button(container, SWT.NONE);
-		send_btn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		send_btn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				String str = message_field.getText();
-				
-				rxtx_basic_lib.com_writer comWriter = null;
-				
-				try {
-					comWriter = new rxtx_basic_lib.com_writer(serial_com.get_outputstream(), str, window);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
-				Thread thread = new Thread(comWriter);
-				
-				//this.getShell().getDisplay().asyncExec(thread);
-				
-				Display.getCurrent().asyncExec(thread);
-				
-				message_field.setText("");
-			}
-		});
 		
 		final Button btnConnect = new Button(grpSetup, SWT.NONE);
 		FormData fd_btnConnect = new FormData();
@@ -241,7 +208,54 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 			}
 		});
 		btnRefresh.setText("Refresh");
+		
+		Group send_group = new Group(container, SWT.NONE);
+		send_group.setLayout(new FormLayout());
+		send_group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 2));
+		formToolkit.adapt(send_group);
+		formToolkit.paintBordersFor(send_group);
+		
+		message_field = new Text(send_group, SWT.BORDER);
+		FormData fd_message_field = new FormData();
+		fd_message_field.top = new FormAttachment(0, 5);
+		fd_message_field.left = new FormAttachment(0, 5);
+		message_field.setLayoutData(fd_message_field);
+		message_field.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+//				if (e.equals(SWT.)))
+			}
+		});
+		message_field.setToolTipText("type your message here");
+		
+		Button send_btn = new Button(send_group, SWT.NONE);
+		fd_message_field.right = new FormAttachment(send_btn, 0, SWT.RIGHT);
+		FormData fd_send_btn = new FormData();
+		fd_send_btn.right = new FormAttachment(0, 259);
+		fd_send_btn.left = new FormAttachment(0, 5);
+		fd_send_btn.top = new FormAttachment(0, 35);
+		send_btn.setLayoutData(fd_send_btn);
+		send_btn.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				send();
+			}
+		});
 		send_btn.setText("Send");
+		
+		Button btnOpenMessageOptions = new Button(send_group, SWT.NONE);
+		btnOpenMessageOptions.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				message_dialog mw = new message_dialog(shell, 0);
+				mw.open();
+			}
+		});
+		FormData fd_btnOpenMessageOptions = new FormData();
+		fd_btnOpenMessageOptions.bottom = new FormAttachment(message_field, 0, SWT.BOTTOM);
+		fd_btnOpenMessageOptions.left = new FormAttachment(message_field, 99);
+		btnOpenMessageOptions.setLayoutData(fd_btnOpenMessageOptions);
+		formToolkit.adapt(btnOpenMessageOptions, true, true);
+		btnOpenMessageOptions.setText("open message options");
 		
 		TextViewer textViewer = new TextViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.READ_ONLY);
 		textViewer.setEditable(false);
@@ -298,16 +312,10 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 * @param newShell
 	 */
 	protected void configureShell(Shell newShell) {
-		newShell.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				System.out.println(e.character);
-				if (true)
-					System.out.println("BLA");
-			}
-		});
 		super.configureShell(newShell);
 		newShell.setText("Serial Communicator of Doom");
+		
+		shell = newShell;
 	}
 
 	/**
@@ -322,12 +330,33 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
     		getStyledText().append(string);
     }
 	
+	private void send()
+	{
+		String str = message_field.getText();
+		
+		rxtx_basic_lib.com_writer comWriter = null;
+		
+		try {
+			comWriter = new rxtx_basic_lib.com_writer(serial_com.get_outputstream(), str, window);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		Thread thread = new Thread(comWriter);
+		
+		//this.getShell().getDisplay().asyncExec(thread);
+		
+		Display.getCurrent().asyncExec(thread);
+		
+		message_field.setText("");
+	}
+	
 	public static void main(String args[]) {
 		try {
 			Window window = new Window();
 			window.setBlockOnOpen(true);
 			window.open();
-			display = Display.getCurrent();
+			Display.getCurrent();
 			Display.getCurrent().dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
