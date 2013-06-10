@@ -1,11 +1,11 @@
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -22,8 +22,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-//eigentlich cooler, aber beist sich mit org.eclipse.swt.widgets.List
-//import java.util.List;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
@@ -39,6 +37,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 
 public class Window extends ApplicationWindow implements SerialPortEventListener{
@@ -46,7 +46,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	
 	private Text message_field;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
-	private rxtx_basic_lib serial_com;
+	protected rxtx_basic_lib serial_com;
 	private Window window;
 	private StyledText styledText;
 
@@ -59,9 +59,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		super(null);
 		setShellStyle(SWT.SHELL_TRIM | SWT.BORDER);
 		createActions();
-		addToolBar(SWT.FLAT | SWT.WRAP);
-		addMenuBar();
-		addStatusLine();
 		this.serial_com = new rxtx_basic_lib();
 		this.window = this;
 	}
@@ -70,13 +67,57 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 * Create contents of the application window.
 	 * @param parent
 	 */
-	@Override
 	protected Control createContents(Composite parent) {
+		
+		Menu menu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menu);
+
+		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
+		mntmFile.setText("File");
+
+		Menu menu_1 = new Menu(mntmFile);
+		mntmFile.setMenu(menu_1);
+
+		MenuItem mntmClose = new MenuItem(menu_1, SWT.NONE);
+		mntmClose.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (serial_com.is_connected())
+				{
+					try {
+						serial_com.exit();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+						System.err.println(e.toString());
+					}
+				}
+				shell.close();
+			}
+		});
+		mntmClose.setText("Close");
+		
+		MenuItem mntmOptions = new MenuItem(menu, SWT.CASCADE);
+		mntmOptions.setText("Options");
+		
+		Menu menu_2 = new Menu(mntmOptions);
+		mntmOptions.setMenu(menu_2);
+		
+		MenuItem mntmMessageOptions = new MenuItem(menu_2, SWT.NONE);
+		mntmMessageOptions.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				message_dialog mw = new message_dialog(shell, 0);
+				mw.open();
+			}
+		});	
+		mntmMessageOptions.setText("Message Options");
+		
+		
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(1, true));
 		
 		Group grpSetup = new Group(container, SWT.NONE);
-		grpSetup.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		GridData gd_grpSetup = new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1);
+		gd_grpSetup.heightHint = 93;
+		grpSetup.setLayoutData(gd_grpSetup);
 		grpSetup.setText("Setup");
 		grpSetup.setLayout(new FormLayout());
 		
@@ -210,8 +251,12 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		btnRefresh.setText("Refresh");
 		
 		Group send_group = new Group(container, SWT.NONE);
+		send_group.setText("Send");
+		send_group.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		send_group.setLayout(new FormLayout());
-		send_group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 2));
+		GridData gd_send_group = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 2);
+		gd_send_group.heightHint = 96;
+		send_group.setLayoutData(gd_send_group);
 		formToolkit.adapt(send_group);
 		formToolkit.paintBordersFor(send_group);
 		
@@ -260,6 +305,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		TextViewer textViewer = new TextViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.READ_ONLY);
 		textViewer.setEditable(false);
 		styledText = textViewer.getTextWidget();
+		styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
 		styledText.setLeftMargin(1);
 		styledText.setWrapIndent(1);
 		styledText.setFont(SWTResourceManager.getFont("Source Sans Pro", 9, SWT.NORMAL));
@@ -281,24 +327,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	}
 
 	/**
-	 * Create the menu manager.
-	 * @return the menu manager
-	 */
-	protected MenuManager createMenuManager() {
-		MenuManager menuManager = new MenuManager("menu");
-		return menuManager;
-	}
-
-	/**
-	 * Create the toolbar manager.
-	 * @return the toolbar manager
-	 */
-	protected ToolBarManager createToolBarManager(int style) {
-		ToolBarManager toolBarManager = new ToolBarManager(style);
-		return toolBarManager;
-	}
-
-	/**
 	 * Create the status line manager.
 	 * @return the status line manager
 	 */
@@ -312,6 +340,7 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 	 * @param newShell
 	 */
 	protected void configureShell(Shell newShell) {
+		newShell.setMinimumSize(new Point(700, 550));
 		super.configureShell(newShell);
 		newShell.setText("Serial Communicator of Doom");
 		
