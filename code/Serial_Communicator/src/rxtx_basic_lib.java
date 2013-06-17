@@ -19,7 +19,7 @@ public class rxtx_basic_lib
 	private InputStream in = null;
 	private  OutputStream out = null;
 	
-	//wether this instance is connected to a port or not (default = false)
+	//Whether this instance is connected to a port or not (default = false)
 	private  boolean connected = false;
 	
 	//the serialport this instance is connected to
@@ -162,21 +162,28 @@ public class rxtx_basic_lib
     public static class com_writer implements Runnable 
     {
         private OutputStream out;
-        private String str;
+        private byte[] str;
         private Window windoof;
         
         public com_writer ( OutputStream out, String string, Window win )
         {
             this.out = out;
-            this.str = string;
+            this.str = string.getBytes();
             this.windoof = win;
+        }
+        
+        public com_writer ( OutputStream out, byte[] bytes, Window win )
+        {
+        	this.out = out;
+        	this.str = bytes;
+        	this.windoof = win;
         }
         
         public void run ()
         {
             try
             {
-                this.out.write(this.str.getBytes());
+                this.out.write(this.str);
                 this.out.flush();
                 
                 this.out.write(NEW_LINE_ASCII);
@@ -208,6 +215,16 @@ public class rxtx_basic_lib
             System.err.format("I/O Streams failed to open. ( %s )\n", e.toString());
             return false;
         }
+    }
+    
+    public byte[] create_package(byte key, byte id, byte data)
+    {
+    	byte[] header = new byte[]{key,00000000,id};
+    	byte[] west_package = new byte[64];
+    	System.arraycopy(header, 0, west_package, 0, header.length);
+    	System.arraycopy(data, 0, west_package, header.length, west_package.length);
+    	
+    	return west_package;
     }
 
 	

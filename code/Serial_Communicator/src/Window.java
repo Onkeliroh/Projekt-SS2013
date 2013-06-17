@@ -1,6 +1,16 @@
+import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
+
+import java.io.IOException;
+import java.util.TooManyListenersException;
+
 import org.eclipse.jface.action.StatusLineManager;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -10,6 +20,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -19,31 +31,16 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
-
-
-import java.io.IOException;
-import java.util.TooManyListenersException;
-
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.jface.text.TextViewer;
-import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 
 public class Window extends ApplicationWindow implements SerialPortEventListener{
 	protected Shell shell;
-	
 	private Text message_field;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	protected rxtx_basic_lib serial_com;
@@ -305,6 +302,8 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		TextViewer textViewer = new TextViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.READ_ONLY);
 		textViewer.setEditable(false);
 		styledText = textViewer.getTextWidget();
+		styledText.setDoubleClickEnabled(false);
+		styledText.setBlockSelection(true);
 		styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
 		styledText.setLeftMargin(1);
 		styledText.setWrapIndent(1);
