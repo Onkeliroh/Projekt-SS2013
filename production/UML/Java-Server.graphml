@@ -48,7 +48,7 @@ Setter</y:MethodLabel>
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="196.0" width="373.0" x="291.0" y="114.0"/>
+          <y:Geometry height="241.11285266457682" width="373.0" x="291.0" y="68.88714733542317"/>
           <y:Fill color="#CCFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="53.06103515625" x="159.969482421875" y="3.0">Device<y:LabelModel>
@@ -61,7 +61,10 @@ Setter</y:MethodLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel>short Id
 Personality personality
-Byte Status</y:AttributeLabel>
+Byte Status
+pos_x short
+pos_y short
+pos_z short</y:AttributeLabel>
             <y:MethodLabel>get_Id() short
 set_Id( short )
 get_Personality()
@@ -120,7 +123,6 @@ set_Color( short[3] )</y:MethodLabel>
     </node>
     <node id="n4">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="338.54545454545456" width="383.81818181818176" x="-313.3401988636367" y="-180.01207386363626"/>
@@ -137,14 +139,13 @@ set_Color( short[3] )</y:MethodLabel>
             <y:AttributeLabel>Connected_Devices List&lt;Device&gt;
 SerialPortConnection rxtx_basic_lib
 </y:AttributeLabel>
-            <y:MethodLabel/>
+            <y:MethodLabel>create_package() Byte[]</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <node id="n5">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="62.125" width="253.125" x="-633.8622159090917" y="114.308096590909"/>
@@ -166,7 +167,6 @@ SerialPortConnection rxtx_basic_lib
     </node>
     <node id="n6">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="97.60227272727263" width="239.93181818181813" x="-280.2651988636353" y="261.4671874999999"/>
@@ -210,7 +210,6 @@ SerialPortConnection rxtx_basic_lib
     </node>
     <node id="n8">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="97.60227272727263" width="253.125" x="-10.333380681817061" y="261.4671874999999"/>
@@ -228,6 +227,24 @@ SerialPortConnection rxtx_basic_lib
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
+      </data>
+    </node>
+    <node id="n9">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d6">
+        <y:UMLNoteNode>
+          <y:Geometry height="38.41065830721004" width="209.1728056426333" x="696.5" y="68.88714733542315"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="175.111328125" x="17.030738758816597" y="10.220954153605021">Last known communication?<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+        </y:UMLNoteNode>
       </data>
     </node>
     <edge id="e0" source="n2" target="n0">
@@ -262,7 +279,6 @@ SerialPortConnection rxtx_basic_lib
     </edge>
     <edge id="e3" source="n4" target="n1">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -274,7 +290,6 @@ SerialPortConnection rxtx_basic_lib
     </edge>
     <edge id="e4" source="n4" target="n5">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -286,7 +301,6 @@ SerialPortConnection rxtx_basic_lib
     </edge>
     <edge id="e5" source="n4" target="n6">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -298,7 +312,6 @@ SerialPortConnection rxtx_basic_lib
     </edge>
     <edge id="e6" source="n7" target="n6">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -310,7 +323,6 @@ SerialPortConnection rxtx_basic_lib
     </edge>
     <edge id="e7" source="n7" target="n4">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -321,7 +333,6 @@ SerialPortConnection rxtx_basic_lib
       </data>
     </edge>
     <edge id="e8" source="n8" target="n6">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -332,7 +343,6 @@ SerialPortConnection rxtx_basic_lib
       </data>
     </edge>
     <edge id="e9" source="n4" target="n8">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
