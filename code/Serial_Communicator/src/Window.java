@@ -262,12 +262,6 @@ public class Window extends ApplicationWindow implements SerialPortEventListener
 		fd_message_field.top = new FormAttachment(0, 5);
 		fd_message_field.left = new FormAttachment(0, 5);
 		message_field.setLayoutData(fd_message_field);
-		message_field.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-//				if (e.equals(SWT.)))
-			}
-		});
 		message_field.setToolTipText("type your message here");
 		
 		Button send_btn = new Button(send_group, SWT.NONE);
