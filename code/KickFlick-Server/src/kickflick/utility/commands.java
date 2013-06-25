@@ -5,7 +5,7 @@ public interface commands {
 	
 	
 	//Commands
-	byte  Reset = 011;
+	byte Reset = 011;
 	byte StateReport = 012;
 	byte Blink = 013;
 	byte Beep = 014;

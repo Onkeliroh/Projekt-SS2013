@@ -62,6 +62,12 @@ public class Server_Main {
 		mntmSettings.setMenu(menu_1);
 		
 		MenuItem mntmCommunicator = new MenuItem(menu, SWT.NONE);
+		mntmCommunicator.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				communicator comm_cator = new communicator(shlKickflickServer, 0, Server); 
+				comm_cator.open();
+			}
+		});
 		mntmCommunicator.setText("Communicator");
 		
 		Group grpConnection = new Group(shlKickflickServer, SWT.NONE);
@@ -69,10 +75,10 @@ public class Server_Main {
 		grpConnection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpConnection.setText("Connection");
 		
-		combo_port = new Combo(grpConnection, SWT.NONE);
+		combo_port = new Combo(grpConnection, SWT.READ_ONLY);
 		combo_port.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		final Combo combo_baut = new Combo(grpConnection, SWT.NONE);
+		final Combo combo_baut = new Combo(grpConnection, SWT.READ_ONLY);
 		combo_baut.setItems(new String[] {"300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "38400", "57600", "115200"});
 		combo_baut.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		combo_baut.select(5);
