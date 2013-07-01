@@ -1,5 +1,7 @@
 package kickflick.gui;
 
+import java.io.IOException;
+
 import kickflick.utility.server;
 
 import org.eclipse.swt.widgets.Display;
@@ -91,11 +93,28 @@ public class Server_Main {
 		});
 		btnRefresh.setText("Refresh");
 		
-		Button btnConnect = new Button(grpConnection, SWT.NONE);
+		final Button btnConnect = new Button(grpConnection, SWT.NONE);
+		GridData gd_btnConnect = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnConnect.widthHint = 100;
+		gd_btnConnect.minimumWidth = 200;
+		btnConnect.setLayoutData(gd_btnConnect);
 		btnConnect.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				Server.connect_panstamp(combo_port.getItem(combo_port.getSelectionIndex()),
+				if ( Server != null && !Server.serial_com.is_connected())
+				{
+					Server.connect_panstamp(combo_port.getItem(combo_port.getSelectionIndex()),
 										Integer.parseInt(combo_baut.getItem(combo_baut.getSelectionIndex())));
+					btnConnect.setText("Disconnect");
+				}
+				else
+				{
+					try {
+						Server.serial_com.exit();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					btnConnect.setText("Connect");
+				}
 			}
 		});
 		btnConnect.setText("Connect");

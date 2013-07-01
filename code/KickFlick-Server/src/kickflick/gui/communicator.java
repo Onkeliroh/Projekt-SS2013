@@ -21,8 +21,6 @@ public class communicator extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
-	private Text receiver_text;
-	private Text sender_text;
 	private Text data_compose_text;
 	
 	private server Server;
@@ -65,33 +63,44 @@ public class communicator extends Dialog {
 		shell.setLayout(new GridLayout(1, false));
 		
 		Group grpComposeMessage = new Group(shell, SWT.NONE);
-		grpComposeMessage.setLayout(new GridLayout(3, false));
+		grpComposeMessage.setLayout(new GridLayout(4, false));
 		grpComposeMessage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpComposeMessage.setText("Compose Header");
 		
 		Label lblReciever = new Label(grpComposeMessage, SWT.NONE);
 		lblReciever.setText("Receiver");
 		
-		Label lblNewLabel = new Label(grpComposeMessage, SWT.NONE);
-		lblNewLabel.setText("Sender");
-		
 		Label lblKey = new Label(grpComposeMessage, SWT.NONE);
 		lblKey.setText("Key");
 		
-		receiver_text = new Text(grpComposeMessage, SWT.BORDER);
+		Label lblElement = new Label(grpComposeMessage, SWT.NONE);
+		lblElement.setText("Element");
 		
-		sender_text = new Text(grpComposeMessage, SWT.BORDER | SWT.READ_ONLY);
-		sender_text.setEditable(false);
-		sender_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		sender_text.setText(Byte.toString(Server.get_server_adress()));
+		Label lblAction = new Label(grpComposeMessage, SWT.NONE);
+		lblAction.setText("Action");
+		
+		Combo receiver_combo = new Combo(grpComposeMessage, SWT.NONE);
+		GridData gd_receiver_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_receiver_combo.widthHint = 50;
+		receiver_combo.setLayoutData(gd_receiver_combo);
 		
 		Combo key_combo = new Combo(grpComposeMessage, SWT.READ_ONLY);
-		GridData gd_key_combo = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_key_combo.widthHint = 100;
+		key_combo.setItems(new String[] {"test", "test", "test", "test"});
+		GridData gd_key_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_key_combo.widthHint = 50;
 		key_combo.setLayoutData(gd_key_combo);
 		
+		Combo element_combo = new Combo(grpComposeMessage, SWT.READ_ONLY);
+		element_combo.setItems(new String[] {"test", "test", "test", "test"});
+		GridData gd_element_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_element_combo.widthHint = 50;
+		element_combo.setLayoutData(gd_element_combo);
+		
+		Combo action_combo = new Combo(grpComposeMessage, SWT.NONE);
+		action_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Group grpComposeData = new Group(shell, SWT.NONE);
-		grpComposeData.setText("Compose Data");
+		grpComposeData.setText("Compose Message");
 		grpComposeData.setLayout(new GridLayout(1, false));
 		grpComposeData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -121,4 +130,7 @@ public class communicator extends Dialog {
 		close_btn.setText("Close");
 
 	}
+	
+	//ToDo:fill Combos with informations
+	//ToDo: generate Byte Array from Selection
 }
