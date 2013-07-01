@@ -14,11 +14,87 @@
   <key for="edge" id="d10" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
     <data key="d7"/>
-    <node id="n0">
+    <node id="n0" yfiles.foldertype="group">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d6">
+        <y:ProxyAutoBoundsNode>
+          <y:Realizers active="0">
+            <y:GroupNode>
+              <y:Geometry height="313.5859375" width="580.0" x="435.0" y="582.4765625"/>
+              <y:Fill color="#F5F5F5" transparent="false"/>
+              <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.4609375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="580.0" x="0.0" y="0.0">Group 1</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="false" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
+            </y:GroupNode>
+            <y:GroupNode>
+              <y:Geometry height="50.0" width="50.0" x="0.0" y="60.0"/>
+              <y:Fill color="#F5F5F5" transparent="false"/>
+              <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.4609375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="65.201171875" x="-7.6005859375" y="0.0">Folder 1</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+              <y:State closed="true" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
+              <y:Insets bottom="5" bottomF="5.0" left="5" leftF="5.0" right="5" rightF="5.0" top="5" topF="5.0"/>
+              <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
+            </y:GroupNode>
+          </y:Realizers>
+        </y:ProxyAutoBoundsNode>
+      </data>
+      <graph edgedefault="directed" id="n0:">
+        <node id="n0::n0">
+          <data key="d4"/>
+          <data key="d5"/>
+          <data key="d6">
+            <y:UMLClassNode>
+              <y:Geometry height="62.125" width="100.0" x="900.0" y="618.9375"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="67.5654296875" x="16.21728515625" y="3.0">Actuator<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
+                <y:AttributeLabel>Id</y:AttributeLabel>
+                <y:MethodLabel/>
+              </y:UML>
+            </y:UMLClassNode>
+          </data>
+        </node>
+        <node id="n0::n1">
+          <data key="d4"/>
+          <data key="d5"/>
+          <data key="d6">
+            <y:UMLClassNode>
+              <y:Geometry height="62.125" width="100.0" x="450.0" y="818.9375"/>
+              <y:Fill color="#FFCC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="54.5146484375" x="22.74267578125" y="3.0">Sensor<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
+                <y:AttributeLabel>Id</y:AttributeLabel>
+                <y:MethodLabel/>
+              </y:UML>
+            </y:UMLClassNode>
+          </data>
+        </node>
+      </graph>
+    </node>
+    <node id="n1">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="232.0" width="325.0" x="315.0" y="408.0"/>
+          <y:Geometry height="232.0" width="325.0" x="712.5" y="834.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="87.052734375" x="118.9736328125" y="3.0">Personality<y:LabelModel>
@@ -44,11 +120,11 @@ Setter</y:MethodLabel>
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n1">
+    <node id="n2">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="241.11285266457682" width="373.0" x="291.0" y="68.88714733542317"/>
+          <y:Geometry height="241.11285266457682" width="373.0" x="313.5" y="529.4435736677116"/>
           <y:Fill color="#CCFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="53.06103515625" x="159.969482421875" y="3.0">Device<y:LabelModel>
@@ -76,11 +152,11 @@ set_Status( Byte )
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n2">
+    <node id="n3">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="178.0" width="228.0" x="363.5" y="728.0"/>
+          <y:Geometry height="178.0" width="228.0" x="836.0" y="386.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="42.27001953125" x="92.864990234375" y="3.0">Color<y:LabelModel>
@@ -104,11 +180,11 @@ set_Color( short[3] )</y:MethodLabel>
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n3">
+    <node id="n4">
       <data key="d4"/>
       <data key="d6">
         <y:UMLNoteNode>
-          <y:Geometry height="81.0" width="167.0" x="696.5" y="171.5"/>
+          <y:Geometry height="81.0" width="167.0" x="91.5" y="609.5"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="47.90625" modelName="custom" textColor="#000000" visible="true" width="167.0" x="0.0" y="16.546875">Status should be handled by a Listener to garanty "real time" Informations<y:LabelModel>
@@ -121,11 +197,11 @@ set_Color( short[3] )</y:MethodLabel>
         </y:UMLNoteNode>
       </data>
     </node>
-    <node id="n4">
+    <node id="n5">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="338.54545454545456" width="383.81818181818176" x="-313.3401988636367" y="-180.01207386363626"/>
+          <y:Geometry height="338.54545454545456" width="383.81818181818176" x="308.0909090909091" y="130.72727272727275"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="121.84423828125" x="130.98697176846588" y="3.0">KickFlick Server<y:LabelModel>
@@ -144,11 +220,11 @@ SerialPortConnection rxtx_basic_lib
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n5">
+    <node id="n6">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="62.125" width="253.125" x="-633.8622159090917" y="114.308096590909"/>
+          <y:Geometry height="62.125" width="253.125" x="873.4375" y="268.9375"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="55.05419921875" x="99.035400390625" y="3.0">Logger<y:LabelModel>
@@ -165,11 +241,11 @@ SerialPortConnection rxtx_basic_lib
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n6">
+    <node id="n7">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="97.60227272727263" width="239.93181818181813" x="-280.2651988636353" y="261.4671874999999"/>
+          <y:Geometry height="97.60227272727263" width="239.93181818181813" x="380.03409090909093" y="-23.80113636363626"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="51.67724609375" x="94.12728604403407" y="3.0">Parser<y:LabelModel>
@@ -186,12 +262,12 @@ SerialPortConnection rxtx_basic_lib
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n7">
+    <node id="n8">
       <data key="d4"/>
       <data key="d5"><![CDATA[Collects all KickFlick Device Commands]]></data>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="81.0" width="215.34090909090912" x="-596.0781250000008" y="261.4671874999999"/>
+          <y:Geometry height="81.0" width="215.34090909090912" x="717.3295454545455" y="-15.5"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="84.63427734375" x="65.35331587357956" y="3.0">Commands<y:LabelModel>
@@ -208,11 +284,11 @@ SerialPortConnection rxtx_basic_lib
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n8">
+    <node id="n9">
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="97.60227272727263" width="253.125" x="-10.333380681817061" y="261.4671874999999"/>
+          <y:Geometry height="97.60227272727263" width="253.125" x="-1.5625" y="251.19886363636374"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="102.591796875" x="75.2666015625" y="3.0">rxtx_basic_lib<y:LabelModel>
@@ -229,12 +305,11 @@ SerialPortConnection rxtx_basic_lib
         </y:UMLClassNode>
       </data>
     </node>
-    <node id="n9">
+    <node id="n10">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
-          <y:Geometry height="38.41065830721004" width="209.1728056426333" x="696.5" y="68.88714733542315"/>
+          <y:Geometry height="38.41065830721004" width="209.1728056426333" x="1195.4135971786834" y="-19.20532915360502"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="175.111328125" x="17.030738758816597" y="10.220954153605021">Last known communication?<y:LabelModel>
@@ -247,107 +322,137 @@ SerialPortConnection rxtx_basic_lib
         </y:UMLNoteNode>
       </data>
     </node>
-    <edge id="e0" source="n2" target="n0">
+    <edge id="e0" source="n3" target="n0::n0">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="0.0" sy="89.0" tx="0.0" ty="-31.0625"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e1" source="n0" target="n1">
+    <edge id="e1" source="n1" target="n2">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="0.0" sy="-116.0" tx="186.5" ty="25.0">
+            <y:Point x="875.0" y="675.0"/>
+          </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e2" source="n3" target="n1">
+    <edge id="e2" source="n4" target="n2">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="83.5" sy="-0.0" tx="-186.5" ty="-0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e3" source="n4" target="n1">
+    <edge id="e3" source="n5" target="n2">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="0.0" sy="169.27272727272725" tx="0.0" ty="-120.55642633228842"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e4" source="n4" target="n5">
+    <edge id="e4" source="n5" target="n6">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="191.90909090909088" sy="-0.0" tx="-126.5625" ty="-0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e5" source="n4" target="n6">
+    <edge id="e5" source="n5" target="n7">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="0.0" sy="-169.27272727272725" tx="0.0" ty="48.80113636363626"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e6" source="n7" target="n6">
+    <edge id="e6" source="n8" target="n7">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="-107.6704545454545" sy="-0.0" tx="119.96590909090901" ty="-0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e7" source="n7" target="n4">
+    <edge id="e7" source="n8" target="n5">
       <data key="d8"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="0.0" sy="40.5" tx="191.90909090909088" ty="-25.0">
+            <y:Point x="825.0" y="275.0"/>
+          </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e8" source="n8" target="n6">
+    <edge id="e8" source="n9" target="n7">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="0.0" sy="-48.801136363636374" tx="-119.96590909090907" ty="-0.0">
+            <y:Point x="125.0" y="25.0"/>
+          </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e9" source="n4" target="n8">
+    <edge id="e9" source="n5" target="n9">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="-191.90909090909088" sy="-0.0" tx="126.5625" ty="-0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e10" source="n0::n1" target="n2">
+      <data key="d8"/>
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="-31.0625" tx="0.0" ty="120.55642633228842"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e11" source="n0::n0" target="n2">
+      <data key="d8"/>
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-50.0" sy="-0.0" tx="186.5" ty="-0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
