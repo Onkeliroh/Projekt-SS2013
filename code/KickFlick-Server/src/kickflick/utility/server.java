@@ -58,7 +58,10 @@ public class server {
 		
 	}
 	
-	public void compose_bytearray(byte receiver, byte sender, byte key, byte)
+	public void compose_bytearray(byte receiver, byte sender, byte key, byte data)
+	{
+		
+	}
 	
 	
 	//Getter
