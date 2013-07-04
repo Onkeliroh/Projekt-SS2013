@@ -4,22 +4,47 @@
 
 #define LEDOUTPUT 4 // The LED is wired to the Arduino Output 4 (physical panStamp pin 19)
 
-// instances
+/////////////////////
+//--- INSTANCES ---//
+/////////////////////
+
 CC1101 _cc1101; // The connection to the hardware chip CC1101 the RF Chip
 ccPacketHandler _ccPacketHandler; // In charge of building, reading and forwarding ccPackets
 
-// member variables
+
+
+///////////////////
+//--- MEMBERS ---//
+///////////////////
+
 byte _syncWord = (19, 9); // The syncWord of sender and receiver must be the same
 byte _serverAddress = 0;
 byte _clients[] = {1, 2};
+
 int _msBlink = 100; // blink-time in ms
-boolean _packetAvailable = false; // a flag that a wireless packet has been received 
+
+boolean _packetAvailable = false; // a flag that a wireless packet has been received
+boolean _ccClear = true; // false as long as send packet has not been confirmed yet
+
+CCPACKET _ccPacket;
+
+
+
+//////////////////////
+//--- INTERRUPTS ---//
+//////////////////////
 
 // Handle interrupt from CC1101 (INT0)
 void cc1101signalsInterrupt(void)
 {
   _packetAvailable = true; // set the flag that NO package is available
 }
+
+
+
+///////////////////////////
+//--- INITIALIZATIONS ---//
+///////////////////////////
 
 // Initializing RF Chip
 void cc1101Init()
@@ -38,14 +63,24 @@ void cc1101Init()
 void setup()
 {
   Serial.begin(115200); // 9600 // 38400
-  Serial.println("Setting up..."); 
+  Serial.println("Setting up server-node..."); 
   pinMode(LEDOUTPUT, OUTPUT); // setup the blinker output
   digitalWrite(LEDOUTPUT, LOW);   
   cc1101Init();
   _ccPacketHandler.setId(_serverAddress); // set ccPacketHandlers id
   Serial.print("... ccPacketHandler startet with id "); 
   Serial.println(_ccPacketHandler.getId());
+  
+  // initial test packet
+  delay(1000);
+  ccSend(1);
 }
+
+
+
+/////////////////////
+//--- MAIN LOOP ---//
+/////////////////////
 
 // The loop method gets called on and on after the start of the system.
 void loop()
@@ -61,35 +96,39 @@ void loop()
   }
 }
 
-// The blink method is called to let the system LED blink once for a cetrain time.
-void blink()
-{
-  digitalWrite(LEDOUTPUT, HIGH);
-  delay(_msBlink);
-  digitalWrite(LEDOUTPUT, LOW);
-  delay(_msBlink);
-}
 
-// The ccSend method sends ccPackets.
+
+///////////////////////////
+//--- CC1101-PROTOCOL ---//
+///////////////////////////
+
+// The ccSend method sends the current ccPacket.
 void ccSend()
 {
-  CCPACKET data1;
-  CCPACKET data2;
-  data1.length = 2;
-  data2.length = 2;
-  data1.data[0] = _clients[0]; // the first byte in the data is the destination's address
-  data2.data[0] = _clients[1];
-  data1.data[1] = 0;
-  data2.data[1] = 0;
-  _cc1101.sendData(data1);
-  if(_cc1101.sendData(data2))
+  if(_cc1101.sendData(_ccPacketHandler.getPacket()))
   {
     blink();
+    _ccClear = false;
   }
   else
   {
-    Serial.println("failed to send!");
-  }  
+    Serial.println("ERROR! - Failed to send packet.");
+  }   
+}
+
+// The ccSend method sends ccPackets.
+void ccSend(byte receiver)
+{
+  _ccPacketHandler.testPacket(receiver); // build a test packet for server
+  if(_cc1101.sendData(_ccPacketHandler.getPacket()))
+  {
+    blink();
+    _ccClear = false;
+  }
+  else
+  {
+    Serial.println("ERROR! - Failed to send test packet.");
+  }   
 }
 
 // the ccReceive method evaluates incoming ccPackages.
@@ -97,18 +136,61 @@ void ccReceive()
 {
   if(_packetAvailable)
   {    
-    _packetAvailable = false; // clear the flag    
-    CCPACKET packet; // create new cc1101-packet
+    _packetAvailable = false; // clear the flag
+    CCPACKET ccPacket; 
     detachInterrupt(0); // Disable wireless reception interrupt
-    if(_cc1101.receiveData(&packet) > 0) // some data was received
+    if(_cc1101.receiveData(&ccPacket) > 0) // some data was received
     {
-      if (packet.crc_ok && packet.length > 1) // the whole ccPacket was properly received
+      if (ccPacket.crc_ok && ccPacket.length > 1) // the whole ccPacket was properly received
       {
-        _ccPacketHandler.evaluatePacket(packet); // set as ccPacket and evaluate its content
+        ccHandle(_ccPacketHandler.evaluatePacket(ccPacket)); // set as ccPacket and evaluate its content
       }
     }        
     attachInterrupt(0, cc1101signalsInterrupt, FALLING); // Enable wireless reception interrupt
   }
+}
+
+// The ccHandle method does some stuff...
+void ccHandle(byte key)
+{
+  Serial.print("handling key ");
+  Serial.println(key);
+  switch (key)
+  {
+    case 200: // acknowledge pacekt received
+      break;
+    case 201: // acknowledge packet correct
+      _ccClear = true;
+      break;
+    case 202: // acknowledge packet incorrect
+      Serial.println("ERROR - False acknowledge received! Resending previous package...");
+      break;
+    case 255: // test packet received
+      _ccPacket = _ccPacketHandler.getPacket(); // "use" current packet's data
+      _ccPacketHandler.acknowledge(); // acknowledge the packet
+      ccSend(); // send the acknowledgement-packet
+      _ccClear = true;
+      break;
+    default: // unknown packet received
+      Serial.print("ERROR - unknown packet received, key: ");
+      Serial.println(key);
+      break; 
+  }
+}
+
+
+
+/////////////////
+//--- STUFF ---//
+/////////////////
+
+// The blink method is called to let the system LED blink once for a cetrain time.
+void blink()
+{
+  digitalWrite(LEDOUTPUT, HIGH);
+  delay(_msBlink);
+  digitalWrite(LEDOUTPUT, LOW);
+  delay(_msBlink);
 }
 
 // The pushClientIds method pushes all clients' ids to the main server.
@@ -119,12 +201,5 @@ void pushClientIds()
     Serial.print(_clients[i]);
   }
   Serial.println();
-}
-
-// The ccHandle method does some stuff...
-void ccHandle()
-{
-  Serial.println("handle");
-  delay(500);
 }
 
