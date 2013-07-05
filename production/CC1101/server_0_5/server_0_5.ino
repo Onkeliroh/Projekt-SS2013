@@ -92,7 +92,6 @@ void loop()
   else // nothing has come in - ccPackets sendable
   {
     blink();
-    delay(100);
   }
 }
 
@@ -105,7 +104,15 @@ void loop()
 // The ccSend method sends the current ccPacket.
 void ccSend()
 {
-  if(_cc1101.sendData(_ccPacketHandler.getPacket()))
+  CCPACKET cp = _ccPacketHandler.getPacket();
+  Serial.print("OUT: ");
+    for (byte i = 0; i < cp.length; ++i)
+    {
+        Serial.print(cp.data[i]);
+        Serial.print("|");
+    }
+  Serial.println("");
+  if(_cc1101.sendData(cp))
   {
     blink();
     _ccClear = false;
@@ -139,7 +146,7 @@ void ccReceive()
     _packetAvailable = false; // clear the flag
     CCPACKET ccPacket; 
     detachInterrupt(0); // Disable wireless reception interrupt
-    if(_cc1101.receiveData(&ccPacket) > 0) // some data was received
+    if(_cc1101.receiveData(&ccPacket) > 0 && ccPacket.data[0] == _serverAddress) // some data was received
     {
       if (ccPacket.crc_ok && ccPacket.length > 1) // the whole ccPacket was properly received
       {
@@ -159,12 +166,12 @@ void ccHandle(byte key)
   {
     case 27: // Wheel: "turn_left"-event
       ccAcknowledge();
-      _ccPacketHandler.buildPacket((_ccPacket.data[1] + 1), 45); // new ccPacket to senders actuator with key 45
+      _ccPacketHandler.buildPacket((_ccPacket.data[1] - 1), 45); // new ccPacket to senders actuator with key 45
       ccSend();
       break;
     case 28: // Wheel: "turn_right"-event
       ccAcknowledge();
-      _ccPacketHandler.buildPacket((_ccPacket.data[1] + 1), 46); // new ccPacket to senders actuator with key 45
+      _ccPacketHandler.buildPacket((_ccPacket.data[1] - 1), 46); // new ccPacket to senders actuator with key 45
       ccSend();
       break;
     case 200: // acknowledge pacekt received
