@@ -1,2 +1,14 @@
 #type | name | byte
+e LED 1
+e Piezzo 2
+e Matrix 3
+
+
+# type | name | byte | name_element
+a On/Off 1 LED
+a Frequency 2 LED
+a Blink/Fade 3 LED
+a Color 4 LED
+
+
 

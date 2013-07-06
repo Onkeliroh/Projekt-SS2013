@@ -5,8 +5,11 @@ import kickflick.gui.Server_Main;
 public class server {
 	private kickflick.gui.Server_Main window;
 	public kickflick.utility.serial_lib serial_com;
+	public setting_parser set_pars = new setting_parser();
 	
 	private byte adress = 0;
+	
+	 
 	
 	public static void main(String[] args)
 	{ 
@@ -14,6 +17,7 @@ public class server {
 		
 		Server.init_communication();
 		Server.openWindow();
+		Server.read_settings();
 	}
 
 	public void openWindow()
@@ -63,6 +67,14 @@ public class server {
 		
 	}
 	
+	private void read_settings()
+	{	
+		try {
+			set_pars.parse_settings("res/keys");
+		} finally {} 
+		
+		
+	}
 	
 	//Getter
 	public kickflick.utility.serial_lib get_SerialCom() {
