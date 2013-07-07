@@ -1,5 +1,8 @@
 package kickflick.gui;
 
+import java.io.IOException;
+
+import kickflick.utility.serial_lib;
 import kickflick.utility.server;
 
 import org.eclipse.swt.widgets.Dialog;
@@ -24,6 +27,7 @@ public class communicator extends Dialog {
 	private Text data_compose_text;
 	
 	private server Server;
+	private Text message_text;
 
 	/**
 	 * Create the dialog.
@@ -58,7 +62,7 @@ public class communicator extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(748, 233);
+		shell.setSize(748, 561);
 		shell.setText(getText());
 		shell.setLayout(new GridLayout(1, false));
 		
@@ -102,16 +106,37 @@ public class communicator extends Dialog {
 		Group grpComposeData = new Group(shell, SWT.NONE);
 		grpComposeData.setText("Compose Message");
 		grpComposeData.setLayout(new GridLayout(1, false));
-		grpComposeData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpComposeData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		
 		data_compose_text = new Text(grpComposeData, SWT.BORDER);
 		data_compose_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Group grpIncomming = new Group(shell, SWT.NONE);
+		grpIncomming.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpIncomming.setText("Incomming!");
+		
+		message_text = new Text(grpIncomming, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
+		message_text.setBounds(10, 23, 716, 295);
 		
 		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
 		composite.setLayout(new GridLayout(2, false));
 		
 		Button send_btn = new Button(composite, SWT.NONE);
+		send_btn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				byte[] west_package = Server.compose_bytearray((byte) 0, (byte) 0, (byte) 0, (byte) 0);
+				try {
+					serial_lib.com_writer writer = new serial_lib.com_writer(Server.serial_com.get_outputstream(), west_package);
+					Thread thread = new Thread(writer);
+					
+					shell.getDisplay().asyncExec(thread);
+				} catch (IOException e1) {
+					System.err.println(e.toString());
+				}
+			}
+		});
 		GridData gd_send_btn = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		gd_send_btn.widthHint = 100;
 		gd_send_btn.minimumWidth = 100;
@@ -130,7 +155,4 @@ public class communicator extends Dialog {
 		close_btn.setText("Close");
 
 	}
-	
-	//ToDo:fill Combos with informations
-	//ToDo: generate Byte Array from Selection
 }

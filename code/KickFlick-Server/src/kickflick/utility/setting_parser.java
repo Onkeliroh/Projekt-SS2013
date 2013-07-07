@@ -3,12 +3,13 @@ package kickflick.utility;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class setting_parser {
-	Map< String , Byte > meta_keys; 
-	Map< String , Byte > element_keys;
-	Map< String , action_class > action_keys;
+	private Map< String , Byte > meta_keys = new HashMap< String , Byte >(); 
+	private Map< String , Byte > element_keys = new HashMap< String , Byte >();
+	private Map< String , action_class > action_keys = new HashMap< String , action_class >();
 	
 	final String default_path = "res/keys"; //ToDo set path 
 	
@@ -17,61 +18,76 @@ public class setting_parser {
 		parse_settings(default_path);
 	}
 	
+	@SuppressWarnings("null")
 	void parse_settings(final String file_path)
-	{
+	{		
 		try {
 			FileReader reader = new FileReader(file_path);
 			BufferedReader settings_reader = new BufferedReader(reader);
 			
 			String line = null;
 			
-			do 
+			while (( line = settings_reader.readLine() ) != null) 
 			{
-				line = settings_reader.readLine();
-				//line contains informations -> begin parsing
-				if (!line.isEmpty())
+//				System.out.println(line);
+				String[] parts = line.split("\\s");
+				
+				if ( parts.length >= 3)
 				{
-					String[] parts = line.split("\\s");
-					
 					switch (parts[0].charAt(0))
 					{
-					case '#'://nothing because it's a comment
-					case 'c':
-						//first = name, second = key
-						meta_keys.put( parts[1], parts[2].getBytes("US-ASCII")[0] );
-					case 'e':
-						//first = name, second = key
-						element_keys.put( parts[1], parts[2].getBytes("US-ASCII")[0] );
-					case 'a':
-						//first = name_element, second = name, third = key
-						if (element_keys.containsKey(parts[3]))
-							action_keys.put( parts[3], new action_class(parts[1], parts[2].getBytes("US-ASCII")[0]) );
+						case '#'://nothing because it's a comment
+						{
+							break;
+						}
+						case 'c':
+						{
+							//first = name, second = key
+							this.meta_keys.put( parts[1], parts[2].getBytes()[0] );
+							break;
+						}
+						case 'e':
+						{
+							//first = name, second = key
+							this.element_keys.put( parts[1], parts[2].getBytes()[0] );
+							break;
+						}
+						case 'a':
+						{
+							//first = name_element, second = name, third = key
+							if (element_keys.containsKey(parts[3]))
+								this.action_keys.put( parts[3], new action_class(parts[1], parts[2].getBytes()[0]) );
+							break;
+						}
 					}
 				}
-			}
-			while (line != null);
-
+			}	
 			
+			settings_reader.close();
+			reader.close();
 			
 		} catch (IOException e) {
 			System.err.println("Oops something went from, while reading the settings.");
 		}	
+		
+		System.out.println(this.element_keys);
+		System.out.println(this.action_keys);
 	}
 	
 	//Getter
 	Map<String,Byte> get_meta_keys()
 	{
-		return meta_keys;
+		return this.meta_keys;
 	}
 	
 	Map<String, Byte> get_element_keys()
 	{
-		return element_keys;
+		return this.element_keys;
 	}
 	
 	Map<String, action_class> get_action_keys()
 	{
-		return action_keys;
+		return this.action_keys;
 	}
 	
 	class action_class
@@ -83,6 +99,11 @@ public class setting_parser {
 		{
 			this.name_ = name;
 			this.key_ = key;
+		}
+		
+		public String toString()
+		{
+			return new String(this.name_ + " | " + this.key_);
 		}
 	}
 }

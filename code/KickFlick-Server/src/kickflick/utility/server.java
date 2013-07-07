@@ -15,9 +15,10 @@ public class server {
 	{ 
 		server Server = new server();
 		
+		
+		Server.read_settings();
 		Server.init_communication();
 		Server.openWindow();
-		Server.read_settings();
 	}
 
 	public void openWindow()
@@ -54,7 +55,7 @@ public class server {
 	
 	public void init_Listener()
 	{
-		
+		serial_com.initIOStream();
 	}
 	
 	public void request_devices()
@@ -62,9 +63,10 @@ public class server {
 		
 	}
 	
-	public void compose_bytearray(byte receiver, byte sender, byte key, byte data)
+	//TODO write
+	public byte[] compose_bytearray(byte receiver, byte sender, byte key, byte data)
 	{
-		
+		return null;
 	}
 	
 	private void read_settings()
@@ -72,7 +74,7 @@ public class server {
 		try {
 			set_pars.parse_settings("res/keys");
 		} finally {} 
-		
+		System.out.println(set_pars.get_element_keys());
 		
 	}
 	

@@ -126,18 +126,17 @@ public class serial_lib
 	public static class com_listener implements Runnable
 	{
 		serial_lib bums;
-//		Window windoof;
 		InputStream in;
-		public com_listener(serial_lib ding, /*Window win,*/ InputStream input)
+		public com_listener(serial_lib ding, InputStream input)
 		{
 			this.bums = ding;
-//			this.windoof = win;
 			this.in = input;
 		}
 		public void run() {
 			int data;
 	        byte[] buffer = new byte[1024];
-	        String str;
+	        @SuppressWarnings("unused")
+			String str = null;
 	      
 	        try
 	        {
@@ -150,7 +149,6 @@ public class serial_lib
 	                buffer[len++] = (byte) data;
 	            }
 	            str = new String(buffer,0,len);
-//	            windoof.write("in:\t" + str + "\n");
 	        }
 	        catch ( IOException e )
 	        {
@@ -174,7 +172,7 @@ public class serial_lib
 //            this.windoof = win;
         }
         
-        public com_writer ( OutputStream out, byte[] bytes/*, Window win*/ )
+        public com_writer ( OutputStream out, byte[] bytes )
         {
         	this.out = out;
         	this.str = bytes;
@@ -190,8 +188,6 @@ public class serial_lib
                 
                 this.out.write(NEW_LINE_ASCII);
                 this.out.flush();
-                
-//                windoof.write("out:\t" + str +"\n");
             }
             catch (Exception e)
             {
