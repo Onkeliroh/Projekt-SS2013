@@ -1,0 +1,11 @@
+﻿Text Summary
+
+Für die technische Umsetzung haben wir uns für Mikrocontroller der Arduino Reihe entschieden. Diese erfreuen sich größter Beliebtheit in der "Maker"-Szene und sind darüber hinaus kostengünstig. Die Datenübertragung erreichen wir mit Hilfe von „Panstamps“. Hierbei handelt es sich grundsätzlich um Arduinos mit einem zusätzlichen Funkmodul.
+
+Die Kommunikation hat sich dabei als die größte Herausforderung dieses Projekts herausgestellt. Um eine möglichst reibungsfreie Übermittlung der Daten zu gewährleisten und gleichzeitig das Datenaufkommen so gering wie möglich zu halten, haben wir ein eigenes Protokoll entwickelt. Es arbeitet hauptsächlich mit vorgefertigten Funktionen, die mittels Schlüsselbefehlen ausgeführt werden.
+ 
+Das Zusammenspiel der einzelnen Komponenten erwies sich als kritischster Punkt. Vom Computer bis zum Sensor muss alles kommunizieren und funktionieren. Der Server verwaltet alle <Devices> und gibt ihnen je nach Nutzer-Interaktion Befehle. Diese Befehle reichen von dem an- und ausschalten einer LED bis hin zum Abspielen von Melodien. 
+Die Persönlichkeiten der <Devices> werden von dem Server festgelegt. Er steuert zum Beispiel das Verhalten der <Devices> untereinander. Treffen sich zwei <Devices> entscheidet der Server anhand ihrer Persönlichkeiten was mit ihnen geschehen soll. So kann beispielsweise ein <Device> komplett die Persönlichkeit seines Nachbar erben oder zwei Knoten gleichen sich mit ihren Attributen plötzlich komplett an.
+Ein <Device> allen reagiert auf äussere Reize, wie Bewegung und Helligkeit. Auch hier kommt die Persönlichkeit zu tragen. So gefällt es zum Beispiel einem <Device> garnicht wenn man ihn in den Schatten tritt.
+
+Die Persönlichkeiten äußern sich in Form, Farbe und Klang. Jedes dieser Attribute ist einzeln vom Server steuerbar.

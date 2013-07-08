@@ -29,7 +29,7 @@ public class setting_parser {
 			
 			while (( line = settings_reader.readLine() ) != null) 
 			{
-//				System.out.println(line);
+//				System.out.println(line);t
 				String[] parts = line.split("\\s");
 				
 				if ( parts.length >= 3)

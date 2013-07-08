@@ -16,7 +16,7 @@ public class server {
 		server Server = new server();
 		
 		
-		Server.read_settings();
+//		Server.read_settings(); //TODO maybe not needed at all
 		Server.init_communication();
 		Server.openWindow();
 	}
