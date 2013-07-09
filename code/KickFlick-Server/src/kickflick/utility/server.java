@@ -64,9 +64,14 @@ public class server {
 	}
 	
 	//TODO write
-	public byte[] compose_bytearray(byte receiver, byte sender, byte key, byte data)
+	public byte[] compose_bytearray(byte receiver, byte sender, byte key, byte[] data)
 	{
-		return null;
+		byte[] dings = new byte[64];
+		dings[0] = receiver;
+		dings[1] = sender;
+		dings[2] = key;
+		//TODO memcopy für java?
+		return dings;
 	}
 	
 	private void read_settings()

@@ -1,7 +1,10 @@
 package kickflick.gui;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Iterator;
 
+import kickflick.utility.keys;
 import kickflick.utility.serial_lib;
 import kickflick.utility.server;
 
@@ -28,6 +31,7 @@ public class communicator extends Dialog {
 	
 	private server Server;
 	private Text message_text;
+	private Combo action_combo;
 
 	/**
 	 * Create the dialog.
@@ -67,48 +71,31 @@ public class communicator extends Dialog {
 		shell.setLayout(new GridLayout(1, false));
 		
 		Group grpComposeMessage = new Group(shell, SWT.NONE);
-		grpComposeMessage.setLayout(new GridLayout(4, false));
+		grpComposeMessage.setLayout(new GridLayout(2, false));
 		grpComposeMessage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		grpComposeMessage.setText("Compose Header");
 		
 		Label lblReciever = new Label(grpComposeMessage, SWT.NONE);
 		lblReciever.setText("Receiver");
 		
-		Label lblKey = new Label(grpComposeMessage, SWT.NONE);
-		lblKey.setText("Key");
-		
-		Label lblElement = new Label(grpComposeMessage, SWT.NONE);
-		lblElement.setText("Element");
-		
 		Label lblAction = new Label(grpComposeMessage, SWT.NONE);
-		lblAction.setText("Action");
+		lblAction.setText("Action Key");
 		
 		Combo receiver_combo = new Combo(grpComposeMessage, SWT.NONE);
 		GridData gd_receiver_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_receiver_combo.widthHint = 50;
 		receiver_combo.setLayoutData(gd_receiver_combo);
 		
-		Combo key_combo = new Combo(grpComposeMessage, SWT.READ_ONLY);
-		key_combo.setItems(new String[] {"test", "test", "test", "test"});
-		GridData gd_key_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_key_combo.widthHint = 50;
-		key_combo.setLayoutData(gd_key_combo);
-		
-		Combo element_combo = new Combo(grpComposeMessage, SWT.READ_ONLY);
-		element_combo.setItems(new String[] {"test", "test", "test", "test"});
-		GridData gd_element_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_element_combo.widthHint = 50;
-		element_combo.setLayoutData(gd_element_combo);
-		
-		Combo action_combo = new Combo(grpComposeMessage, SWT.NONE);
+		action_combo = new Combo(grpComposeMessage, SWT.READ_ONLY);
 		action_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Group grpComposeData = new Group(shell, SWT.NONE);
-		grpComposeData.setText("Compose Message");
+		grpComposeData.setText("Addtitionel Data");
 		grpComposeData.setLayout(new GridLayout(1, false));
 		grpComposeData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		
 		data_compose_text = new Text(grpComposeData, SWT.BORDER);
+		data_compose_text.setToolTipText("Insert additional data here.\nfor example colors! ");
 		data_compose_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Group grpIncomming = new Group(shell, SWT.NONE);
@@ -126,14 +113,28 @@ public class communicator extends Dialog {
 		send_btn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				byte[] west_package = Server.compose_bytearray((byte) 0, (byte) 0, (byte) 0, (byte) 0);
-				try {
-					serial_lib.com_writer writer = new serial_lib.com_writer(Server.serial_com.get_outputstream(), west_package);
-					Thread thread = new Thread(writer);
-					
-					shell.getDisplay().asyncExec(thread);
-				} catch (IOException e1) {
-					System.err.println(e.toString());
+				byte[] west_package = Server.compose_bytearray(
+						(byte) 2, 
+						(byte) 0, 
+						keys.values()[action_combo.getSelectionIndex()].get_key(),
+						new byte[2]
+						);
+				for (byte b : west_package )
+					System.out.format("%d", b);
+				
+//				System.out.println(new String(west_package,0));
+				if (Server.serial_com.is_connected())
+				{
+					try {
+						Server.serial_com.initIOStream();
+						serial_lib.com_writer writer = new serial_lib.com_writer(Server.serial_com.get_outputstream(), west_package);
+						Thread thread = new Thread(writer);
+						
+//						thread.run();
+						shell.getDisplay().asyncExec(thread);
+					} catch (IOException e1) {
+						System.err.println(e.toString());
+					}
 				}
 			}
 		});
@@ -153,6 +154,19 @@ public class communicator extends Dialog {
 		gd_close_btn.widthHint = 100;
 		close_btn.setLayoutData(gd_close_btn);
 		close_btn.setText("Close");
+		
+		//Custom creations
+		fill_action_combo();
 
+	}
+	public Combo getAction_combo() {
+		return action_combo;
+	}
+	
+	private void fill_action_combo() {
+		for (keys key : keys.values()) {
+			getAction_combo().add(key.get_name());
+		}
+		getAction_combo().select(0);
 	}
 }

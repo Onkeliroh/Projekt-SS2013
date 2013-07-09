@@ -163,20 +163,17 @@ public class serial_lib
     {
         private OutputStream out;
         private byte[] str;
-//        private Window windoof;
         
-        public com_writer ( OutputStream out, String string/*, Window win*/ )
-        {
-            this.out = out;
-            this.str = string.getBytes();
-//            this.windoof = win;
-        }
+//        public com_writer ( OutputStream out, String string )
+//        {
+//            this.out = out;
+//            this.str = string.getBytes();
+//        }
         
         public com_writer ( OutputStream out, byte[] bytes )
         {
         	this.out = out;
         	this.str = bytes;
-//        	this.windoof = win;
         }
         
         public void run ()
@@ -191,7 +188,7 @@ public class serial_lib
             }
             catch (Exception e)
             {
-                System.err.println("Failed to write data. (" + e.toString() + ")");
+                System.err.println("Failed to write data. com_writer (" + e.toString() + ")");
             }
         }
     }

@@ -1,5 +1,7 @@
 package kickflick.utility;
 
+import java.util.Enumeration;
+
 public enum keys {
     request_cs("Request C->S",(byte)001),	
     set_sc("Set S->C",(byte)002), //Client-ID	
@@ -51,5 +53,5 @@ public enum keys {
     
     public String get_name() { return this.name_; }
     public byte get_key() { return this.key_; }
-    
+
 }
