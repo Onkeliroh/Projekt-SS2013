@@ -33,7 +33,7 @@ public class serial_lib
     //some ascii values for for certain things
     final static int SPACE_ASCII = 32;
     final static int DASH_ASCII = 45;
-    final static int NEW_LINE_ASCII = 10;
+    final static int NEW_LINE_ASCII = 124;
 	
 	
 	//Constructor
