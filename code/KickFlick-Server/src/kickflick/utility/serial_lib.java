@@ -164,11 +164,11 @@ public class serial_lib
         private OutputStream out;
         private byte[] str;
         
-//        public com_writer ( OutputStream out, String string )
-//        {
-//            this.out = out;
-//            this.str = string.getBytes();
-//        }
+        public com_writer ( OutputStream out, String string )
+        {
+            this.out = out;
+            this.str = string.getBytes();
+        }
         
         public com_writer ( OutputStream out, byte[] bytes )
         {

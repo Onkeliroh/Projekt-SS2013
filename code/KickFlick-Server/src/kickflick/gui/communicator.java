@@ -119,10 +119,12 @@ public class communicator extends Dialog {
 						keys.values()[action_combo.getSelectionIndex()].get_key(),
 						new byte[2]
 						);
+				System.out.println(keys.values()[action_combo.getSelectionIndex()].get_key() );
+				
 				for (byte b : west_package )
 					System.out.format("%d", b);
+				System.out.format("\n");
 				
-//				System.out.println(new String(west_package,0));
 				if (Server.serial_com.is_connected())
 				{
 					try {
@@ -130,8 +132,8 @@ public class communicator extends Dialog {
 						serial_lib.com_writer writer = new serial_lib.com_writer(Server.serial_com.get_outputstream(), west_package);
 						Thread thread = new Thread(writer);
 						
-//						thread.run();
 						shell.getDisplay().asyncExec(thread);
+						
 					} catch (IOException e1) {
 						System.err.println(e.toString());
 					}
