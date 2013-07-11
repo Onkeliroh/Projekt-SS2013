@@ -33,6 +33,8 @@ public class Server_Main {
 	private server Server;
 	private Combo combo_port;
 	
+	
+	//unnessesary ?
 	public Server_Main()
 	{}
 
@@ -42,14 +44,6 @@ public class Server_Main {
 	public void open() {
 		Display display = Display.getDefault();
 		shlKickflickServer = new Shell();
-		shlKickflickServer.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if ( e.character == 'q') {
-					shlKickflickServer.close();
-				}
-			}
-		});
 		shlKickflickServer.setSize(574, 463);
 		shlKickflickServer.setText("KickFlick Server");
 		shlKickflickServer.setLayout(new GridLayout(1, false));
