@@ -4,8 +4,9 @@ public class ledChain {
 	private short Id_;
 	private personality Personality_;
 	private byte State_;
-	private color Color;
-
+	private color Color_;
+	private short Frequency_;
+	
 	// Constructors
 	public ledChain(short Id,
 					personality Personality,
@@ -18,9 +19,8 @@ public class ledChain {
 		personality defaultPersonality = null;
 		this.Personality_ = defaultPersonality;
 		this.State_ = 0;
-		color defaultColor;
-		this.Color = defaultColor;
-		this.Frequency = 0; 					// means: static light emission, no changes 
+		this.Color_.set_Color(null);
+		this.Frequency_ = 0;  					// means: static light emission, no changes 
 	}
 
 	// Setter
@@ -41,7 +41,7 @@ public class ledChain {
 	}
 
 	public void set_Frequency(short frequency) {
-		this.Frequency_ = Frequency;
+		this.Frequency_ = frequency;
 	}
 
 	// Getter

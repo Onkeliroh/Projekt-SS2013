@@ -30,7 +30,7 @@ public class accelerometer {
 		this.Id_ = Id;
 		
 		//TODO defaultPersonality? values?
-		personality defaultPersonality = null;		
+		personality defaultPersonality = new personality();		
 		this.Personality_ = defaultPersonality;
 		this.State_ = 0;
 		this.xIntensity_ = 0;

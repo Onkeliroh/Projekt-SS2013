@@ -4,7 +4,7 @@ public class lightsensor {
 	private short Id_ ;
 	private personality Personality_;
 	private byte State_;
-	private int intensity_;	
+	private int Intensity_;	
 
 
 	//Constructors
@@ -13,14 +13,13 @@ public class lightsensor {
 		this.Id_ = Id;
 		this.Personality_ = Personality;
 		this.State_ = State;
-		this-Intensity_ = Intensity;
+		this.Intensity_ = Intensity;
 	}
 	
 	public lightsensor (short Id)
 	{
 		this.Id_ = Id;
-		personality defaultPersonality;
-		this.Personality_ = defaultPersonality;
+		this.Personality_ = null;
 		this.State_ = 0;
 		this.Intensity_ = 0;
 	}
@@ -56,7 +55,7 @@ public class lightsensor {
 		return this.State_;
 	}
 
-	public short get_Intensity() {
+	public int get_Intensity() {
 		return this.Intensity_;
 	}
 

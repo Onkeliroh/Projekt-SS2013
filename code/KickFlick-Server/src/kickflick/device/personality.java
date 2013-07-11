@@ -1,3 +1,6 @@
+// TODO
+// check if we are going to implement a speaker, a vibrator and a LEDMatrix
+
 package kickflick.device;
 
 public class personality{
@@ -6,15 +9,20 @@ public class personality{
 	protected short State_;
 	private color Color_;
 	private short FrequencyLED_;
-	private short FrequencySpeaker_;
-	private short FrequencyVibrator_;
-	private short LEDDelay_;
+	// private short FrequencySpeaker_;
+	// private short FrequencyVibrator_;
+	// private short LEDDelay_;
 	
 	//Constructor
 	
 	public personality()
 	{
-		
+		this.Name_ = "Horst";
+		this.Id_ = 0;
+		this.State_ = 0;
+		this.Color_.set_Color(null);
+		this.FrequencyLED_ = 0;
+		// speaker, vibrator, leddealy?
 	}
 	
 	public personality(String name, short id, short state, color color_tmp, short fled, short fsp, short fvib, short ledd)
@@ -24,9 +32,9 @@ public class personality{
 		this.State_ = state;
 		this.Color_ = color_tmp;
 		this.FrequencyLED_ = fled;
-		this.FrequencySpeaker_ = fsp;
-		this.FrequencyVibrator_ = fvib;
-		this.LEDDelay_ = ledd;
+		// this.FrequencySpeaker_ = fsp;
+		// this.FrequencyVibrator_ = fvib;
+		// this.LEDDelay_ = ledd;
 	}
 	
 	public personality(String name, short id)
@@ -36,9 +44,9 @@ public class personality{
 		this.State_ = 0;
 		this.Color_ = new color();
 		this.FrequencyLED_ = 1;
-		this.FrequencySpeaker_ = 1;
-		this.FrequencyVibrator_ = 1;
-		this.LEDDelay_ = 0;
+		// this.FrequencySpeaker_ = 1;
+		// this.FrequencyVibrator_ = 1;
+		// this.LEDDelay_ = 0;
 	}
 	
 	//Setter
@@ -73,6 +81,7 @@ public class personality{
 		this.FrequencyLED_ = fled;
 	}
 	
+	/*
 	public void set_FrequencySpeaker (short fsp)
 	{
 		this.FrequencySpeaker_ = fsp;
@@ -82,6 +91,7 @@ public class personality{
 	{
 		this.FrequencyVibrator_ = fvib;
 	}
+	*/
 	
 	//Getter
 	
@@ -109,7 +119,7 @@ public class personality{
 	{
 		return this.FrequencyLED_;
 	}
-	
+	/*
 	public short get_FrequencySpeaker ()
 	{
 		return this.FrequencySpeaker_;
@@ -124,4 +134,5 @@ public class personality{
 	{
 		return this.LEDDelay_;
 	}
+	*/
 }
