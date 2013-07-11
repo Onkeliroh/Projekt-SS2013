@@ -104,8 +104,7 @@ void wheelInit()
   digitalWrite( hallSensor1, HIGH ); //To enable an internal 20K pullup resistor (see http://arduino.cc/en/Reference/DigitalWrite)
   PCintPort::attachInterrupt( hallSensor1, &rpm_interrupt1, CHANGE );  
   pinMode(hallSensor2, INPUT ); 
-  digitalWrite( hallSensor2, HIGH ); //To enable an internal 20K pullup resistor (see http://arduino.cc/en/Reference/DigitalWrite)
-      
+  digitalWrite( hallSensor2, HIGH ); //To enable an internal 20K pullup resistor (see http://arduino.cc/en/Reference/DigitalWrite)   
 }
 
 // The setup method gets called on start of the system.
@@ -122,7 +121,7 @@ void setup()
   Serial.println(_ccPacketHandler.getId());
   
   // initial test packet
-  delay(1000);
+  //delay(1000);
   //ccSend(0);
 }
 
@@ -141,47 +140,9 @@ void loop()
   }
   else // nothing has come in - ccPackets sendable
   {
-    blink();
+    //blink();
   }
-  if(sensorupdated) 
-  {     
-   PCintPort::detachInterrupt( hallSensor1 );
-  
-   for( int col=0; col <= 3; col++ )
-   {           
-     compare1 = compareArrays( trace_der1, steps, traceSize );
-     compare2 = compareArrays( trace_der2, steps, traceSize );
-     compare3 = compareArrays( trace_der3, steps, traceSize );
-     compare4 = compareArrays( trace_der4, steps, traceSize );
-              
-     if( compare1 || compare2 || compare3 || compare4 )
-     {
-       wheelEval(1); 
-       
-       break;
-     } 
-     else
-     { 
-       compare1 = compareArrays( trace_izq1, steps, traceSize );
-       compare2 = compareArrays( trace_izq2, steps, traceSize );
-       compare3 = compareArrays( trace_izq3, steps, traceSize );
-       compare4 = compareArrays( trace_izq4, steps, traceSize );
-  
-       if( compare1 || compare2 || compare3 || compare4 )
-       {    
-         wheelEval(2);                  
-          
-         break;  
-       } 
-       else
-       {
-         wheelEval(0);     
-       }  
-     }              
-   }         
-   PCintPort::attachInterrupt( hallSensor1, &rpm_interrupt1, CHANGE );  
-  }
-  sensorupdated = false; 
+  wheelEval();
 }
 
 
@@ -347,6 +308,55 @@ boolean compareArrays( const int *traceArray, int *readArray, int sizeArray )
   return areEqual; 
 }
 
+void wheelEval()
+{
+  if(sensorupdated) 
+  {     
+    PCintPort::detachInterrupt(hallSensor1);
+  
+    for(int col = 0; col != 3; ++col)
+    {           
+      compare1 = compareArrays(trace_der1, steps, traceSize);
+      compare2 = compareArrays(trace_der2, steps, traceSize);
+      compare3 = compareArrays(trace_der3, steps, traceSize);
+      compare4 = compareArrays(trace_der4, steps, traceSize);
+        
+      if(compare1 || compare2 || compare3 || compare4)
+      {
+        //wheelEval(1);
+        _ccPacketHandler.buildPacket(0, 27);
+        ccSend();     
+        _ccClear = true;  
+        break;
+      } 
+      else // neither left- nor right-turn
+      { 
+        compare1 = compareArrays(trace_izq1, steps, traceSize);
+        compare2 = compareArrays(trace_izq2, steps, traceSize);
+        compare3 = compareArrays(trace_izq3, steps, traceSize);
+        compare4 = compareArrays(trace_izq4, steps, traceSize);
+      
+        if(compare1 || compare2 || compare3 || compare4)
+        {    
+          //wheelEval(2); 
+          _ccPacketHandler.buildPacket(0, 28);
+          ccSend(); 
+          _ccClear = true;         
+          break;  
+        } 
+        /* 
+        else
+        {
+          wheelEval(0);     
+        } 
+        */ 
+      }  
+    }         
+    PCintPort::attachInterrupt(hallSensor1, &rpm_interrupt1, CHANGE);  
+  }
+  sensorupdated = false; 
+}
+
 // 
 void wheelEval(byte dir)
 {
@@ -356,7 +366,7 @@ void wheelEval(byte dir)
       if(wheel_direction != 1)
       {
         wheel_direction = 1;
-        ccSendWheelDirection();//turnRight();
+        ccSendWheelDirection(); //turnRight();
       }        
       digitalWrite( greenDirec, HIGH );
       digitalWrite( redDirec, LOW );
