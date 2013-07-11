@@ -19,7 +19,7 @@ public class lightsensor {
 	public lightsensor (short Id)
 	{
 		this.Id_ = Id;
-		this.Personality_ = null;
+		this.Personality_ = new personality();
 		this.State_ = 0;
 		this.Intensity_ = 0;
 	}

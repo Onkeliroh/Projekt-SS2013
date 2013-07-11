@@ -7,21 +7,24 @@ public class personality{
 	protected String Name_;
 	protected short Id_;
 	protected short State_;
-	private color Color_;
-	private short FrequencyLED_;
+	private color[] Colors_ = new color[4];
+	private short[] FrequencyLED_ = new short[4];
 	// private short FrequencySpeaker_;
 	// private short FrequencyVibrator_;
 	// private short LEDDelay_;
 	
-	//Constructor
 	
+	//Constructors
+	
+	// default
 	public personality()
 	{
 		this.Name_ = "Horst";
 		this.Id_ = 0;
 		this.State_ = 0;
-		this.Color_.set_Color(null);
-		this.FrequencyLED_ = 0;
+		
+		
+		this.FrequencyLED_ = ;
 		// speaker, vibrator, leddealy?
 	}
 	
