@@ -135,8 +135,7 @@ public class serial_lib
 		public void run() {
 			int data;
 	        byte[] buffer = new byte[1024];
-	        @SuppressWarnings("unused")
-			String str = null;
+	        String str = null;
 	      
 	        try
 	        {
@@ -148,7 +147,9 @@ public class serial_lib
 	                }
 	                buffer[len++] = (byte) data;
 	            }
+	            //TODO change to byte array
 	            str = new String(buffer,0,len);
+	            System.out.println(str);
 	        }
 	        catch ( IOException e )
 	        {
