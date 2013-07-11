@@ -13,11 +13,13 @@ public class accelerometer {
 						 personality Personality,
 						 byte State,
 						 short xIntensity,
+						 short yIntensity,
+						 short zIntensity
 						 )
 	{
 		this.Id_ = Id;
-		this.Personality_ = personality;
-		this.State_ = state;
+		this.Personality_ = Personality;
+		this.State_ = State;
 		this.xIntensity_ = xIntensity;
 		this.yIntensity_ = yIntensity;
 		this.zIntensity_ = zIntensity; 
@@ -27,12 +29,12 @@ public class accelerometer {
 	{
 		this.Id_ = Id;
 		
-		personality defaultPersonality;		
+		personality defaultPersonality = null;		
 		this.Personality_ = defaultPersonality;
 		this.State_ = 0;
-		this.xIntensity = 0;
-		this.yIntensity = 0;
-		this.zIntensity = 0;
+		this.xIntensity_ = 0;
+		this.yIntensity_ = 0;
+		this.zIntensity_ = 0;
 	}
 	
 	// Setter
@@ -49,11 +51,11 @@ public class accelerometer {
 	}
 	
 	public void set_yIntensity(short yIntensity) {
-		this.yIntensity = yIntensity;
+		this.yIntensity_ = yIntensity;
 	}	
 
 	public void set_zIntensity(short zIntensity) {
-		this.zIntensity = zIntensity;
+		this.zIntensity_ = zIntensity;
 	}
 
 	// Getter
