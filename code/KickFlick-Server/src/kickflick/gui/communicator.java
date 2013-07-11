@@ -1,8 +1,10 @@
 package kickflick.gui;
 
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
+
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.TooManyListenersException;
 
 import kickflick.utility.keys;
 import kickflick.utility.serial_lib;
@@ -23,7 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 
-public class communicator extends Dialog {
+public class communicator extends Dialog implements SerialPortEventListener {
 
 	protected Object result;
 	protected Shell shell;
@@ -49,6 +51,18 @@ public class communicator extends Dialog {
 	 * @return the result
 	 */
 	public Object open() {
+		if ( Server.serial_com.is_connected())
+		{
+			try {
+				Server.serial_com.initIOStream();
+				Server.serial_com.get_connected_Port().addEventListener(this);
+				Server.serial_com.get_connected_Port().notifyOnDataAvailable(true);
+			} catch (TooManyListenersException e1) {
+				System.err.println(e1.toString());
+			}	
+		}
+		
+		
 		createContents();
 		shell.open();
 		shell.layout();
@@ -113,23 +127,19 @@ public class communicator extends Dialog {
 		send_btn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				//TODO read messagae field, space as seperator for a byte
+				byte[] dings = get_data_composition();
+				
+				
 				byte[] west_package = Server.compose_bytearray(
 						(byte) 2, 
 						(byte) 0, 
 						keys.values()[action_combo.getSelectionIndex()].get_key(),
-						new byte[2]
+						dings
 						);
-//				System.out.println(keys.values()[action_combo.getSelectionIndex()].get_key() );
-				
-//				for (byte b : west_package )
-//					System.out.format("%d", b);
-//				System.out.format("\n");
 				
 				if (Server.serial_com.is_connected())
 				{
 					try {
-						Server.serial_com.initIOStream();
 						serial_lib.com_writer writer = new serial_lib.com_writer(Server.serial_com.get_outputstream(), west_package);
 						Thread thread = new Thread(writer);
 						
@@ -171,5 +181,34 @@ public class communicator extends Dialog {
 			getAction_combo().add(key.get_name());
 		}
 		getAction_combo().select(0);
+	}
+	
+	private byte[] get_data_composition()
+	{
+		String str = data_compose_text.getText();
+		
+		byte[] value = new byte[61];
+		if (str.length() > 0)
+		{
+			for ( int i = 0 ; str.length() > i ; ++i )
+			{
+				value[i] = (byte) str.charAt(i);
+			}
+		}
+			
+		return value;
+	}
+
+	@Override
+	public void serialEvent(SerialPortEvent arg0) {
+		try {
+//			System.out.println("INCOMMING!!!");
+			serial_lib.com_listener horcher = new serial_lib.com_listener(Server.serial_com, Server.serial_com.get_inputstream());
+//			horcher.run();
+			Thread read = new Thread(horcher);
+			shell.getDisplay().asyncExec(read);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

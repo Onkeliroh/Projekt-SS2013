@@ -70,7 +70,7 @@ public class server {
 		dings[0] = receiver;
 		dings[1] = sender;
 		dings[2] = key;
-		//TODO memcopy für java?
+		System.arraycopy(data, 0, dings, 3, data.length);
 		return dings;
 	}
 	
