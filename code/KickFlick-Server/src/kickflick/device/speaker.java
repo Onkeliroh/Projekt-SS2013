@@ -24,8 +24,8 @@ public class speaker {
 	public speaker (short Id)
 	{
 		this.Id_ = Id;
-		personality defaultPersonality;
-		this.Personality = defaultPersonality;
+		personality defaultPersonality = new personality();
+		this.Personality_ = defaultPersonality;
 		this.State_ = 00000000;
 		this.Pitch_ = 0;
 		this.Duration_ = 0;

@@ -113,6 +113,7 @@ public class communicator extends Dialog {
 		send_btn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
+				//TODO read messagae field, space as seperator for a byte
 				byte[] west_package = Server.compose_bytearray(
 						(byte) 2, 
 						(byte) 0, 

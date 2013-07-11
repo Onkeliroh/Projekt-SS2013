@@ -11,6 +11,12 @@ public class personality{
 	private short LEDDelay_;
 	
 	//Constructor
+	
+	public personality()
+	{
+		
+	}
+	
 	public personality(String name, short id, short state, color color_tmp, short fled, short fsp, short fvib, short ledd)
 	{
 		this.Name_ = name;

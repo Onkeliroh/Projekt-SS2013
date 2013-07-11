@@ -1,24 +1,12 @@
-package kickklick.device;
+package kickflick.device;
 
 public class ledChain {
 	private short Id_;
 	private personality Personality_;
 	private byte State_;
+	private color Color;
 
 	// Constructors
-	public ledChain(short Id, 
-					personality Personality,
-					byte State,
-					color Color,
-					short Frequency)
-	{
-		this.Id_ = Id;
-		this.Personality_ = Personality;
-		this.State_ = State;
-		this.Color_ = Color;
-		this.Frequency_ = Frequency;
-	}
-
 	public ledChain(short Id,
 					personality Personality,
 					byte State,
@@ -26,11 +14,12 @@ public class ledChain {
 					short Frequency)
 	{
 		this.Id_ = Id;
-		personality defaultPersonality;
-		this.personality_ = defaultPersonality;
+		//TODO defaultPersonality value?
+		personality defaultPersonality = null;
+		this.Personality_ = defaultPersonality;
 		this.State_ = 0;
 		color defaultColor;
-		this.Color_ = defaultColor;
+		this.Color = defaultColor;
 		this.Frequency = 0; 					// means: static light emission, no changes 
 	}
 
