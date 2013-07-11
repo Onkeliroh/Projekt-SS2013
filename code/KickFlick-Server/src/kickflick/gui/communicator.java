@@ -119,11 +119,11 @@ public class communicator extends Dialog {
 						keys.values()[action_combo.getSelectionIndex()].get_key(),
 						new byte[2]
 						);
-				System.out.println(keys.values()[action_combo.getSelectionIndex()].get_key() );
+//				System.out.println(keys.values()[action_combo.getSelectionIndex()].get_key() );
 				
-				for (byte b : west_package )
-					System.out.format("%d", b);
-				System.out.format("\n");
+//				for (byte b : west_package )
+//					System.out.format("%d", b);
+//				System.out.format("\n");
 				
 				if (Server.serial_com.is_connected())
 				{

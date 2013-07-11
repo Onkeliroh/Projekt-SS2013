@@ -217,7 +217,7 @@ public class rxtx_basic_lib
         }
     }
     
-    public byte[] create_package(byte key, byte id, byte data)
+/*    public byte[] create_package(byte key, byte id, byte data)
     {
     	byte[] header = new byte[]{key,00000000,id};
     	byte[] west_package = new byte[64];
@@ -226,7 +226,7 @@ public class rxtx_basic_lib
     	
     	return west_package;
     }
-
+*/
 	
 	//for a nice cleanup
 	public  boolean exit() throws IOException
