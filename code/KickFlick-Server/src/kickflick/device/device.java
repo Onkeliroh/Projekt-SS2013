@@ -25,7 +25,7 @@ public class device {
 		this.Personality_ = Personality;
 	}
 	
-	public void ser_State (byte State)
+	public void set_State (byte State)
 	{
 		this.State_ = State;
 	}
