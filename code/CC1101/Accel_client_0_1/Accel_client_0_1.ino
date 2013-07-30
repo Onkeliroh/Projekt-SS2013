@@ -1,13 +1,8 @@
-#include "LPD6803.h"
 #include "EEPROM.h"
 #include "cc1101.h"
 #include "ccPacketHandler.h"
-#include <TimerOne.h>
 
 #define LEDOUTPUT 4 // The LED is wired to the Arduino Output 4 (physical panStamp pin 19)
-#define CLOCKPIN 5 // 'yellow' wire
-#define DATAPIN 3 // 'green' wire
-
 
 
 /////////////////////
@@ -16,7 +11,6 @@
 
 CC1101 _cc1101; // The connection to the hardware chip CC1101 the RF Chip
 ccPacketHandler _ccPacketHandler; // In charge of building, reading and forwarding ccPackets
-LPD6803 _strip = LPD6803(50, DATAPIN, CLOCKPIN); // Set the first variable to the NUMBER of pixels. 20 = 20 pixels in a row
 
 
 
@@ -26,14 +20,14 @@ LPD6803 _strip = LPD6803(50, DATAPIN, CLOCKPIN); // Set the first variable to th
 
 byte _syncWord = (19, 9); // The syncWord of sender and receiver must be the same
 byte _serverAddress = 0;
-byte _clientAddress = 1;
+byte _clientAddress = 3;
 
 int _msBlink = 100; // blink-time in ms
-int _pillarsHead = 0;
+int _x, _y, _z;
+int _threshold = 125;
 
 boolean _packetAvailable = false; // a flag that a wireless packet has been received
 boolean _ccClear = true; // false as long as send packet has not been confirmed yet 
-boolean _flagRainbow = false; // true := rainbow()
 
 CCPACKET _ccPacket;
 
@@ -68,12 +62,11 @@ void cc1101Init()
   attachInterrupt(0, cc1101signalsInterrupt, FALLING); // Enable wireless reception interrupt
 }
 
-// Initializing the LED-strip
-void stripInit()
+void accelInit()
 {
-  _strip.setCPUmax(50);
-  _strip.begin();
-  _strip.show();
+  int _x = analogRead(0);
+  int _y = analogRead(1);
+  int _z = analogRead(2);  
 }
 
 // The setup method gets called on start of the system.
@@ -82,15 +75,15 @@ void setup()
   Serial.begin(115200); // 9600 // 38400
   Serial.println("Setting up client-node..."); 
   pinMode(LEDOUTPUT, OUTPUT); // setup the blinker output
-  digitalWrite(LEDOUTPUT, LOW);   
+  digitalWrite(LEDOUTPUT, LOW);
   cc1101Init();
-  stripInit();
+  accelInit();
   _ccPacketHandler.setId(_clientAddress); // set ccPacketHandlers id
   Serial.print("... ccPacketHandler startet with id "); 
   Serial.println(_ccPacketHandler.getId());
   
   // initial test packet
-  delay(1000);
+  //delay(1000);
   //ccSend(0);
 }
 
@@ -109,16 +102,10 @@ void loop()
   }
   else // nothing has come in - ccPackets sendable
   {
-    //blink();
-    delay(250);
+    blink();
+    delay(100);
   }
-  if(_flagRainbow)
-  {
-    Serial.println("playing default pattern...");
-    //colorWipe(Color(random(0, 63), random(0, 63), random(0, 63)));
-    caterpillar();
-    //rainbow();    
-  }
+  accelRead();
 }
 
 
@@ -168,9 +155,8 @@ void ccReceive()
     _packetAvailable = false; // clear the flag
     CCPACKET ccPacket;
     detachInterrupt(0); // Disable wireless reception interrupt
-    if(_cc1101.receiveData(&ccPacket) > 0 && ccPacket.data[0] == _clientAddress) // some data was received
+    if(_cc1101.receiveData(&ccPacket) > 0) // some data was received
     {
-      Serial.println(ccPacket.data[0]);
       if (ccPacket.crc_ok && ccPacket.length > 1) // the whole ccPacket was properly received
       {
         ccHandle(_ccPacketHandler.evaluatePacket(ccPacket)); // set as ccPacket and evaluate its content
@@ -187,15 +173,6 @@ void ccHandle(byte key)
   Serial.println(key);
   switch (key)
   {
-    case 45: // start colorWipe-ing
-      flipRainbow(); // set the flag for rainbow()
-      ccAcknowledge();
-      break;
-    case 46: // stop colorWipe-ing
-      flipRainbow(); // set the flag for rainbow()
-      colorWipe(Color(0, 0, 0));
-      ccAcknowledge();
-      break;
     case 200: // acknowledge packet received
       break;
     case 201: // acknowledge packet correct
@@ -205,7 +182,6 @@ void ccHandle(byte key)
       Serial.println("ERROR - false acknowledge received! Resending previous package...");
       break;
     case 255: // test packet received
-      //flipRainbow();
       ccAcknowledge();
       break;
     default: // unknown packet received
@@ -224,92 +200,41 @@ void ccAcknowledge()
 }
 
 
-/////////////////////
-//--- LED-STRIP ---//
-/////////////////////
 
-//
-void caterpillar() 
+/////////////////////////
+//--- ACCELEROMETER ---//
+/////////////////////////
+
+void accelRead()
 {
-  _strip.setPixelColor(_pillarsHead, Color(18, 36, 0));// get_Color(0, 63, 0));
-  _strip.setPixelColor(_pillarsHead + 1, Color(18, 36, 0));// get_Color(0, 63, 0));
-  _strip.setPixelColor(_pillarsHead + 2, Color(18, 36, 0));// get_Color(0, 63, 0));
-  _strip.setPixelColor(_pillarsHead + 3, Color(18, 36, 0));// get_Color(0, 63, 0));
+  int x = analogRead(0);
+  int y = analogRead(1);
+  int z = analogRead(2);
   
-  _strip.setPixelColor(_pillarsHead - 1, Color(0, 0, 0));// get_Color(63, 0, 0));
-   
-  if((_pillarsHead % 50) == 0)
-    _strip.setPixelColor(49, Color(0, 0, 0));// get_Color(63, 0, 0));
+  int deltaX = _x - x;
+  int deltaY = _y - y;
+  int deltaZ = _z - z;
   
-  _pillarsHead = (++_pillarsHead) % _strip.numPixels();
-  _strip.show();
+  _x = x;
+  _y = y;
+  _z = z;
+  
+  accelEval(deltaX, deltaY, deltaZ);
 }
 
-// The colorWipe method switched all LEDs to one given color
-void colorWipe(uint16_t c)
+void accelEval(int dX, int dY, int dZ)
 {
-  for(int i = 0; i < _strip.numPixels(); ++i)
-  {
-    _strip.setPixelColor(i, c);
-  }
-  _strip.show();
+  if (maximum(dX, dY, dZ) > _threshold) //|| minimum(dX, dY, dZ) < (_threshold * (-1)))
+    accelShake();
 }
 
-void flipRainbow()
+void accelShake()
 {
-  if(_flagRainbow)
-    _flagRainbow = false;
-  else
-    _flagRainbow = true;
+  Serial.println("shake! shake! shake!");
+  _ccPacketHandler.buildPacket(0, 31);
+  ccSend();
+  delay(250);
 }
-
-// The rainbow method drives every LED through all possible colors
-void rainbow()//uint8_t wait)
-{
-  for (int j = 0; j < 96 * 3; ++j) // 3 cycles of all 96 colors in the wheel
-  {
-    for (int i = 0; i < _strip.numPixels(); ++i) 
-    {
-      _strip.setPixelColor(i, Wheel((i + j) % 96));      
-    }  
-    _strip.show();   // write all the pixels out
-  }
-}
-
-// Input a value 0 to 127 to get a color value.
-// The colours are a transition r - g -b - back to r
-unsigned int Wheel(byte WheelPos)
-{
-  byte r, g, b;
-  switch(WheelPos >> 5)
-  {
-    case 0:
-      r = 31 - WheelPos % 32;   //Red down
-      g = WheelPos % 32;      // Green up
-      b = 0;                  //blue off
-      break; 
-    case 1:
-      g = 31 - WheelPos % 32;  //green down
-      b = WheelPos % 32;      //blue up
-      r = 0;                  //red off
-      break; 
-    case 2:
-      b = 31 - WheelPos % 32;  //blue down 
-      r = WheelPos % 32;      //red up
-      g = 0;                  //green off
-      break; 
-  }
-  return(Color(r,g,b));
-}
-
-// Create a 16 bit color value from R, G, B
-unsigned int Color(byte r, byte g, byte b)
-{
-  //Take the lowest 5 bits of each value and append them end to end
-  return(((unsigned int)g & 0x1F ) << 10 | ((unsigned int)b & 0x1F) << 5 | (unsigned int)r & 0x1F);
-}
-
-
 
 /////////////////
 //--- STUFF ---//
@@ -322,5 +247,15 @@ void blink()
   delay(_msBlink);
   digitalWrite(LEDOUTPUT, LOW);
   delay(_msBlink);
+}
+
+int maximum(int a, int b, int c)
+{
+  return max(max(a, b), max(b, c));
+}
+
+int minimum(int a, int b, int c)
+{
+  return min(min(a, b), min(b, c));
 }
 

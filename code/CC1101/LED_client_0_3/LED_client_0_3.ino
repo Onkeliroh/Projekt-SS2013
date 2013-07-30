@@ -29,7 +29,10 @@ byte _serverAddress = 0;
 byte _clientAddress = 1;
 
 int _msBlink = 100; // blink-time in ms
-int _pillarsHead = 0;
+
+int _pillarHead = 0;
+int _pillarLength = 4;
+unsigned int _pillarColor = randomColor();
 
 boolean _packetAvailable = false; // a flag that a wireless packet has been received
 boolean _ccClear = true; // false as long as send packet has not been confirmed yet 
@@ -109,16 +112,10 @@ void loop()
   }
   else // nothing has come in - ccPackets sendable
   {
-    //blink();
-    delay(250);
+    blink();
+    //delay(100);    
   }
-  if(_flagRainbow)
-  {
-    Serial.println("playing default pattern...");
-    //colorWipe(Color(random(0, 63), random(0, 63), random(0, 63)));
-    caterpillar();
-    //rainbow();    
-  }
+  //caterpillarFw();
 }
 
 
@@ -187,13 +184,26 @@ void ccHandle(byte key)
   Serial.println(key);
   switch (key)
   {
-    case 45: // start colorWipe-ing
-      flipRainbow(); // set the flag for rainbow()
+    case 45: // backward caterpillar
       ccAcknowledge();
+      for(int i = 0; i != 3; ++i)
+      {
+        caterpillarBw();
+        delay(200);
+      }
       break;
-    case 46: // stop colorWipe-ing
-      flipRainbow(); // set the flag for rainbow()
-      colorWipe(Color(0, 0, 0));
+    case 46: // forward caterpillar
+      ccAcknowledge();
+      for(int i = 0; i != 3; ++i)
+      {
+        caterpillarFw();
+        delay(200);
+      }
+      break;
+    case 47: // chanche caterpillar's color
+      caterpillarChangeColor();
+      _strip.setPixelColor(_pillarHead, _pillarColor);
+      _strip.show();
       ccAcknowledge();
       break;
     case 200: // acknowledge packet received
@@ -228,21 +238,62 @@ void ccAcknowledge()
 //--- LED-STRIP ---//
 /////////////////////
 
-//
-void caterpillar() 
+void caterpillarChangeColor()
 {
-  _strip.setPixelColor(_pillarsHead, Color(18, 36, 0));// get_Color(0, 63, 0));
-  _strip.setPixelColor(_pillarsHead + 1, Color(18, 36, 0));// get_Color(0, 63, 0));
-  _strip.setPixelColor(_pillarsHead + 2, Color(18, 36, 0));// get_Color(0, 63, 0));
-  _strip.setPixelColor(_pillarsHead + 3, Color(18, 36, 0));// get_Color(0, 63, 0));
+  _pillarColor = randomColor();
+  Serial.print("COLOR: ");
+  Serial.println(_pillarColor);
+}
+
+void caterpillarFw() 
+{  
+  if(_pillarHead != _strip.numPixels()) // head not at the end
+  {
+    _strip.setPixelColor(_pillarHead, _pillarColor); 
+    ++_pillarHead;
+  }
+  else // head at the end
+  {
+    _pillarHead = 0;
+  }
   
-  _strip.setPixelColor(_pillarsHead - 1, Color(0, 0, 0));// get_Color(63, 0, 0));
-   
-  if((_pillarsHead % 50) == 0)
-    _strip.setPixelColor(49, Color(0, 0, 0));// get_Color(63, 0, 0));
-  
-  _pillarsHead = (++_pillarsHead) % _strip.numPixels();
+  if(_pillarHead < _pillarLength) // head not across the border
+  {
+    _strip.setPixelColor((_strip.numPixels() - (_pillarLength - _pillarHead)), Color(0, 0, 0));
+  }
+  else // head across the border
+  {
+    _strip.setPixelColor((_pillarHead - _pillarLength), Color(0, 0, 0));
+  }
   _strip.show();
+}
+
+void caterpillarBw()
+{  
+  if(_pillarHead != -1) // head not at the end
+  {
+    _strip.setPixelColor(_pillarHead, _pillarColor); 
+    --_pillarHead;
+  }
+  else // head at the end
+  {
+    _pillarHead = _strip.numPixels() - 1;
+  }
+  
+  if(_pillarHead < (_strip.numPixels() - _pillarLength)) // head not across the border
+  {
+    _strip.setPixelColor((_pillarHead + _pillarLength), Color(0, 0, 0));
+  }
+  else
+  {
+    _strip.setPixelColor((_pillarLength - (_strip.numPixels() - _pillarHead)), Color(0, 0, 0));
+  }
+  _strip.show();
+}
+
+unsigned int randomColor()
+{
+  return Color(random(0, 63), random(0, 63), random(0, 63));
 }
 
 // The colorWipe method switched all LEDs to one given color
@@ -299,7 +350,7 @@ unsigned int Wheel(byte WheelPos)
       g = 0;                  //green off
       break; 
   }
-  return(Color(r,g,b));
+  return(Color(r, g, b));
 }
 
 // Create a 16 bit color value from R, G, B
