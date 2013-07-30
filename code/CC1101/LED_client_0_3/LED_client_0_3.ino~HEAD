@@ -113,7 +113,9 @@ void loop()
   else // nothing has come in - ccPackets sendable
   {
     blink();
+    //delay(100);    
   }
+  //caterpillarFw();
 }
 
 
@@ -183,12 +185,20 @@ void ccHandle(byte key)
   switch (key)
   {
     case 45: // backward caterpillar
-      caterpillarBw();
       ccAcknowledge();
+      for(int i = 0; i != 3; ++i)
+      {
+        caterpillarBw();
+        delay(200);
+      }
       break;
     case 46: // forward caterpillar
-      caterpillarFw();
       ccAcknowledge();
+      for(int i = 0; i != 3; ++i)
+      {
+        caterpillarFw();
+        delay(200);
+      }
       break;
     case 47: // chanche caterpillar's color
       caterpillarChangeColor();

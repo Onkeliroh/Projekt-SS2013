@@ -24,7 +24,7 @@ byte _clientAddress = 3;
 
 int _msBlink = 100; // blink-time in ms
 int _x, _y, _z;
-int _threshold = 125;
+int _threshold = 200;
 
 boolean _packetAvailable = false; // a flag that a wireless packet has been received
 boolean _ccClear = true; // false as long as send packet has not been confirmed yet 
@@ -83,7 +83,7 @@ void setup()
   Serial.println(_ccPacketHandler.getId());
   
   // initial test packet
-  //delay(1000);
+  delay(1000);
   //ccSend(0);
 }
 
@@ -233,7 +233,7 @@ void accelShake()
   Serial.println("shake! shake! shake!");
   _ccPacketHandler.buildPacket(0, 31);
   ccSend();
-  delay(250);
+  delay(500);
 }
 
 /////////////////
