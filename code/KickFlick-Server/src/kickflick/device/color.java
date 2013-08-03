@@ -5,7 +5,7 @@ public class color{
 	private short R;
 	private short G;
 	private short B;
-	private short Intensity_;
+	private short A;
 	
 	// Color Enumeration
 	public enum Color {
@@ -34,11 +34,11 @@ public class color{
 
 	
 	//Constructors
-	public color(short r, short g, short b, short Intensity) {
+	public color(short r, short g, short b, short a) {
 		this.R = r;
 		this.G = g;
 		this.B = b;
-		this.Intensity_ = Intensity;
+		this.A = a;
 	}
 	
 	public color(short[] color)	{
@@ -46,7 +46,7 @@ public class color{
 	}
 	
 	public color(){
-		set_Color(new short[]{0,0,0,0});
+		set_Color(new short[]{0,0,0,255});
 	}
 	
 	public color(color Color)
@@ -59,7 +59,7 @@ public class color{
 		this.R = (short)i;
 		this.G = (short)j;
 		this.B = (short)k;
-		this.Intensity_ = (short)l;
+		this.A = (short)l;
 	}
 
 	//Methods - Setter	
@@ -85,8 +85,8 @@ public class color{
 		this.B = color_tmp[2];
 	}
 	
-	public void set_Intensity (short Intensity) {
-		this.Intensity_ = Intensity;
+	public void set_Intensity (short a) {
+		this.A = a;
 	}
 	
 	//Methods - Getter
@@ -106,12 +106,12 @@ public class color{
 	}
 	
 	public short get_Intensity() {
-		return this.Intensity_;
+		return this.A;
 	}
 	
 	public short[] get_Color()
 	{
-		short[] dings = {this.R,this.G,this.B,this.Intensity_}; 
+		short[] dings = {this.R,this.G,this.B,this.A}; 
 		return dings;
 	}
 	

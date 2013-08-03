@@ -1,17 +1,12 @@
-// TODO
-// check if we are going to implement a speaker, a vibrator and a LEDMatrix
-
 package kickflick.device;
+
+import java.awt.Color;
 
 public class personality{
 	protected String Name_;
 	protected short Id_;
 	protected short State_;
 	private color[] Colors_ = new color[4];
-	private short[] FrequencyLED_ = new short[4];
-	// private short FrequencySpeaker_;
-	// private short FrequencyVibrator_;
-	// private short LEDDelay_;
 	
 	
 	//Constructors
@@ -19,25 +14,25 @@ public class personality{
 	// default
 	public personality()
 	{
-		this.Name_ = "Horst";
+		this.Name_ = "undefined";
 		this.Id_ = 0;
 		this.State_ = 0;
-		
-		
-		this.FrequencyLED_ = ;
-		// speaker, vibrator, leddealy?
+		this.Colors_ = new color[] {new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150)};
 	}
 	
-	public personality(String name, short id, short state, color color_tmp, short fled, short fsp, short fvib, short ledd)
+	public personality(String name, short id, short state, color[] color_tmp)
 	{
 		this.Name_ = name;
 		this.Id_ = id;
 		this.State_ = state;
-		this.Color_ = color_tmp;
-		this.FrequencyLED_ = fled;
-		// this.FrequencySpeaker_ = fsp;
-		// this.FrequencyVibrator_ = fvib;
-		// this.LEDDelay_ = ledd;
+		this.Colors_ = color_tmp;
+	}
+	
+	public personality(String name, short id, short state)
+	{
+		this.Name_ = name;
+		this.Id_ = id;
+		this.State_ = state;
 	}
 	
 	public personality(String name, short id)
@@ -45,11 +40,7 @@ public class personality{
 		this.Name_ = name;
 		this.Id_ = id;
 		this.State_ = 0;
-		this.Color_ = new color();
-		this.FrequencyLED_ = 1;
-		// this.FrequencySpeaker_ = 1;
-		// this.FrequencyVibrator_ = 1;
-		// this.LEDDelay_ = 0;
+		this.Colors_ = new color[4];
 	}
 	
 	//Setter
@@ -69,32 +60,27 @@ public class personality{
 			this.State_ = state;
 		else
 		{
-			//ToDo: Error
+			//TODO: Error
 		}
 	}
 	
+	//sets the color of the current state
 	public void set_Color (color Color)
 	{
 		//this.Color_.set_Color(Color.get_Color());
-		this.Color_ = new color(Color);
+		this.Colors_[this.State_] = new color(Color);
 	}
 	
-	public void set_FrequencyLED (short fled)
+	//sets the color of a state
+	public void set_Color ( color Color, short state)
 	{
-		this.FrequencyLED_ = fled;
+		try	{
+			this.Colors_[state] = Color;
+		}
+		finally	{
+			System.err.println("Error while setting Color. Maybe wrong state.");
+		}
 	}
-	
-	/*
-	public void set_FrequencySpeaker (short fsp)
-	{
-		this.FrequencySpeaker_ = fsp;
-	}
-	
-	public void set_FrequencyVibrator (short fvib)
-	{
-		this.FrequencyVibrator_ = fvib;
-	}
-	*/
 	
 	//Getter
 	
@@ -115,27 +101,11 @@ public class personality{
 	
 	public color get_Color ()
 	{
-		return this.Color_;
+		return this.Colors_[this.State_];
 	}
 	
-	public short get_FrequencyLED ()
+	public color get_Color ( short state )
 	{
-		return this.FrequencyLED_;
+		return this.Colors_[state];
 	}
-	/*
-	public short get_FrequencySpeaker ()
-	{
-		return this.FrequencySpeaker_;
-	}
-	
-	public short get_FrequencyVibrator ()
-	{
-		return this.FrequencyVibrator_;
-	}
-	
-	public short get_LEDDelay ()
-	{
-		return this.LEDDelay_;
-	}
-	*/
 }
