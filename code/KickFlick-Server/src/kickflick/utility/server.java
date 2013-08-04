@@ -1,12 +1,20 @@
 package kickflick.utility;
 
-import kickflick.gui.Server_Main;
+import java.util.ArrayList;
+import java.util.List;
 
-public class server {
+import kickflick.gui.Server_Main;
+import kickflick.device.device;;
+
+public class server{
 	private kickflick.gui.Server_Main window;
 	public kickflick.utility.serial_lib serial_com;
 	public setting_parser set_pars = new setting_parser();
+	public parser input_parser = new parser();
 	
+	protected List<device> devices = new ArrayList<device>();
+	
+	//maybe unnecessary
 	private byte adress = 0;
 	
 	 
@@ -21,7 +29,7 @@ public class server {
 		Server.openWindow();
 	}
 
-	public void openWindow()
+	private void openWindow()
 	{
 		try {
 			window = new Server_Main();
@@ -41,6 +49,9 @@ public class server {
 	{
 		try {
 			serial_com.connect(str, Baut);
+			
+			//adds listener to server
+			serial_com.get_connected_Port().addEventListener(input_parser);
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}
@@ -60,10 +71,9 @@ public class server {
 	
 	public void request_devices()
 	{
-		
+		//TODO write
 	}
-	
-	//TODO write
+
 	public byte[] compose_bytearray(byte receiver, byte sender, byte key, byte[] data)
 	{
 		byte[] dings = new byte[64];

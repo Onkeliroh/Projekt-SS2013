@@ -202,7 +202,7 @@ public class communicator extends Dialog implements SerialPortEventListener {
 	@Override
 	public void serialEvent(SerialPortEvent arg0) {
 		try {
-//			System.out.println("INCOMMING!!!");
+			System.out.println("INCOMMING!!!");
 			serial_lib.com_listener horcher = new serial_lib.com_listener(Server.serial_com, Server.serial_com.get_inputstream());
 //			horcher.run();
 			Thread read = new Thread(horcher);
