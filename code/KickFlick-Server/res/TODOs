@@ -1,0 +1,4 @@
+TODOs
+
+- make sure that all the running reader and writer thread in the communicator are beeing close befor closeing window
+- use "setDaeomn(bool)" as often as possible -> safes cleaning up
