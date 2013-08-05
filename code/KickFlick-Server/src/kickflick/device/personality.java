@@ -3,13 +3,17 @@ package kickflick.device;
 import java.awt.Color;
 
 public class personality{
-	protected String Name_;
-	protected short Id_;
-	protected short State_;
+	private String Name_;
+	private short Id_;
+	private short State_;
 	private color[] Colors_ = new color[4];
+	private Byte[] pattern_;
 	
 	
 	//Constructors
+	
+	//TODO build timer 
+	//TODO come up with a idea about switching state depending on timer
 	
 	// default
 	public personality()
@@ -18,6 +22,15 @@ public class personality{
 		this.Id_ = 0;
 		this.State_ = 0;
 		this.Colors_ = new color[] {new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150)};
+	}
+	
+	public personality(String name, short id, short state, color[] color_tmp, Byte[] patterns)
+	{
+		this.Name_ = name;
+		this.Id_ = id;
+		this.State_ = state;
+		this.Colors_ = color_tmp;
+		this.pattern_ = patterns;
 	}
 	
 	public personality(String name, short id, short state, color[] color_tmp)
@@ -82,6 +95,21 @@ public class personality{
 		}
 	}
 	
+	public void set_pattern(Byte pattern)
+	{
+		this.pattern_[this.State_] = pattern;
+	}
+	
+	public void set_pattern( Byte pattern, short state )
+	{
+		this.pattern_[state] = pattern;
+	}
+	
+	public void set_pattern (Byte[] pattern)
+	{
+		this.pattern_ = pattern;
+	}
+	
 	//Getter
 	
 	public String get_Name ()
@@ -107,5 +135,15 @@ public class personality{
 	public color get_Color ( short state )
 	{
 		return this.Colors_[state];
+	}
+	
+	public Byte get_pattern ( short state )
+	{
+		return this.pattern_[state];
+	}
+	
+	public Byte get_pattern ()
+	{
+		return this.pattern_[this.State_];
 	}
 }

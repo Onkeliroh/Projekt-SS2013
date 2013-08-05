@@ -15,7 +15,8 @@ public class server{
 	protected List<device> devices = new ArrayList<device>();
 	
 	//maybe unnecessary
-	private byte adress = 0;
+	//adress can't be 0 because 0 stands for every client
+	private byte adress = 1;
 	
 	 
 	
