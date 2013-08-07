@@ -5,10 +5,8 @@
 #include <TimerOne.h>
 
 #define LEDOUTPUT 4 // The LED is wired to the Arduino Output 4 (physical panStamp pin 19)
-#define CLOCKPIN 5 // 'yellow' wire
-#define DATAPIN 3 // 'green' wire
-
-
+#define CLOCKPIN  5 // 'yellow' wire
+#define DATAPIN   3 // 'green' wire 
 
 /////////////////////
 //--- INSTANCES ---//
@@ -18,15 +16,13 @@ CC1101 _cc1101; // The connection to the hardware chip CC1101 the RF Chip
 ccPacketHandler _ccPacketHandler; // In charge of building, reading and forwarding ccPackets
 LPD6803 _strip = LPD6803(50, DATAPIN, CLOCKPIN); // Set the first variable to the NUMBER of pixels. 20 = 20 pixels in a row
 
-
-
 ///////////////////
 //--- MEMBERS ---//
 ///////////////////
 
 byte _syncWord = (19, 9); // The syncWord of sender and receiver must be the same
-byte _serverAddress = 0;
-byte _clientAddress = 1;
+byte _serverAddress = 1;
+byte _clientId = 2;
 
 int _msBlink = 100; // blink-time in ms
 
@@ -64,7 +60,7 @@ void cc1101Init()
   _cc1101.init(); // initialize the RF Chip
   _cc1101.setCarrierFreq(CFREQ_868); // Set carrier frequency to default 868 or 915 MHz
   _cc1101.setSyncWord(&_syncWord, false);  
-  _cc1101.setDevAddress(_clientAddress, false); // this device address need to match the target address in the sender
+  _cc1101.setDevAddress(_clientId, false); // this device address need to match the target address in the sender
   _cc1101.enableAddressCheck(); // you can skip this line, because the default is to have the address check enabled
   _cc1101.setRxState();
   Serial.println("... RF Chip initialized"); 
@@ -88,7 +84,7 @@ void setup()
   digitalWrite(LEDOUTPUT, LOW);   
   cc1101Init();
   stripInit();
-  _ccPacketHandler.setId(_clientAddress); // set ccPacketHandlers id
+  _ccPacketHandler.setId(_clientId); // set ccPacketHandlers id
   Serial.print("... ccPacketHandler startet with id "); 
   Serial.println(_ccPacketHandler.getId());
   
@@ -163,54 +159,53 @@ void ccReceive()
     _packetAvailable = false; // clear the flag
     CCPACKET ccPacket;
     detachInterrupt(0); // Disable wireless reception interrupt
-    if(_cc1101.receiveData(&ccPacket) > 0 && ccPacket.data[0] == _clientAddress) // some data was received
+    if(_cc1101.receiveData(&ccPacket) > 0 && ccPacket.RECEIVER_ID == _clientId) // some data was received
     {
-      Serial.println(ccPacket.data[0]);
       if (ccPacket.crc_ok && ccPacket.length > 1) // the whole ccPacket was properly received
       {
-        ccHandle(_ccPacketHandler.evaluatePacket(ccPacket)); // set as ccPacket and evaluate its content
+        _ccPacketHandler.printPacket(ccPacket);
+        ccHandle(ccPacket); // set as ccPacket and evaluate its content
       }
-    }        
+    }         
     attachInterrupt(0, cc1101signalsInterrupt, FALLING); // Enable wireless reception interrupt
   }
 }
 
+
 // The ccHandle method decides what happens due to incoming packets.
-void ccHandle(byte key)
+void ccHandle(CCPACKET ccPacket)
 {
   Serial.print("handling key ");
-  Serial.println(key);
-  switch (key)
+  Serial.println(ccPacket.ADMINKEY);
+  
+  switch (ccPacket.ADMINKEY)
   {
-    case 45: // backward caterpillar
+    case BACKWARD_CATERPILLAR: 
       caterpillarBw();
       ccAcknowledge();
       break;
-    case 46: // forward caterpillar
+    case FORWARD_CATERPILLAR: 
       caterpillarFw();
       ccAcknowledge();
       break;
-    case 47: // chanche caterpillar's color
+    case CHANGE_COLOR: 
       caterpillarChangeColor();
       _strip.setPixelColor(_pillarHead, _pillarColor);
       _strip.show();
       ccAcknowledge();
       break;
-    case 200: // acknowledge packet received
+    case ACKNOWLEDGE_REQUEST: 
       break;
-    case 201: // acknowledge packet correct
+    case ACKNOWLEDGE_RESPONSE:
       _ccClear = true;
       break;
-    case 202: // acknowledge packet incorrect
-      Serial.println("ERROR - false acknowledge received! Resending previous package...");
-      break;
-    case 255: // test packet received
+    case TEST: 
       //flipRainbow();
       ccAcknowledge();
       break;
     default: // unknown packet received
       Serial.print("ERROR - unknown packet received, key: ");
-      Serial.println(key);
+      Serial.println(ccPacket.ADMINKEY);
       break; 
   }
 }
