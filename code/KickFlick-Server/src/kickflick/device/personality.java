@@ -1,6 +1,8 @@
 package kickflick.device;
 
-import java.awt.Color;
+import kickflick.device.color;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class personality{
 	private String Name_;
@@ -8,6 +10,8 @@ public class personality{
 	private short State_;
 	private color[] Colors_ = new color[4];
 	private Byte[] pattern_;
+	
+	private Timer timer_ = new Timer(true); 
 	
 	
 	//Constructors
@@ -22,6 +26,8 @@ public class personality{
 		this.Id_ = 0;
 		this.State_ = 0;
 		this.Colors_ = new color[] {new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150)};
+		
+		this.timer_.schedule(this.checkState(), 30000);
 	}
 	
 	public personality(String name, short id, short state, color[] color_tmp, Byte[] patterns)
@@ -145,5 +151,10 @@ public class personality{
 	public Byte get_pattern ()
 	{
 		return this.pattern_[this.State_];
+	}
+
+	public TimerTask checkState() {
+		// TODO if nothing happens
+		return null;		
 	}
 }
