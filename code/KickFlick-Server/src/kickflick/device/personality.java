@@ -11,6 +11,8 @@ public class personality{
 	private color[] Colors_ = new color[4];
 	private Byte[] pattern_;
 	
+	private device device_;
+	
 	private Timer timer_ = new Timer(true); 
 	
 	
@@ -22,12 +24,23 @@ public class personality{
 	// default
 	public personality()
 	{
+		this.device_ = null;
 		this.Name_ = "undefined";
 		this.Id_ = 0;
 		this.State_ = 0;
 		this.Colors_ = new color[] {new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150)};
 		
 		this.timer_.schedule(this.checkState(), 30000);
+	}
+	
+	public personality(device dev, String name, short id, short state, color[] color_tmp, Byte[] patterns)
+	{
+		this.device_ = dev;
+		this.Name_ = name;
+		this.Id_ = id;
+		this.State_ = state;
+		this.Colors_ = color_tmp;
+		this.pattern_ = patterns;
 	}
 	
 	public personality(String name, short id, short state, color[] color_tmp, Byte[] patterns)
@@ -63,6 +76,12 @@ public class personality{
 	}
 	
 	//Setter
+	
+	public void set_device(device dev)
+	{
+		this.device_ = dev;
+	}
+	
 	public void set_Name(String name)
 	{
 		this.Name_ = name;
@@ -118,6 +137,11 @@ public class personality{
 	
 	//Getter
 	
+	publicdevice get_device()
+	{
+		return this.device_;
+	}
+	
 	public String get_Name ()
 	{
 		return this.Name_;
@@ -155,6 +179,7 @@ public class personality{
 
 	public TimerTask checkState() {
 		// TODO if nothing happens
+		System.out.println("Hello World");
 		return null;		
 	}
 }
