@@ -137,7 +137,7 @@ public class personality{
 	
 	//Getter
 	
-	publicdevice get_device()
+	public device get_device()
 	{
 		return this.device_;
 	}
