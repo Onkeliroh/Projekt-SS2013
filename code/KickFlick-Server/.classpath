@@ -14,11 +14,6 @@
 	<classpathentry kind="lib" path="/usr/share/eclipse/plugins/org.eclipse.ui.workbench_3.105.0.v20130529-1406.jar" sourcepath="/usr/share/eclipse/plugins/org.eclipse.ui.workbench.source_3.104.0.v20130204-164612.jar"/>
 	<classpathentry kind="lib" path="/usr/share/eclipse/plugins/com.ibm.icu.source_50.1.1.v201304230130.jar" sourcepath="/usr/share/eclipse/plugins/com.ibm.icu.source_4.4.2.v20110823.jar"/>
 	<classpathentry kind="lib" path="/usr/share/eclipse/plugins/org.eclipse.ui.forms_3.6.0.v20130517-0139.jar" sourcepath="/usr/share/eclipse/plugins/org.eclipse.ui.forms.source_3.5.200.v20120705-114351.jar"/>
-	<classpathentry kind="lib" path="/home/onkeliroh/eclipse_indigo/plugins/rxtx/RXTXcomm.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/onkeliroh/eclipse_indigo/plugins/rxtx"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/rxtx/RXTXcomm.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="KickFlick-Server/lib/rxtx"/>
