@@ -41,6 +41,7 @@
 /*Ids*/
 #define BROADCAST               0
 #define SERVER_01               1
+#define LED_CLIENT_01           2
 
 
 
@@ -52,18 +53,11 @@ class ccPacketHandler
 
         //--- TORS ---//
 
-        /// default c-tor
-
         ccPacketHandler();
-
-        /// copy c-tor
-
-        ccPacketHandler(byte id);
 
         /// default d-tor
 
-        virtual ~ccPacketHandler();
-
+        ~ccPacketHandler();
 
 
         //--- STUFF ---//
@@ -72,27 +66,23 @@ class ccPacketHandler
 
         void clearPacket();
 
-        void testPacket();
+        void testPacket(byte sender);
 
-        void testPacket(byte receiver);
+        void testPacket(byte receiver, byte sender);
 
-        void buildPacket(byte receiver, byte adminKey);
+        void buildPacket(byte receiver, byte sender, byte adminKey);
 
         void addToPacket(byte data);
 
-        void buildRSSIPacket(byte rawRSSI, byte neighbourID);
+        void buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourID);
 
         /// setters
-
-        void setId(byte id);
 
         void setHash(byte ccHash);
 
         void setBuildCounter(int counter);
 
         /// getters
-
-        byte getId();
 
         byte getHash();
 
@@ -125,45 +115,33 @@ class ccPacketHandler
 
         CCPACKET getPacket();
 
-        byte getReceiver();
+        byte getPacketReceiver();
 
-        byte getSender();
+        byte getPacketSender();
 
         byte getAdminKey();
 
         byte getPackNum();
+      
+        byte getPacketRSSI();
         
-        //--- RECEIVING ---//
-
-        /// setters
-
-
-
-        /// getters
-
-
-
-        byte printPacket(CCPACKET ccPacket); 
-        //prints the received data on screen 
-
-        boolean hashMatches(CCPACKET ccPacket);
+        void printPacket(); 
+       
+        boolean hashMatches();
 
         void acknowledge();
 
         byte ccHash();
 
-    protected:
+        boolean _ccClear;
 
     private:
-
         CCPACKET _ccPacket; /// length of 6 is minimum, since: 0 := receiver's address, 1 := sender's address, 2 := administration-key, 3,4,...,63 := payload
-
-        byte _id; /// determines the operation-mode: 1 := server, 2,...,255 := client
-
+        
         byte _hash; /// for checking the acknowledge packet
 
         int _buildCounter; /// used for building custom ccPackets
-
+        
 };
 
 

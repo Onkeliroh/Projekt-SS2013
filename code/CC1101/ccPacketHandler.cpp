@@ -1,42 +1,22 @@
 #include "ccPacketHandler.h"
 
-#include "ccpacket.h"
-
-#include "cc1101.h"
-
-
 
 //--- TORS ---//
 
-/// default c-tor
+/// constructor
 
 ccPacketHandler::ccPacketHandler()
 
 {
 
     _ccPacket.length = CCPACKETHANDLER_LENGTH; 
-
-    _id = 255; /// last possible id, since id-value is a byte
-
-}
-
-
-
-/// copy c-tor
-
-ccPacketHandler::ccPacketHandler(byte id)
-
-{
-
-    _ccPacket.length = 10; /// maximum is 61, due to ccpacket.h's lines 33 to 53
-
-    _id = id; /// set id to given id
+    
 
 }
 
 
 
-/// default d-tor
+/// destructor
 
 ccPacketHandler::~ccPacketHandler()
 
@@ -67,7 +47,7 @@ void ccPacketHandler::clearPacket()
 
 
 
-void ccPacketHandler::testPacket()
+void ccPacketHandler::testPacket(byte sender)
 
 {
 
@@ -81,7 +61,7 @@ void ccPacketHandler::testPacket()
 
     setReceiver(SERVER_01); /// setting receiver
 
-    setSender(_id); /// setting sender
+    setSender(sender); /// setting sender
 
     setAdminKey(TEST); /// setting administration key
 
@@ -91,7 +71,7 @@ void ccPacketHandler::testPacket()
 
 
 
-void ccPacketHandler::testPacket(byte receiver)
+void ccPacketHandler::testPacket(byte receiver, byte sender)
 
 {
 
@@ -105,7 +85,7 @@ void ccPacketHandler::testPacket(byte receiver)
 
     setReceiver(receiver); /// setting receiver
 
-    setSender(_id); /// setting sender
+    setSender(sender); /// setting sender
 
     setAdminKey(TEST); /// setting administration key - default := 255
 
@@ -114,7 +94,7 @@ void ccPacketHandler::testPacket(byte receiver)
 }
 
 
-void ccPacketHandler::buildPacket(byte receiver, byte adminKey) 
+void ccPacketHandler::buildPacket(byte receiver, byte sender, byte adminKey) 
 
 {
 
@@ -122,7 +102,7 @@ void ccPacketHandler::buildPacket(byte receiver, byte adminKey)
 
     setReceiver(receiver); /// set given receiver
 
-    setSender(_id); /// set sender
+    setSender(sender); /// set sender
 
     setAdminKey(adminKey); /// set given administration key
 
@@ -150,13 +130,13 @@ void ccPacketHandler::addToPacket(byte data)    //modified by Jenny
 
 }
 
-void ccPacketHandler::buildRSSIPacket(byte rawRSSI, byte neighbourID)
+void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourID)
 {
     clearPacket(); /// clear the packet
 
     setReceiver(SERVER_01); 
 
-    setSender(_id); 
+    setSender(sender); 
 
     setAdminKey(NEAR_NODE_EVENT);
 
@@ -167,10 +147,8 @@ void ccPacketHandler::buildRSSIPacket(byte rawRSSI, byte neighbourID)
     setBuildCounter(5); /// set build counter to next free byte's position    
 }
 
-boolean ccPacketHandler::hashMatches(CCPACKET ccPacket)
+boolean ccPacketHandler::hashMatches()
 {
-    setPacket(ccPacket);
-
     if(getHash() == ccHash())
 
     	return true;
@@ -206,16 +184,6 @@ byte ccPacketHandler::ccHash()
 
 /// setters
 
-void ccPacketHandler::setId(byte id)
-
-{
-
-    _id = id;
-
-}
-
-
-
 void ccPacketHandler::setHash(byte ccHash)
 
 {
@@ -238,16 +206,6 @@ void ccPacketHandler::setBuildCounter(int counter)
 
 /// getters
 
-byte ccPacketHandler::getId()
-
-{
-
-    return _id;
-
-}
-
-
-
 byte ccPacketHandler::getHash()
 
 {
@@ -265,7 +223,6 @@ int ccPacketHandler::getBuildCounter()
     return _buildCounter;
 
 }
-
 
 
 //--- SENDING ---//
@@ -297,6 +254,7 @@ void ccPacketHandler::setReceiver(byte receiver)
 {
 
     _ccPacket.RECEIVER_ID = receiver; /// set receiver to a given receiver
+    
 
 }
 
@@ -358,7 +316,7 @@ CCPACKET ccPacketHandler::getPacket()
 
 
 
-byte ccPacketHandler::getReceiver()
+byte ccPacketHandler::getPacketReceiver()
 
 {
 
@@ -368,7 +326,7 @@ byte ccPacketHandler::getReceiver()
 
 
 
-byte ccPacketHandler::getSender()
+byte ccPacketHandler::getPacketSender()
 
 {
 
@@ -396,21 +354,20 @@ byte ccPacketHandler::getPackNum()
 
 }
 
-//--- RECEIVING ---//
 
-/// setters
-
-
-
-/// getters
-
-
-
-byte ccPacketHandler::printPacket(CCPACKET ccPacket)
+byte ccPacketHandler::getPacketRSSI()
 
 {
-    setPacket(ccPacket);
 
+    return _ccPacket.rssi;
+
+}
+
+
+
+void ccPacketHandler::printPacket()
+
+{
     for (byte i = 0; i < _ccPacket.length; ++i)
     {
 
@@ -431,9 +388,9 @@ void ccPacketHandler::acknowledge()
 
 {
 
-    byte sender = getSender(); /// save sender
+    byte sender = getPacketSender(); /// save sender
 
-    byte receiver = getReceiver(); /// save receiver
+    byte receiver = getPacketReceiver(); /// save receiver
 
     byte ulf = ccHash(); /// hash the data
 
