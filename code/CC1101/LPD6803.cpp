@@ -70,7 +70,7 @@ void LedOut() {
       
       if(BitCount == 16)    //Last bit?
       {
-        LedIndex++;        //Move to next LED
+        LedIndex++;        //Move to next LEDs
         if (LedIndex < numLEDs) //Still more leds to go or are we done?
         {
           BitCount=0;      //Start from the fist bit of the next LED
