@@ -6,6 +6,7 @@ import java.util.TooManyListenersException;
 import kickflick.utility.server;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.SWT;
@@ -61,8 +62,15 @@ public class Server_Main {
 		MenuItem mntmCommunicator = new MenuItem(menu, SWT.NONE);
 		mntmCommunicator.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				communicator comm_cator = new communicator(shlKickflickServer, 0, Server); 
-				comm_cator.open();
+				if (Server.serial_com.is_connected())
+				{
+					communicator comm_cator = new communicator(shlKickflickServer, 0, Server);
+					comm_cator.open();
+				}
+				else
+				{
+					System.err.println("Can't open communicator without beeing connected to a serial port.");
+				}
 			}
 		});
 		mntmCommunicator.setText("Communicator");

@@ -9,7 +9,7 @@ public class personality{
 	private short Id_;
 	private short State_;
 	private color[] Colors_ = new color[4];
-	private Byte[] pattern_;
+	private byte[] pattern_;
 	
 	private device device_;
 	
@@ -33,7 +33,7 @@ public class personality{
 		this.timer_.schedule(this.checkState(), 30000);
 	}
 	
-	public personality(device dev, String name, short id, short state, color[] color_tmp, Byte[] patterns)
+	public personality(device dev, String name, short id, short state, color[] color_tmp, byte[] patterns)
 	{
 		this.device_ = dev;
 		this.Name_ = name;
@@ -43,7 +43,7 @@ public class personality{
 		this.pattern_ = patterns;
 	}
 	
-	public personality(String name, short id, short state, color[] color_tmp, Byte[] patterns)
+	public personality(String name, short id, short state, color[] color_tmp, byte[] patterns)
 	{
 		this.Name_ = name;
 		this.Id_ = id;
@@ -120,17 +120,17 @@ public class personality{
 		}
 	}
 	
-	public void set_pattern(Byte pattern)
+	public void set_pattern(byte pattern)
 	{
 		this.pattern_[this.State_] = pattern;
 	}
 	
-	public void set_pattern( Byte pattern, short state )
+	public void set_pattern( byte pattern, short state )
 	{
 		this.pattern_[state] = pattern;
 	}
 	
-	public void set_pattern (Byte[] pattern)
+	public void set_pattern (byte[] pattern)
 	{
 		this.pattern_ = pattern;
 	}
@@ -167,19 +167,32 @@ public class personality{
 		return this.Colors_[state];
 	}
 	
-	public Byte get_pattern ( short state )
+	public byte get_pattern ( short state )
 	{
 		return this.pattern_[state];
 	}
 	
-	public Byte get_pattern ()
+	public byte get_pattern ()
 	{
 		return this.pattern_[this.State_];
 	}
 
 	public TimerTask checkState() {
 		// TODO if nothing happens
-		System.out.println("Hello World");
+		// TODO write to serial
 		return null;		
+	}
+	
+	public void restart_timer()
+	{
+		//stopping
+		if ( this.timer_ != null)
+		{
+			this.timer_.cancel();
+			this.timer_.purge();
+		}
+		
+		//starting
+		this.timer_.schedule(this.checkState(), 30000);
 	}
 }

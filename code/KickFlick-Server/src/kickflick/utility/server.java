@@ -12,7 +12,7 @@ public class server{
 	public setting_parser set_pars = new setting_parser();
 	public parser input_parser = new parser();
 	
-	protected List<device> devices = new ArrayList<device>();
+	private List<device> devices = new ArrayList<device>();
 	
 	//maybe unnecessary
 	//adress can't be 0 because 0 stands for every client
@@ -101,5 +101,15 @@ public class server{
 	
 	public byte get_server_adress()	{
 		return adress;
+	}
+	
+	public List<device> get_devices()
+	{
+		return this.devices;
+	}
+	
+	public device get_device(int index)
+	{
+		return this.devices.get(index);
 	}
 }

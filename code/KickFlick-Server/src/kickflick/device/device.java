@@ -5,12 +5,12 @@ public class device {
 	private personality Personality_;
 	private byte State_;
 	
-	private Byte sender_adr_;
-	private Byte receiver_adr_;
+	private byte sender_adr_;
+	private byte receiver_adr_;
 	
 	//Constructors
 	
-	public device ( short Id, personality Personality, Byte state, Byte sender, Byte receiver)
+	public device ( short Id, personality Personality, byte state, byte sender, byte receiver)
 	{
 		this.Id_ = Id;
 		this.Personality_ = Personality;
