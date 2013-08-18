@@ -6,6 +6,7 @@ package kickflick.utility;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,7 +26,7 @@ public class serial_lib
 	private  boolean connected = false;
 	
 	//the serialport this instance is connected to
-	private  SerialPort serialPort;
+	private SerialPort serialPort;
 	
 	//the timeout value for connecting with the port
     final static int TIMEOUT = 2000;
@@ -125,37 +126,38 @@ public class serial_lib
 
 	public static class com_listener implements Runnable
 	{
-		serial_lib bums;
-		InputStream in;
+		private serial_lib bums_;
+		private InputStream in_;
+		private byte[] Buffer_ = new byte[1024];
+		
 		public com_listener(serial_lib ding, InputStream input)
 		{
-			this.bums = ding;
-			this.in = input;
+			this.bums_ = ding;
+			this.in_ = input;
 		}
 		public void run() {
 			int data;
-	        byte[] buffer = new byte[1024];
-	        String str = null;
-	      
+			
 	        try
 	        {
 	            int len = 0;
-	            while ( ( data = in.read()) > -1 )
+	            while ( ( data = this.in_.read()) > -1 )
 	            {
 	                if ( data == '\n' ) {
 	                    break;
 	                }
-	                buffer[len++] = (byte) data;
+	                this.Buffer_[len++] = (byte) data;
 	            }
-	            //TODO change to byte array
-	            str = new String(buffer,0,len);
-	            System.out.println(str);
 	        }
 	        catch ( IOException e )
 	        {
 	            e.printStackTrace();
 	            System.exit(-1);
 	        }   
+		}
+		public byte[] get_buffer()
+		{
+			return this.Buffer_;
 		}
 	}
 	

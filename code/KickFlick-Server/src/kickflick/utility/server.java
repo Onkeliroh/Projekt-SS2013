@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kickflick.gui.Server_Main;
-import kickflick.device.device;;
+import kickflick.device.device;
 
 public class server{
 	private kickflick.gui.Server_Main window;
 	public kickflick.utility.serial_lib serial_com;
 	public setting_parser set_pars = new setting_parser();
-	public parser input_parser = new parser();
+	public parser input_parser = new parser(this);
 	
 	private List<device> devices = new ArrayList<device>();
 	
