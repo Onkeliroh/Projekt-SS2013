@@ -1,29 +1,24 @@
 #include "analogComp.h"
 #include "EEPROM.h"
 #include "ccServer.h"
-
+#include "SerialCommand.h"
 
 #define SERVER_ID 1
 
-<<<<<<< HEAD
-#define enableRFChipInterrupt() attachInterrupt(0, RFChipInterrupt, FALLING);
-#define disableRFChipInterrupt() detachInterrupt(0);
-=======
+#define NORMAL_FLOW 1
+#undef NORMAL_FLOW   //comment this line out when not doing tests
+
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()    detachInterrupt(0);
->>>>>>> origin/master
 
 /////////////////////
 //--- INSTANCES ---//
 /////////////////////
 
-<<<<<<< HEAD
-CCSERVER _server = CCSERVER(SERVER_ID);
-boolean _packetAvailable = false;
-=======
 CCSERVER  _server = CCSERVER(SERVER_ID);
+SerialCommand SCmd;   
+
 boolean   _packetAvailable = false;
->>>>>>> origin/master
 
 //////////////////////
 //--- INTERRUPTS ---//
@@ -33,11 +28,7 @@ boolean   _packetAvailable = false;
 void RFChipInterrupt()
 
 {
-<<<<<<< HEAD
-    _packetAvailable = true;
-=======
     _packetAvailable = true;          
->>>>>>> origin/master
 
 }
 
@@ -46,11 +37,7 @@ void RFChipInterrupt()
 void setup()
 {
     _server.setup();
-<<<<<<< HEAD
-    enableRFChipInterrupt();
-=======
     enableRFChipInterrupt();   
->>>>>>> origin/master
 }
 
 
@@ -62,64 +49,32 @@ byte incomingByte;
 
 void loop()
 {
-<<<<<<< HEAD
-    if(_packetAvailable)
-=======
-    if(_packetAvailable) 
->>>>>>> origin/master
-    {
-        disableRFChipInterrupt();
-        
-        if(_server.ccReceive())
+    #ifdef NORMAL_FLOW		
+		
+        if(_packetAvailable) 
         {
-            _server.ccPrintPacket();
-<<<<<<< HEAD
-            _server.ccHandle();
-=======
-            _server.ccHandle(); 
->>>>>>> origin/master
-             
-        }
+            disableRFChipInterrupt();
         
-        if(!_server.isSender())
+            if(_server.ccReceive())
+            {
+                _server.ccHandle(); 
+            
+            }
+        
+            _packetAvailable = false;   
+            enableRFChipInterrupt();
+    
+         }
+        else 
         {
-            _server.ccPrintPacket();
+            _server.ledBlink();
         }
-        
-<<<<<<< HEAD
-        _packetAvailable = false;
-        enableRFChipInterrupt();
     
-    }
-    else
-=======
-        _packetAvailable = false;   
-        enableRFChipInterrupt();
-    
-    }
-    else 
->>>>>>> origin/master
-    {
-        _server.ledBlink();
-    }
+    #endif
   
-    while (Serial.available())
-    {
-        // read the incoming byte:
-        incomingByte = Serial.read();
-<<<<<<< HEAD
-        // say what you got:
-        Serial.print("I received: ");
-=======
-        // say what you got:   
-        Serial.print("I received: ");    
->>>>>>> origin/master
-        Serial.println(incomingByte);
-   
-    }
+    SCmd.readSerial();
+    SCmd.showBuffer();
+    SCmd.clearBuffer();
+     
+    delay(5000);
 }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> origin/master
