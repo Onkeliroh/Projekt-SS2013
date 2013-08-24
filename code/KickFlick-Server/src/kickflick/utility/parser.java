@@ -16,7 +16,44 @@ public class parser implements SerialPortEventListener {
 	
 	public void parse(byte[] arg)
 	{
-		
+		System.out.println("Parser received message: " + arg.toString());
+		if (arg.length > 2) // must contain at least sender receiver and key
+		{
+			if ( !this.Server_.get_devices().isEmpty())
+			{
+				
+			}
+			else
+			{
+	//			this.Server_.get_devices().add(new device(new personality(),(byte) 0, )
+			}
+			
+			switch (arg[2])
+			{
+				
+			}
+		}
+		else {
+			System.err.println("Parser received empty message!");
+		}
+	}
+	
+	public int find_device(byte address)
+	{
+		for ( int i = 0; i < this.Server_.get_devices().size() ; ++i)
+		{
+			if ( this.Server_.get_device(i).get_sender_address() == address)
+			{
+				return i;
+			}
+			
+			if ( this.Server_.get_device(i).get_receiver_address() == address)
+			{
+				return i;
+			}
+		}
+		//found nothing
+		return -1;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package kickflick.device;
 
 public class device {
-	protected short Id_ ;
 	private personality Personality_;
 	private byte State_;
 	
@@ -10,9 +9,8 @@ public class device {
 	
 	//Constructors
 	
-	public device ( short Id, personality Personality, byte state, byte sender, byte receiver)
+	public device (personality Personality, byte state, byte sender, byte receiver)
 	{
-		this.Id_ = Id;
 		this.Personality_ = Personality;
 		this.State_ = state;
 		this.sender_adr_ = sender;
@@ -21,27 +19,24 @@ public class device {
 		this.Personality_.set_device(this);
 	}
 	
-	public device (short Id, personality Personality, byte State)
+	public device (personality Personality, byte State)
 	{
-		this.Id_ = Id;
 		this.Personality_ = Personality;
 		this.State_ = State;
 		
 		this.Personality_.set_device(this);
 	}
 	
-	public device ( short id, byte State)
+	public device (byte State)
 	{
-		this.Id_ = id;
 		this.State_ = State;
 		this.Personality_ = new personality();
 		
 		this.Personality_.set_device(this);
 	}
 	
-	public device (short Id)
+	public device ()
 	{
-		this.Id_ = Id;
 		this.State_ = 00000000;
 		this.Personality_ = new personality();
 		
@@ -61,11 +56,17 @@ public class device {
 		this.State_ = State;
 	}
 	
-	//Getter
-	public short get_Id ()
+	public void set_sender(byte sender)
 	{
-		return this.Id_;
+		this.sender_adr_ = sender;
 	}
+	
+	public void set_receiver(byte receiver)
+	{
+		this.receiver_adr_ = receiver;
+	}
+	
+	//Getter
 	
 	public personality get_Personality ()
 	{
@@ -75,5 +76,15 @@ public class device {
 	public byte get_State ()
 	{
 		return this.State_;
+	}
+	
+	public byte get_sender_address()
+	{
+		return this.sender_adr_;
+	}
+	
+	public byte get_receiver_address()
+	{
+		return this.receiver_adr_;
 	}
 }

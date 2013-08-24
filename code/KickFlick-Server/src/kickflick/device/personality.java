@@ -13,10 +13,7 @@ public class personality{
 	
 	private device device_;
 	
-	private Timer timer_ = new Timer(true); 
-	
-	private Timer timer_ = new Timer(true); 
-	
+	private Timer timer_ = new Timer(true); 	
 	
 	//Constructors
 	
@@ -33,7 +30,6 @@ public class personality{
 		this.Colors_ = new color[] {new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150)};
 		
 		this.timer_.schedule(this.checkState(), 30000);
-<<<<<<< HEAD
 	}
 	
 	public personality(device dev, String name, short id, short state, color[] color_tmp, byte[] patterns)
@@ -44,8 +40,6 @@ public class personality{
 		this.State_ = state;
 		this.Colors_ = color_tmp;
 		this.pattern_ = patterns;
-=======
->>>>>>> origin/master
 	}
 	
 	public personality(String name, short id, short state, color[] color_tmp, byte[] patterns)
@@ -184,7 +178,6 @@ public class personality{
 
 	public TimerTask checkState() {
 		// TODO if nothing happens
-<<<<<<< HEAD
 		// TODO write to serial
 		return null;		
 	}
@@ -201,8 +194,4 @@ public class personality{
 		//starting
 		this.timer_.schedule(this.checkState(), 30000);
 	}
-=======
-		return null;		
-	}
->>>>>>> origin/master
 }
