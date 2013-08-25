@@ -10,8 +10,9 @@ CCSERVER::CCSERVER(byte id)
 
     _id = id;
     _syncWord = (19,9); 
-    _twinNode = 0;        
-          
+    _twinNode = 0; 
+    cleanBuffer();
+    
 }
 
 
@@ -24,6 +25,13 @@ CCSERVER::~CCSERVER(void)
 }
 
 //METHODS
+void CCSERVER::cleanBuffer()
+{
+    for(int i=0;i<BUFFERLENGTH;i++)    
+      buffer[i]= 0;      
+    
+}
+
 void CCSERVER::setup()
 
 {
@@ -68,39 +76,66 @@ boolean CCSERVER::ccReceive(void)
 void CCSERVER::ccHandle(void)
 
 {
+    #ifdef SERVERDEBUG
+        ccPrintPacket();		
+    #endif
 
     byte key = _ccPacketHandler.getAdminKey();
   
     switch (key)
     {
         case SHAKE_EVENT: 
-            //ccAcknowledge();   
-            _ccPacketHandler.buildPacket(LED_CLIENT_01, _id, CHANGE_COLOR); 
-            _ccPacketHandler.printPacket();
-            ccSend();  
+            #ifdef BYPASS_JAVASERVER
+                //ccAcknowledge();   
+                _ccPacketHandler.buildPacket(LED_CLIENT_01, _id, CHANGE_COLOR); 
+                _ccPacketHandler.printPacket();
+                ccSend();  
+            #endif
             break;
-        case NEAR_NODE_EVENT: 
-            distanceAlert();
-            //ccAcknowledge();
+        case NEAR_NODE_EVENT:            
+            #ifdef SERVERDEBUG
+                distanceAlert();
+            #endif      
             break;    
         case ACKNOWLEDGE_REQUEST:
             if (_ccPacketHandler.hashMatches()) 
                 _ccPacketHandler._ccClear = true;
             else
-                Serial.println("False acknowledge! Resending prev. package");
+                #ifdef SERVERDEBUG
+                    Serial.println("False acknowledge! Resending prev. package");
+                #endif
             break;   
         case LOW_BATTERY:
-            Serial.println("Node has low batt!");   
+            #ifdef SERVERDEBUG
+                lowBatteryAlert();
+            #endif
         case TEST: 
             ccAcknowledge();
             break;
         default: // unknown packet received
-            Serial.print("Unknown packet received, key: ");
-            Serial.println(key);
+            #ifdef SERVERDEBUG
+                Serial.print("Unknown packet received, key: ");
+                Serial.println(key);
+            #endif
             break; 
     }
 }
 
+
+void CCSERVER::saveDataInBuffer(void)
+{
+    byte key = _ccPacketHandler.getAdminKey();
+  
+    if(key == NEAR_NODE_EVENT)
+    {
+        setNearNodeBuffer();
+    } 
+    else
+    {
+        setBuffer();
+    } 
+   
+}
 
 boolean CCSERVER::isSender()
 
@@ -141,8 +176,7 @@ void CCSERVER::distanceAlert()
     Serial.print("Detected RSSI " );
     Serial.print(rssi_dBm);
     Serial.print(" from device Nr: \t");
-    Serial.println(emisorID);
-  
+    Serial.println(emisorID);    
 }
 
 
@@ -153,11 +187,87 @@ void CCSERVER::lowBatteryAlert()
  
     Serial.print("Node Nr. " );
     Serial.print(nodeLowBattery);
-    Serial.println("  is running out of Battery!!!");  
+    Serial.println("  is running out of Battery!!!");      
 }
 
 
+void CCSERVER::setBufferHash()
+{
+    buffer[BUFFERHASH] = 0;
+
+    for(int i=0;i<BUFFERLENGTH-1; i++)
+    {
+        buffer[BUFFERHASH]+=buffer[i];
+    }
+        
+}
 
 
+void CCSERVER::setBuffer()
+{
+    CCPACKET ccPacket = _ccPacketHandler.getPacket();
+  
+    buffer[0] = ccPacket.SENDER_ID;
+    buffer[1] = ccPacket.ADMINKEY;
+    buffer[2] = 0;
+    buffer[3] = 0;
+    setBufferHash();  
+
+}
+
+void CCSERVER::setNearNodeBuffer()
+{
+    CCPACKET ccPacket = _ccPacketHandler.getPacket();
+    byte nearNodeRssiDBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
+
+  
+    buffer[0] = ccPacket.SENDER_ID;
+    buffer[1] = ccPacket.ADMINKEY;
+    buffer[2] = ccPacket.NEAR_NODE_ID;
+    buffer[3] = nearNodeRssiDBm;
+    setBufferHash(); 
+
+}
+
+void CCSERVER::sendBufferToJavaServer()
+{
+    for(int i=0; i<BUFFERLENGTH; i++)
+    {
+        Serial.write(buffer[i]);                     
+    }
+          
+}
+
+void CCSERVER::setRandomBuffer()
+{
+    long rand = random(1,100);    
+
+    if(rand < 33)
+    {
+        buffer[0] = (byte)random(2,50); 
+        buffer[1] = NEAR_NODE_EVENT;
+        buffer[2] = (byte)random(1,255); 
+        buffer[3] = (byte)random(1,255);         
+    }
+    else
+    {
+        if(rand < 66)
+	{
+	    buffer[0] = (byte)random(2,50);
+	    buffer[1] = SHAKE_EVENT;
+            buffer[2] = 0; 
+            buffer[3] = 0; 
+	}
+        else
+        {
+	    buffer[0] = (byte)random(2,50);
+	    buffer[1] = LOW_BATTERY;
+            buffer[2] = 0; 
+            buffer[3] = 0;             
+         }
+     }
+
+     setBufferHash();  
+} 
 
 
