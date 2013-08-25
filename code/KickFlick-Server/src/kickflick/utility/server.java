@@ -10,15 +10,9 @@ public class server{
 	private kickflick.gui.Server_Main window;
 	public kickflick.utility.serial_lib serial_com;
 	public setting_parser set_pars = new setting_parser();
-	public parser input_parser = new parser(this);
+	public parser input_parser;
 	
 	private List<device> devices = new ArrayList<device>();
-	
-	//maybe unnecessary
-	//adress can't be 0 because 0 stands for every client
-	private byte adress = 1;
-	
-	 
 	
 	public static void main(String[] args)
 	{ 
@@ -27,7 +21,11 @@ public class server{
 		
 //		Server.read_settings(); //TODO maybe not needed at all
 		Server.init_communication();
-		Server.openWindow();
+
+        Server.connect_panstamp("/dev/ttyACM0",9600);
+
+        Server.input_parser = new parser(Server);
+		//Server.openWindow();
 	}
 
 	private void openWindow()
@@ -49,25 +47,11 @@ public class server{
 	public void connect_panstamp(String str, int Baut)
 	{
 		try {
-			serial_com.connect(str, Baut);
-			
-			//adds listener to server
-			serial_com.get_connected_Port().addEventListener(input_parser);
+			this.serial_com.connect(str, Baut);
+			this.serial_com.initIOStream();
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}
-		
-		//initListener
-		
-		if ( serial_com.is_connected() )
-		{
-			//request Devices
-		}
-	}
-	
-	public void init_Listener()
-	{
-		serial_com.initIOStream();
 	}
 	
 	public void request_devices()
@@ -88,7 +72,7 @@ public class server{
 	private void read_settings()
 	{	
 		try {
-			set_pars.parse_settings("res/keys");
+			this.set_pars.parse_settings("res/keys");
 		} finally {} 
 		System.out.println(set_pars.get_element_keys());
 		
@@ -96,11 +80,7 @@ public class server{
 	
 	//Getter
 	public kickflick.utility.serial_lib get_SerialCom() {
-			return serial_com;		
-	}
-	
-	public byte get_server_adress()	{
-		return adress;
+			return this.serial_com;		
 	}
 	
 	public List<device> get_devices()

@@ -25,51 +25,45 @@ public class personality{
 	{
 		this.device_ = null;
 		this.Name_ = "undefined";
-		this.Id_ = 0;
 		this.State_ = 0;
 		this.Colors_ = new color[] {new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150)};
 		
 		this.timer_.schedule(this.checkState(), 30000);
 	}
 	
-	public personality(device dev, String name, short id, short state, color[] color_tmp, byte[] patterns)
+	public personality(device dev, String name, short state, color[] color_tmp, byte[] patterns)
 	{
 		this.device_ = dev;
 		this.Name_ = name;
-		this.Id_ = id;
 		this.State_ = state;
 		this.Colors_ = color_tmp;
 		this.pattern_ = patterns;
 	}
 	
-	public personality(String name, short id, short state, color[] color_tmp, byte[] patterns)
+	public personality(String name, short state, color[] color_tmp, byte[] patterns)
 	{
 		this.Name_ = name;
-		this.Id_ = id;
 		this.State_ = state;
 		this.Colors_ = color_tmp;
 		this.pattern_ = patterns;
 	}
 	
-	public personality(String name, short id, short state, color[] color_tmp)
+	public personality(String name, short state, color[] color_tmp)
 	{
 		this.Name_ = name;
-		this.Id_ = id;
 		this.State_ = state;
 		this.Colors_ = color_tmp;
 	}
 	
-	public personality(String name, short id, short state)
+	public personality(String name, short state)
 	{
 		this.Name_ = name;
-		this.Id_ = id;
 		this.State_ = state;
 	}
 	
-	public personality(String name, short id)
+	public personality(String name)
 	{
 		this.Name_ = name;
-		this.Id_ = id;
 		this.State_ = 0;
 		this.Colors_ = new color[4];
 	}
@@ -84,11 +78,6 @@ public class personality{
 	public void set_Name(String name)
 	{
 		this.Name_ = name;
-	}
-	
-	public void set_Id (short Id)
-	{
-		this.Id_ = Id;
 	}
 	
 	public void set_State (short state)
@@ -144,11 +133,6 @@ public class personality{
 	public String get_Name ()
 	{
 		return this.Name_;
-	}
-	
-	public short get_Id ()
-	{
-		return this.Id_;
 	}
 	
 	public short get_State()

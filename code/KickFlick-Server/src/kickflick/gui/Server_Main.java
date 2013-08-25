@@ -50,7 +50,6 @@ public class Server_Main {
 		mntmSettings.setMenu(menu_1);
 		
 		MenuItem mntmCommunicator = new MenuItem(menu, SWT.NONE);
-		mntmCommunicator.setEnabled(false); //TODO enable again
 		mntmCommunicator.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (Server.serial_com.is_connected())

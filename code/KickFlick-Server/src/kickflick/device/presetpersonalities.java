@@ -5,7 +5,6 @@ public enum presetpersonalities {
 	Paul("Paul",new personality(
 			"Paul",
 			(short)0,
-			(short)0,
 			new color[] { 
 					new color(0,0,255,255),
 					new color(0,0,255,255),
@@ -16,7 +15,6 @@ public enum presetpersonalities {
 	
 	Tanja("Tanja",new personality(
 			"Tanja",
-			(short)1,
 			(short)0,
 			new color[] { 
 					new color(255,204,221,255),
@@ -28,7 +26,6 @@ public enum presetpersonalities {
 	
 	Mama("Mama",new personality(
 			"Mama",
-			(short)2,
 			(short)0,
 			new color[] { 
 					new color(255,255,255,255),

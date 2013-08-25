@@ -4,8 +4,8 @@ public class device {
 	private personality Personality_;
 	private byte State_;
 	
-	private byte sender_adr_;
-	private byte receiver_adr_;
+	private byte sensor_node;
+	private byte actuator_node;
 	
 	//Constructors
 	
@@ -13,8 +13,8 @@ public class device {
 	{
 		this.Personality_ = Personality;
 		this.State_ = state;
-		this.sender_adr_ = sender;
-		this.receiver_adr_ = receiver;
+		this.sensor_node = sender;
+		this.actuator_node = receiver;
 		
 		this.Personality_.set_device(this);
 	}
@@ -56,14 +56,14 @@ public class device {
 		this.State_ = State;
 	}
 	
-	public void set_sender(byte sender)
+	public void set_sensor_node(byte sensor)
 	{
-		this.sender_adr_ = sender;
+		this.sensor_node = sensor;
 	}
 	
-	public void set_receiver(byte receiver)
+	public void set_actuator_node(byte actuator)
 	{
-		this.receiver_adr_ = receiver;
+		this.actuator_node = actuator;
 	}
 	
 	//Getter
@@ -78,13 +78,13 @@ public class device {
 		return this.State_;
 	}
 	
-	public byte get_sender_address()
+	public byte get_sensor_node()
 	{
-		return this.sender_adr_;
+		return this.sensor_node;
 	}
 	
-	public byte get_receiver_address()
+	public byte get_actuator_node()
 	{
-		return this.receiver_adr_;
+		return this.actuator_node;
 	}
 }

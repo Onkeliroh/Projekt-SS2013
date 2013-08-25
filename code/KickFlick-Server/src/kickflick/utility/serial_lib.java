@@ -128,25 +128,23 @@ public class serial_lib
 	{
 		private serial_lib bums_;
 		private InputStream in_;
-		private byte[] Buffer_ = new byte[1024];
+		private byte[] Buffer_ = new byte[4];
 		
 		public com_listener(serial_lib ding, InputStream input)
 		{
+			System.out.println("create Com-Listener");
 			this.bums_ = ding;
 			this.in_ = input;
 		}
 		public void run() {
-			int data;
-			
+//			int data;
 	        try
 	        {
 	            int len = 0;
-	            while ( ( data = this.in_.read()) > -1 )
+//	            while ( ( data = this.in_.read()) > -1 )
+	            while ( this.in_.available() > 0 )
 	            {
-	                if ( data == '\n' ) {
-	                    break;
-	                }
-	                this.Buffer_[len++] = (byte) data;
+	            	this.in_.read(this.Buffer_);
 	            }
 	        }
 	        catch ( IOException e )
