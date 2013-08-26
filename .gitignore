@@ -8,4 +8,9 @@
 *.tex.backup
 *.toc
 
+*.iml
+
+.classpath
+.idea/
+
 bin/
