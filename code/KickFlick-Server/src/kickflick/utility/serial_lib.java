@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class serial_lib
 	
 	public SerialPort get_connected_Port()
 	{
-		if (connected)
+		if (this.connected)
 			return this.serialPort;
 		else
 			return null;
@@ -100,11 +101,10 @@ public class serial_lib
 			if ( commPort instanceof SerialPort )
 			{
 				connected = true;
-				serialPort = (SerialPort) commPort;
-				serialPort.setSerialPortParams(bps,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+				this.serialPort = (SerialPort) commPort;
+				this.serialPort.setSerialPortParams(bps,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 
-                this.in = this.serialPort.getInputStream();
-                this.out = this.serialPort.getOutputStream();
+                this.initIOStream();
 			}
 		}
 	}
@@ -139,12 +139,19 @@ public class serial_lib
 			this.in_ = input;
 		}
 		public void run() {
+            int tmp_int;
+            byte[] tmp = new byte[1024];
 	        try
 	        {
-	           while ( this.in_.available() > 0 )
-	           {
-	            	this.in_.read(this.Buffer_);
-               }
+                int len = 0;
+                while ( ( tmp_int = this.in_.read()) > -1 )
+                {
+                    if ( tmp_int == '\n' ) {
+                        break;
+                    }
+                    tmp[len++] = (byte) tmp_int;
+                }
+                System.arraycopy(tmp,0,this.Buffer_,0,4);
 	        }
             catch ( IOException e )
 	        {
@@ -201,8 +208,8 @@ public class serial_lib
     {
         try {
             //
-            in = serialPort.getInputStream();
-            out = serialPort.getOutputStream();
+            this.in = this.serialPort.getInputStream();
+            this.out = this.serialPort.getOutputStream();
             
             return true;
         }
