@@ -87,4 +87,10 @@ public class device {
 	{
 		return this.actuator_node;
 	}
+
+    //react function
+    public void react(byte[] arg)
+    {
+
+    }
 }

@@ -48,7 +48,6 @@ public class server{
 	{
 		try {
 			this.serial_com.connect(str, Baut);
-			this.serial_com.initIOStream();
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}

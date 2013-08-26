@@ -101,7 +101,10 @@ public class serial_lib
 			{
 				connected = true;
 				serialPort = (SerialPort) commPort;
-				serialPort.setSerialPortParams(bps,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);			
+				serialPort.setSerialPortParams(bps,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+
+                this.in = this.serialPort.getInputStream();
+                this.out = this.serialPort.getOutputStream();
 			}
 		}
 	}
@@ -120,8 +123,7 @@ public class serial_lib
 	{
 		if (connected)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	public static class com_listener implements Runnable
@@ -137,21 +139,18 @@ public class serial_lib
 			this.in_ = input;
 		}
 		public void run() {
-//			int data;
 	        try
 	        {
-	            int len = 0;
-//	            while ( ( data = this.in_.read()) > -1 )
-	            while ( this.in_.available() > 0 )
-	            {
+	           while ( this.in_.available() > 0 )
+	           {
 	            	this.in_.read(this.Buffer_);
-	            }
+               }
 	        }
-	        catch ( IOException e )
+            catch ( IOException e )
 	        {
 	            e.printStackTrace();
 	            System.exit(-1);
-	        }   
+	        }
 		}
 		public byte[] get_buffer()
 		{
