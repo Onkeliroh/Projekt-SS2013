@@ -54,7 +54,8 @@ public class parser implements SerialPortEventListener {
                     tmp.set_actuator_node(arg[0]);
                     tmp.set_sensor_node(arg[0]--);      //sensor is next to actuator node
                 }
- cd P                {
+                else
+                {
                     System.err.println("Parser Error: incorrect Packet Sender ID");
                     return;
                 }
