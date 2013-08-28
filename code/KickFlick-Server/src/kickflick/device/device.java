@@ -1,11 +1,17 @@
 package kickflick.device;
 
+import java.security.Timestamp;
+
+//TODO write timertask, timestamp and message composer + sender
+
 public class device {
 	private personality Personality_;
 	private byte State_;
 	
 	private byte sensor_node;
 	private byte actuator_node;
+
+    private Timestamp last_seen;
 	
 	//Constructors
 	
@@ -15,40 +21,30 @@ public class device {
 		this.State_ = state;
 		this.sensor_node = sender;
 		this.actuator_node = receiver;
-		
-		this.Personality_.set_device(this);
 	}
 	
 	public device (personality Personality, byte State)
 	{
 		this.Personality_ = Personality;
 		this.State_ = State;
-		
-		this.Personality_.set_device(this);
 	}
 	
 	public device (byte State)
 	{
 		this.State_ = State;
 		this.Personality_ = new personality();
-		
-		this.Personality_.set_device(this);
 	}
 	
 	public device ()
 	{
 		this.State_ = 00000000;
 		this.Personality_ = new personality();
-		
-		this.Personality_.set_device(this);
 	}
 
 	//Setter
 	public void set_Personality (personality Personality)
 	{
 		this.Personality_ = Personality;
-		
-		this.Personality_.set_device(this);
 	}
 	
 	public void set_State (byte State)

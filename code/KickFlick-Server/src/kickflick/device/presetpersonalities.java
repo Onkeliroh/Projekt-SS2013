@@ -1,45 +1,40 @@
 package kickflick.device;
 
-public enum presetpersonalities {
-	//TODO add patterns
+public enum presetpersonalities
+{
+    //TODO write correct color and pattern values
 	Paul("Paul",new personality(
 			"Paul",
 			(short)0,
-			new color[] { 
-					new color(0,0,255,255),
-					new color(0,0,255,255),
-					new color(100,0,255,255),
-					new color(0,200,230,255)
-					}
+			new byte[] { 1, 1, 1, 1 },
+            new byte[] { 1, 1, 1, 1 }
 			)),
 	
 	Tanja("Tanja",new personality(
 			"Tanja",
 			(short)0,
-			new color[] { 
-					new color(255,204,221,255),
-					new color(255,238,100,255),
-					new color(100,0,255,255),
-					new color(255,0,0,255)
-					}
+            new byte[] { 1, 1, 1, 1 },
+            new byte[] { 1, 1, 1, 1 }
 			)),
 	
 	Mama("Mama",new personality(
 			"Mama",
 			(short)0,
-			new color[] { 
-					new color(255,255,255,255),
-					new color(255,187,0,255),
-					new color(255,0,0,255),
-					new color(255,0,0,255)
-					}
+            new byte[] { 1, 1, 1, 1 },
+            new byte[] { 1, 1, 1, 1 }
 			));
 
 	private final String name_;
 	private final personality personality_;
 		
-	private presetpersonalities(String name, personality perso) {
-		this.name_ = name;
-		this.personality_ = perso;
+	private presetpersonalities(String name, personality perso)
+    {
+		name_ = name;
+		personality_ = perso;
 	}
+
+    public personality get_personality()
+    {
+        return personality_;
+    }
 }

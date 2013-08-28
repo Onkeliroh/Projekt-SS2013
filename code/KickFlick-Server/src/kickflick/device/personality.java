@@ -6,53 +6,38 @@ import java.util.TimerTask;
 
 public class personality{
 	private String Name_;
-	private short Id_;
-	private short State_;
-	private color[] Colors_ = new color[4];
-	private byte[] pattern_;
-	
-	private device device_;
-	
-	private Timer timer_ = new Timer(true); 	
-	
+	private short State_ = 0;
+	private byte[] Color1_ = new byte[4];             //TODO should be two color keys
+    private byte[] Color2_ = new byte[4];
+	private byte[] pattern_ = new byte[4];                            //TODO should be the subkey
+
 	//Constructors
-	
-	//TODO build timer 
-	//TODO come up with a idea about switching state depending on timer
-	
+
 	// default
 	public personality()
 	{
-		this.device_ = null;
-		this.Name_ = "undefined";
-		this.State_ = 0;
-		this.Colors_ = new color[] {new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150),new color(0,255,0,150)};
-		
-		this.timer_.schedule(this.checkState(), 30000);
+        this.Name_ = presetpersonalities.Paul.get_personality().Name_;
+        this.State_ = presetpersonalities.Paul.get_personality().State_;
+        this.Color1_ = presetpersonalities.Paul.get_personality().Color1_;
+        this.Color2_ = presetpersonalities.Paul.get_personality().Color2_;
+        this.pattern_ = presetpersonalities.Paul.get_personality().pattern_;
 	}
 	
-	public personality(device dev, String name, short state, color[] color_tmp, byte[] patterns)
+	public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp, byte[] patterns)
 	{
-		this.device_ = dev;
 		this.Name_ = name;
 		this.State_ = state;
-		this.Colors_ = color_tmp;
+		this.Color1_ = color1_tmp;
+        this.Color2_ = color2_tmp;
 		this.pattern_ = patterns;
 	}
 	
-	public personality(String name, short state, color[] color_tmp, byte[] patterns)
+	public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp)
 	{
 		this.Name_ = name;
 		this.State_ = state;
-		this.Colors_ = color_tmp;
-		this.pattern_ = patterns;
-	}
-	
-	public personality(String name, short state, color[] color_tmp)
-	{
-		this.Name_ = name;
-		this.State_ = state;
-		this.Colors_ = color_tmp;
+		this.Color1_ = color1_tmp;
+        this.Color2_ = color2_tmp;
 	}
 	
 	public personality(String name, short state)
@@ -64,16 +49,18 @@ public class personality{
 	public personality(String name)
 	{
 		this.Name_ = name;
-		this.State_ = 0;
-		this.Colors_ = new color[4];
 	}
+
+    public personality ( personality pers )
+    {
+        this.Name_ = pers.Name_;
+        this.State_ = pers.State_;
+        this.Color1_ = pers.Color1_;
+        this.Color2_ = pers.Color2_;
+        this.pattern_ = pers.pattern_;
+    }
 	
 	//Setter
-	
-	public void set_device(device dev)
-	{
-		this.device_ = dev;
-	}
 	
 	public void set_Name(String name)
 	{
@@ -85,28 +72,43 @@ public class personality{
 		if (state < 5 && state >= 0)
 			this.State_ = state;
 		else
-		{
-			//TODO: Error
-		}
+            System.err.println("Personality: State is out of range.");
 	}
 	
 	//sets the color of the current state
-	public void set_Color (color Color)
+	public void set_Color1 (byte Color)
 	{
 		//this.Color_.set_Color(Color.get_Color());
-		this.Colors_[this.State_] = new color(Color);
+		this.Color1_[this.State_] = Color;
 	}
+
+    public void set_Color2 (byte Color)
+    {
+        //this.Color_.set_Color(Color.get_Color());
+        this.Color2_[this.State_] = Color;
+    }
 	
 	//sets the color of a state
-	public void set_Color ( color Color, short state)
+	public void set_Color1 ( byte Color, short state)
 	{
 		try	{
-			this.Colors_[state] = Color;
+			this.Color1_[state] = Color;
 		}
 		finally	{
 			System.err.println("Error while setting Color. Maybe wrong state.");
 		}
 	}
+
+    //sets the color of a state
+    public void set_Color2 ( byte Color, short state)
+    {
+        try	{
+            this.Color2_[state] = Color;
+        }
+        finally	{
+            System.err.println("Error while setting Color. Maybe wrong state.");
+        }
+    }
 	
 	public void set_pattern(byte pattern)
 	{
@@ -125,11 +127,6 @@ public class personality{
 	
 	//Getter
 	
-	public device get_device()
-	{
-		return this.device_;
-	}
-	
 	public String get_Name ()
 	{
 		return this.Name_;
@@ -140,16 +137,26 @@ public class personality{
 		return this.State_;
 	}
 	
-	public color get_Color ()
+	public byte get_Color1 ()
 	{
-		return this.Colors_[this.State_];
+		return this.Color1_[this.State_];
 	}
+
+    public byte get_Color2 ()
+    {
+        return this.Color2_[this.State_];
+    }
 	
-	public color get_Color ( short state )
+	public byte get_Color1 ( short state )
 	{
-		return this.Colors_[state];
+		return this.Color1_[state];
 	}
-	
+
+    public byte get_Color2 ( short state )
+    {
+        return this.Color2_[state];
+    }
+
 	public byte get_pattern ( short state )
 	{
 		return this.pattern_[state];
@@ -158,24 +165,5 @@ public class personality{
 	public byte get_pattern ()
 	{
 		return this.pattern_[this.State_];
-	}
-
-	public TimerTask checkState() {
-		// TODO if nothing happens
-		// TODO write to serial
-		return null;		
-	}
-	
-	public void restart_timer()
-	{
-		//stopping
-		if ( this.timer_ != null)
-		{
-			this.timer_.cancel();
-			this.timer_.purge();
-		}
-		
-		//starting
-		this.timer_.schedule(this.checkState(), 30000);
 	}
 }
