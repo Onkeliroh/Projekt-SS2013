@@ -22,10 +22,10 @@ public class server{
 //		Server.read_settings(); //TODO maybe not needed at all
 		Server.init_communication();
 
-        Server.connect_panstamp("/dev/ttyACM0",9600);
+        //Server.connect_panstamp("/dev/ttyACM0",9600);
 
         Server.input_parser = new parser(Server);
-		//Server.openWindow();
+		Server.openWindow();
 	}
 
 	private void openWindow()
@@ -48,6 +48,11 @@ public class server{
 	{
 		try {
 			this.serial_com.connect(str, Baut);
+
+            //add Listener
+            this.serial_com.get_connected_Port().addEventListener(this.input_parser);
+            this.serial_com.get_connected_Port().notifyOnDataAvailable(true);
+
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}

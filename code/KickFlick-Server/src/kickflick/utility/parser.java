@@ -14,21 +14,13 @@ public class parser implements SerialPortEventListener {
 	{
 		System.out.println("Create Parser");
 		this.Server_=Serv;
-        try
-        {
-            this.Server_.get_SerialCom().get_connected_Port().addEventListener(this);
-            this.Server_.get_SerialCom().get_connected_Port().notifyOnDataAvailable(true);
-        }
-        catch (Exception e) {
-            System.err.println("Parser constructor: " + e.toString());
-        }
 	}
 	
 	public void parse(byte[] arg)
 	{
 		System.out.print("Parser received message: ");
         System.out.println(Arrays.toString(arg));
-		if (arg.length != 4) // must contain at least sender receiver and key
+		if (arg.length == 4) // must contain at least sender receiver and key
 		{
 			if ( !this.Server_.get_devices().isEmpty()) // if NOT emtpy
 			{
@@ -48,7 +40,7 @@ public class parser implements SerialPortEventListener {
                     //TODO stuff
                 }
 			}
-			else
+			else    //if empty -> create new device and fill
 			{
                 device tmp = new device ( new personality(), (byte) 0);
 
@@ -68,11 +60,6 @@ public class parser implements SerialPortEventListener {
                     return;
                 }
                 this.Server_.get_devices().add( tmp );
-			}
-			
-			switch (arg[2])
-			{
-				
 			}
 		}
 		else {
@@ -106,6 +93,14 @@ public class parser implements SerialPortEventListener {
 					);
 			Thread thread = new Thread(horcher);
 			thread.start();
+            try
+            {
+                thread.join();
+            }
+            catch(InterruptedException e)
+            {
+                e.fillInStackTrace();
+            }
 
 			this.parse(horcher.get_buffer());
 		} catch (IOException e) {
