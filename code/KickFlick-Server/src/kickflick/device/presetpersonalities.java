@@ -6,13 +6,15 @@ public enum presetpersonalities
 	Paul("Paul",new personality(
 			"Paul",
 			(short)0,
-			new byte[] { 1, 1, 1, 1 },
-            new byte[] { 1, 1, 1, 1 }
+			new byte[] { 1, 1, 1, 1 },    //Color 1
+            new byte[] { 1, 1, 1, 1 },    //Color 2
+            new byte[] { 1, 1, 1, 1 }     //Pattern
 			)),
 	
 	Tanja("Tanja",new personality(
 			"Tanja",
 			(short)0,
+            new byte[] { 1, 1, 1, 1 },
             new byte[] { 1, 1, 1, 1 },
             new byte[] { 1, 1, 1, 1 }
 			)),
@@ -20,6 +22,7 @@ public enum presetpersonalities
 	Mama("Mama",new personality(
 			"Mama",
 			(short)0,
+            new byte[] { 1, 1, 1, 1 },
             new byte[] { 1, 1, 1, 1 },
             new byte[] { 1, 1, 1, 1 }
 			));

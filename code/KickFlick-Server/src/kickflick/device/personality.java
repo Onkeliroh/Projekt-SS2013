@@ -7,9 +7,11 @@ import java.util.TimerTask;
 public class personality{
 	private String Name_;
 	private short State_ = 0;
-	private byte[] Color1_ = new byte[4];             //TODO should be two color keys
+	private byte[] Color1_ = new byte[4];
     private byte[] Color2_ = new byte[4];
-	private byte[] pattern_ = new byte[4];                            //TODO should be the subkey
+	private byte[] pattern_ = new byte[4]; //TODO should be the subkey
+
+    private byte[][] actio_reactio = new byte[4][2];
 
 	//Constructors
 
@@ -166,4 +168,33 @@ public class personality{
 	{
 		return this.pattern_[this.State_];
 	}
+
+    public String get_state_name()
+    {
+        return this.get_state_name(this.State_);
+    }
+
+    public String get_state_name(short state)
+    {
+        switch (state)
+        {
+            case 0: return "Standbye";
+            case 1: return "First contact";
+            case 2: return "Playing ";
+            case 3: return "Playing (hard)";
+            default: return "unknown";
+        }
+    }
+
+
+    public void inc_state()
+    {
+        this.set_State(this.State_++);
+    }
+
+    public void dec_state()
+    {
+        this.set_State(this.State_--);
+    }
+
 }

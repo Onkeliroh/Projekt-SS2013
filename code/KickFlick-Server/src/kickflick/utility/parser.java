@@ -42,7 +42,7 @@ public class parser implements SerialPortEventListener {
 			}
 			else    //if empty -> create new device and fill
 			{
-                device tmp = new device ( new personality(), (byte) 0);
+                device tmp = new device ( new personality());
 
                 if (arg[0] % 2 == 0)
                 {

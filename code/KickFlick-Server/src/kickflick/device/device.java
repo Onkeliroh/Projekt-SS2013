@@ -6,7 +6,6 @@ import java.security.Timestamp;
 
 public class device {
 	private personality Personality_;
-	private byte State_;
 	
 	private byte sensor_node;
 	private byte actuator_node;
@@ -15,29 +14,20 @@ public class device {
 	
 	//Constructors
 	
-	public device (personality Personality, byte state, byte sender, byte receiver)
+	public device (personality Personality, byte sender, byte receiver)
 	{
 		this.Personality_ = Personality;
-		this.State_ = state;
 		this.sensor_node = sender;
 		this.actuator_node = receiver;
 	}
 	
-	public device (personality Personality, byte State)
+	public device (personality Personality)
 	{
 		this.Personality_ = Personality;
-		this.State_ = State;
-	}
-	
-	public device (byte State)
-	{
-		this.State_ = State;
-		this.Personality_ = new personality();
 	}
 	
 	public device ()
 	{
-		this.State_ = 00000000;
 		this.Personality_ = new personality();
 	}
 
@@ -45,11 +35,6 @@ public class device {
 	public void set_Personality (personality Personality)
 	{
 		this.Personality_ = Personality;
-	}
-	
-	public void set_State (byte State)
-	{
-		this.State_ = State;
 	}
 	
 	public void set_sensor_node(byte sensor)
@@ -67,11 +52,6 @@ public class device {
 	public personality get_Personality ()
 	{
 		return this.Personality_;
-	}
-	
-	public byte get_State ()
-	{
-		return this.State_;
 	}
 	
 	public byte get_sensor_node()

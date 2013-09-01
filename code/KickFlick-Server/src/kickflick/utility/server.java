@@ -25,6 +25,11 @@ public class server{
         //Server.connect_panstamp("/dev/ttyACM0",9600);
 
         Server.input_parser = new parser(Server);
+
+        //TODO remove after testing
+        Server.devices.add(new device());
+        Server.devices.add(new device());
+
 		Server.openWindow();
 	}
 
