@@ -35,7 +35,7 @@ public class Server_Main {
     final Display display = new Display();
 
 	private Runnable timer_;
-    private final int time = 1000;
+    private final int time = 1000; //TODO make configurable
 	private Table DeviceTable;
 
 
@@ -50,7 +50,7 @@ public class Server_Main {
 		//display = Display.getDefault();
 		final Shell shlKickflickServer = new Shell( display );
 		shlKickflickServer.setMinimumSize(new Point(1, 23));
-		shlKickflickServer.setSize(500, 353);
+		shlKickflickServer.setSize(575, 354);
 		shlKickflickServer.setLocation(750, 250);
 		shlKickflickServer.setText("KickFlick Server");
 		GridLayout gl_shlKickflickServer = new GridLayout(1, false);
@@ -177,6 +177,7 @@ public class Server_Main {
 
 		Button newDevice = new Button(grpDevices, SWT.NONE);
 		newDevice.setText("New Device");
+		new Label(grpDevices, SWT.NONE);
         newDevice.addMouseListener(new MouseAdapter() {
             public void mouseDown(MouseEvent e) {
                 Server.get_devices().add(new kickflick.device.device());
@@ -213,7 +214,6 @@ public class Server_Main {
                 //DeviceTable.clearAll();
                 int selection = DeviceTable.getSelectionIndex();
                 DeviceTable.removeAll();
-                System.out.println("Refresh table");
                 for ( int i = 0; i < Server.get_devices().size(); ++i)
                 {
                     TableItem tableItem = new TableItem(DeviceTable, SWT.NONE,i);   //TODO evtl. tabelle vorher löschen
