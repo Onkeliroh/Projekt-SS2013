@@ -5,11 +5,6 @@ import java.io.IOException;
 import kickflick.device.device;
 import kickflick.utility.server;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
@@ -37,7 +32,10 @@ public class Server_Main {
 	private server Server;
 	private Combo combo_port;
 
-	private Timer timer_;
+    final Display display = new Display();
+
+	private Runnable timer_;
+    private final int time = 1000;
 	private Table DeviceTable;
 
 
@@ -49,7 +47,7 @@ public class Server_Main {
 	 * @wbp.parser.entryPoint
 	 */
 	public void open() {
-		Display display = Display.getDefault();
+		//display = Display.getDefault();
 		final Shell shlKickflickServer = new Shell( display );
 		shlKickflickServer.setMinimumSize(new Point(1, 23));
 		shlKickflickServer.setSize(500, 353);
@@ -179,12 +177,17 @@ public class Server_Main {
 
 		Button newDevice = new Button(grpDevices, SWT.NONE);
 		newDevice.setText("New Device");
-		
-
-		Button Reload = new Button(grpDevices, SWT.NONE);
-		Reload.setText("Reload");
+        newDevice.addMouseListener(new MouseAdapter() {
+            public void mouseDown(MouseEvent e) {
+                Server.get_devices().add(new kickflick.device.device());
+            }
+        });
 
 		set_up();
+
+        init_timer();
+
+        display.timerExec(0,this.timer_);
 
 		shlKickflickServer.open();
 		shlKickflickServer.layout();
@@ -195,12 +198,40 @@ public class Server_Main {
 		}
 	}
 
-	public void set_up()
+	private void set_up()
 	{
 		java.util.List<String> port_list  = Server.get_SerialCom().get_port_names();
 		getCombo_port().setItems(port_list.toArray(new String[port_list.size()]));
 		getCombo_port().select(0);
 	}
+
+    private void init_timer()
+    {
+        this.timer_ = new Runnable() {
+            public void run()
+            {
+                //DeviceTable.clearAll();
+                int selection = DeviceTable.getSelectionIndex();
+                DeviceTable.removeAll();
+                System.out.println("Refresh table");
+                for ( int i = 0; i < Server.get_devices().size(); ++i)
+                {
+                    TableItem tableItem = new TableItem(DeviceTable, SWT.NONE,i);   //TODO evtl. tabelle vorher löschen
+                    tableItem.setText(new String[] {
+                            Server.get_device(i).get_Personality().get_Name(),
+                            Server.get_device(i).get_Personality().get_state_name(),
+                            Server.get_device(i).get_timestamp()
+                    });
+                }
+                try{
+                    DeviceTable.setSelection(selection);
+                }
+                finally{}
+
+                display.timerExec(time, this);
+            }
+        };
+    }
 
 	public void set_Server ( kickflick.utility.server Server )
 	{
@@ -211,35 +242,6 @@ public class Server_Main {
 		return combo_port;
 	}
 
-	private void init_timer()
-	{
-        this.timer_ = new Timer();
-
-        TimerTask refresh_Table = new TimerTask()
-        {
-            private Table table_;
-            private List<device> dev_  = new ArrayList<device>();
-            public void init(Table table, List<device> devs)
-            {
-                this.table_ = table;
-                this.dev_ = devs;
-            }
-            @Override
-            public void run() 
-            {
-                for ( int i = 0 ; i < this.dev_.size() ; ++i)
-                {
-                    TableItem tableItem = new TableItem(this.table_, SWT.NONE,i);
-                    tableItem.setText(new String[] {
-                            this.dev_.get(i).get_Personality().get_Name(),
-                            this.dev_.get(i).get_Personality().get_state_name()
-                    });
-                }
-            }
-        };
-       // refresh_Table.init()
-       // this.timer_.schedule(refresh_Table,100,30000);
-	}
 	protected Table getDeviceTable() {
 		return DeviceTable;
 	}

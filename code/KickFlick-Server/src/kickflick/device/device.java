@@ -1,6 +1,7 @@
 package kickflick.device;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+import java.util.*;
 
 //TODO write timertask, timestamp and message composer + sender
 
@@ -10,7 +11,7 @@ public class device {
 	private byte sensor_node;
 	private byte actuator_node;
 
-    private Timestamp last_seen;
+    private Timestamp timestamp;
 	
 	//Constructors
 	
@@ -19,16 +20,20 @@ public class device {
 		this.Personality_ = Personality;
 		this.sensor_node = sender;
 		this.actuator_node = receiver;
+
+        this.timestamp = new Timestamp(new Date().getTime());
 	}
 	
 	public device (personality Personality)
 	{
 		this.Personality_ = Personality;
+        this.timestamp = new Timestamp(new Date().getTime());
 	}
 	
 	public device ()
 	{
 		this.Personality_ = new personality();
+        this.timestamp = new Timestamp(new Date().getTime());
 	}
 
 	//Setter
@@ -63,6 +68,12 @@ public class device {
 	{
 		return this.actuator_node;
 	}
+
+    public String get_timestamp()
+    {
+        //TODO reduce time stamp to minutes and seconds
+        return this.timestamp.toString();
+    }
 
     //react function
     public void react(byte[] arg)
