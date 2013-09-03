@@ -2,6 +2,7 @@ package kickflick.utility;
 
 import java.util.Enumeration;
 
+//TODO update
 public enum keys {
     request_cs("Request C->S",(byte)001),	
     set_sc("Set S->C",(byte)002), //Client-ID	

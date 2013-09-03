@@ -3,6 +3,8 @@ package kickflick.device;
 import java.sql.Timestamp;
 import java.util.*;
 
+import kickflick.utility.keys;
+
 //TODO write timertask, timestamp and message composer + sender
 
 public class device {
@@ -11,8 +13,10 @@ public class device {
 	private byte sensor_node;
 	private byte actuator_node;
 
+    private List<keys> trigger_inc = new ArrayList<keys>();
+    private List<keys> trigger_dec = new ArrayList<keys>();
+
     private Timestamp timestamp;
-	
 	//Constructors
 	
 	public device (personality Personality, byte sender, byte receiver)
@@ -78,6 +82,15 @@ public class device {
     //react function
     public void react(byte[] arg)
     {
+        if ( this.trigger_inc.contains(arg[1]))
+        {
+            this.get_Personality().inc_state();
+        }
+        else if ( this.trigger_dec.contains(arg[1]))
+        {
+            this.get_Personality().dec_state();
+        }
 
+        //send info
     }
 }

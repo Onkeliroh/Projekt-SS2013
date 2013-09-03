@@ -7,6 +7,7 @@ import java.util.TimerTask;
 public class personality{
 	private String Name_;
 	private short State_ = 0;
+    public final int state_count = 4;
 	private byte[] Color1_ = new byte[4];
     private byte[] Color2_ = new byte[4];
 	private byte[] pattern_ = new byte[4]; //TODO should be the subkey

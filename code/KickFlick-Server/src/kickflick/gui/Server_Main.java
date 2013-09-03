@@ -144,36 +144,18 @@ public class Server_Main {
 
 
 
-		Button Config = new Button(grpDevices, SWT.NONE);
-		Config.setText("Config");
-		Config.addSelectionListener( new SelectionAdapter() {
-		/* TODO write better Config - Window!!
-			public void widgetSelected( SelectionEvent e ) {
-				Shell ConfigerationShell = new Shell( Display.getDefault() );
-				ConfigerationShell.setText( "Configeration" );
-				ConfigerationShell.setLayout( new GridLayout(1, false) );
+		Button Config_btn = new Button(grpDevices, SWT.NONE);
+		Config_btn.setText("Config");
+		Config_btn.addMouseListener(new MouseAdapter()
+        {
+            public void mouseDown(MouseEvent e) {
+                if ( DeviceTable.getSelectionIndex() >= 0)
+                {
+                    new Device_Config_Dialog(shlKickflickServer,SWT.APPLICATION_MODAL,Server.get_device(DeviceTable.getSelectionIndex())).open();
+                }
+            }
+        });
 
-				Label Head = new Label( ConfigerationShell, SWT.BORDER );
-				Head.setText( "Configeration" );
-				Label Headline = new Label( ConfigerationShell, SWT.NONE ); 
-				Headline.setText( "Configeration" );
-
-				Label PersonalitysColors = new Label( ConfigerationShell, SWT.NONE );
-				PersonalitysColors.setText( "set Personalities Colors ()" );
-				Menu ConfigerationMenu = new Menu( ConfigerationShell, SWT.POP_UP );
-				MenuItem ConfigerationItem = new MenuItem( ConfigerationMenu, SWT.RADIO );
-				ConfigerationItem.setText( "Personality Colors" );
-				ConfigerationItem.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected( SelectionEvent e) {
-						MenuItem Item = (MenuItem)e.widget;
-						if( Item.getSelection() ) {
-							this.Server.get_Devices().;
-						}
-					}
-				});
-			}
-		*/	
-		});
 
 		Button newDevice = new Button(grpDevices, SWT.NONE);
 		newDevice.setText("New Device");
