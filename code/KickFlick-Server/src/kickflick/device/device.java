@@ -2,6 +2,7 @@ package kickflick.device;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.Map;
 
 import kickflick.utility.keys;
 
@@ -13,8 +14,7 @@ public class device {
 	private byte sensor_node;
 	private byte actuator_node;
 
-    private List<keys> trigger_inc = new ArrayList<keys>();
-    private List<keys> trigger_dec = new ArrayList<keys>();
+    private Map<kickflick.utility.keys,Boolean> trigger = new HashMap<keys,Boolean>();
 
     private Timestamp timestamp;
 	//Constructors
@@ -26,18 +26,24 @@ public class device {
 		this.actuator_node = receiver;
 
         this.timestamp = new Timestamp(new Date().getTime());
+
+        create_trigger();
 	}
 	
 	public device (personality Personality)
 	{
 		this.Personality_ = Personality;
         this.timestamp = new Timestamp(new Date().getTime());
+
+        create_trigger();
 	}
 	
 	public device ()
 	{
 		this.Personality_ = new personality();
         this.timestamp = new Timestamp(new Date().getTime());
+
+        create_trigger();
 	}
 
 	//Setter
@@ -55,6 +61,11 @@ public class device {
 	{
 		this.actuator_node = actuator;
 	}
+
+    public void set_trigger_map ( Map<keys,Boolean> tmp)
+    {
+        this.trigger = tmp;
+    }
 	
 	//Getter
 	
@@ -79,18 +90,31 @@ public class device {
         return this.timestamp.toString();
     }
 
+    public Map<keys,Boolean> get_trigger_map()
+    {
+        return this.trigger;
+    }
+
     //react function
     public void react(byte[] arg)
     {
-        if ( this.trigger_inc.contains(arg[1]))
-        {
-            this.get_Personality().inc_state();
-        }
-        else if ( this.trigger_dec.contains(arg[1]))
-        {
-            this.get_Personality().dec_state();
-        }
+//        if ( this.trigger_inc.contains(arg[1]))
+//        {
+//            this.get_Personality().inc_state();
+//        }
+//        else if ( this.trigger_dec.contains(arg[1]))
+//        {
+//            this.get_Personality().dec_state();
+//        }
 
         //send info
+    }
+
+    private void create_trigger()
+    {
+        for ( int i = 0; i < keys.values().length; ++i)
+        {
+            this.trigger.put(keys.values()[i],true);
+        }
     }
 }

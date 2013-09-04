@@ -26,10 +26,6 @@ public class server{
 
         Server.input_parser = new parser(Server);
 
-        //TODO remove after testing
-        Server.devices.add(new device());
-        Server.devices.add(new device());
-
 		Server.openWindow();
 	}
 

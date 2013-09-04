@@ -21,6 +21,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 import kickflick.device.*;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+
+import java.util.Map;
 
 public class Device_Config_Dialog extends Dialog {
 
@@ -34,6 +39,7 @@ public class Device_Config_Dialog extends Dialog {
 
 
     private device Device;
+    private Table trigger_table;
 
 	/**
 	 * Create the dialog.
@@ -41,11 +47,12 @@ public class Device_Config_Dialog extends Dialog {
 	 * @param style
 	 */
 	public Device_Config_Dialog(Shell parent, int style, device Dev ) {
-		super(parent, style);
+		super(parent, SWT.SHELL_TRIM | SWT.BORDER | SWT.APPLICATION_MODAL);
 		setText("SWT Dialog");
 
 
         this.Device = Dev;
+        System.out.println(this.Device.get_trigger_map().toString());
 	}
 
 	/**
@@ -70,10 +77,11 @@ public class Device_Config_Dialog extends Dialog {
 	 */
 	private void createContents() {
 //		shlDeviceConfugurationDialog = new Shell(getParent(), getStyle());
-        shlDeviceConfugurationDialog = new Shell(getParent(), SWT.CLOSE | SWT.MAX | SWT.MIN);
+        shlDeviceConfugurationDialog = new Shell(getParent(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
         shlDeviceConfugurationDialog.setSize(450, 300);
 		shlDeviceConfugurationDialog.setText("Device Confuguration Dialog");
-		shlDeviceConfugurationDialog.setLayout(new GridLayout(1, false));
+		GridLayout gl_shlDeviceConfugurationDialog = new GridLayout(1, false);
+		shlDeviceConfugurationDialog.setLayout(gl_shlDeviceConfugurationDialog);
 		
 		Group grpDefaultConfigurations = new Group(shlDeviceConfugurationDialog, SWT.NONE);
 		grpDefaultConfigurations.setLayout(new GridLayout(2, false));
@@ -82,6 +90,7 @@ public class Device_Config_Dialog extends Dialog {
 		
 		preset_pers_combo = new Combo(grpDefaultConfigurations, SWT.READ_ONLY);
 		preset_pers_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(grpDefaultConfigurations, SWT.NONE);
         preset_pers_combo.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e) {
@@ -91,35 +100,68 @@ public class Device_Config_Dialog extends Dialog {
 
 		Group grpConfuguration = new Group(shlDeviceConfugurationDialog, SWT.NONE);
 		grpConfuguration.setText("Confuguration");
-		grpConfuguration.setLayout(new GridLayout(3, false));
+		grpConfuguration.setLayout(new GridLayout(5, false));
 		grpConfuguration.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Label name_label = new Label(grpConfuguration, SWT.NONE);
 		name_label.setText("Name:");
+		new Label(grpConfuguration, SWT.NONE);
 		
 		name_text = new Text(grpConfuguration, SWT.BORDER);
 		name_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		new Label(grpConfuguration, SWT.NONE);
+		new Label(grpConfuguration, SWT.NONE);
 		
 		Label state_label = new Label(grpConfuguration, SWT.NONE);
-		state_label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		state_label.setText("State:");
+		new Label(grpConfuguration, SWT.NONE);
 		
 		state_combo = new Combo(grpConfuguration, SWT.READ_ONLY);
-		state_combo.setItems(new String[] {"Standby", "First contact", "Playing", "Playing (hard)"});
+		state_combo.setItems(new String[]{"Standby", "First contact", "Playing", "Playing (hard)"});
 		state_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		state_combo.select(0);
 		new Label(grpConfuguration, SWT.NONE);
+		new Label(grpConfuguration, SWT.NONE);
+		
+		trigger_table = new Table(grpConfuguration, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
+		GridData gd_trigger_table = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2);
+		gd_trigger_table.widthHint = 242;
+		gd_trigger_table.heightHint = 61;
+		trigger_table.setLayoutData(gd_trigger_table);
+		trigger_table.setHeaderVisible(true);
+		trigger_table.setLinesVisible(true);
+		
+		TableColumn tblclmnAction = new TableColumn(trigger_table, SWT.NONE);
+		tblclmnAction.setWidth(100);
+		tblclmnAction.setText("Action");
 		
 		Composite composite = new Composite(grpConfuguration, SWT.NONE);
-		GridData gd_composite = new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 3, 1);
+		GridData gd_composite = new GridData(SWT.RIGHT, SWT.BOTTOM, false, true, 2, 1);
 		gd_composite.heightHint = 48;
 		composite.setLayoutData(gd_composite);
 		composite.setLayout(new GridLayout(2, false));
 		
-		Button btnApply_1 = new Button(composite, SWT.NONE);
-		btnApply_1.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, true, 1, 1));
-		btnApply_1.setText("Apply");
+		Button btnApply = new Button(composite, SWT.NONE);
+		btnApply.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, true, 1, 1));
+		btnApply.setText("Apply");
+        btnApply.addMouseListener( new MouseAdapter()
+        {
+            public void mouseDown(MouseEvent e) {
+                personality tmp_pers = new personality(
+                        name_text.getText(),
+                        (short)0,            //TODO make state configurable
+                        new byte[] { 1, 1, 1, 1 },    //Color 1
+                        new byte[] { 1, 1, 1, 1 },    //Color 2
+                        new byte[] { 1, 1, 1, 1 }
+                );
+
+                Device = new device(
+                    tmp_pers,
+                    (byte) 0,
+                    (byte) 0
+                ); //TODO make call by reverence
+            }
+        });
 		
 		Button btnClose = new Button(composite, SWT.NONE);
 		btnClose.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, true, 1, 1));
@@ -150,6 +192,16 @@ public class Device_Config_Dialog extends Dialog {
             this.state_combo.add(this.Device.get_Personality().get_state_name((short)i),i);
 
         this.state_combo.select(this.Device.get_Personality().get_State());
+
+        for (Map.Entry<kickflick.utility.keys,Boolean> entry : this.Device.get_trigger_map().entrySet())
+        {
+            TableItem tableItem = new TableItem(this.trigger_table, SWT.NONE);   //TODO evtl. tabelle vorher löschen
+            tableItem.setText(entry.getKey().get_name());
+            if ( entry.getValue() )
+                tableItem.setChecked(true);
+            else
+                tableItem.setChecked(false);
+        }
     }
 
     private void set_pre_pers(personality pers)
