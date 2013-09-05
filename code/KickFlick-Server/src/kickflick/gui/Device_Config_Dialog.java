@@ -1,5 +1,6 @@
 package kickflick.gui;
 
+import kickflick.utility.keys;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -13,17 +14,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-
-import kickflick.device.*;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
+import kickflick.device.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 import java.util.Map;
 
@@ -35,9 +37,6 @@ public class Device_Config_Dialog extends Dialog {
     private Combo state_combo;
     private Combo preset_pers_combo;
 
-    private Label name_Label;
-
-
     private device Device;
     private Table trigger_table;
 
@@ -46,13 +45,11 @@ public class Device_Config_Dialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public Device_Config_Dialog(Shell parent, int style, device Dev ) {
+	public Device_Config_Dialog(Shell parent, int style, device Dev) {
 		super(parent, SWT.SHELL_TRIM | SWT.BORDER | SWT.APPLICATION_MODAL);
 		setText("SWT Dialog");
 
-
         this.Device = Dev;
-        System.out.println(this.Device.get_trigger_map().toString());
 	}
 
 	/**
@@ -147,19 +144,32 @@ public class Device_Config_Dialog extends Dialog {
         btnApply.addMouseListener( new MouseAdapter()
         {
             public void mouseDown(MouseEvent e) {
+
+                Map<kickflick.utility.keys,Boolean> trigger = new HashMap<keys,Boolean>();
+
+                trigger = Device.get_trigger_map();
+
+                int i = 0;
+                for (Map.Entry<kickflick.utility.keys,Boolean> entry : trigger.entrySet())
+                {
+                    if ( entry.getKey().get_name() == trigger_table.getItem(i).getText())
+                        entry.setValue(trigger_table.getItem(i).getChecked());
+                }
+
                 personality tmp_pers = new personality(
                         name_text.getText(),
-                        (short)0,            //TODO make state configurable
+                        (short)state_combo.getSelectionIndex(),
                         new byte[] { 1, 1, 1, 1 },    //Color 1
                         new byte[] { 1, 1, 1, 1 },    //Color 2
-                        new byte[] { 1, 1, 1, 1 }
+                        new byte[] { 1, 1, 1, 1 }     //Pattern
                 );
 
                 Device = new device(
                     tmp_pers,
                     (byte) 0,
-                    (byte) 0
-                ); //TODO make call by reverence
+                    (byte) 0,
+                    trigger
+                );
             }
         });
 		
@@ -188,11 +198,14 @@ public class Device_Config_Dialog extends Dialog {
         //load device informations
         this.name_text.setText(this.Device.get_Personality().get_Name());
 
+        this.state_combo.removeAll();
         for ( int i = 0; i< this.Device.get_Personality().state_count; ++i)
             this.state_combo.add(this.Device.get_Personality().get_state_name((short)i),i);
 
         this.state_combo.select(this.Device.get_Personality().get_State());
 
+
+        this.trigger_table.removeAll();
         for (Map.Entry<kickflick.utility.keys,Boolean> entry : this.Device.get_trigger_map().entrySet())
         {
             TableItem tableItem = new TableItem(this.trigger_table, SWT.NONE);   //TODO evtl. tabelle vorher löschen
@@ -214,4 +227,8 @@ public class Device_Config_Dialog extends Dialog {
         this.state_combo.select(pers.get_State());
     }
 
+    public device get_device()
+    {
+        return this.Device;
+    }
 }

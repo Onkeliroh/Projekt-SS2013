@@ -20,11 +20,14 @@ public class parser implements SerialPortEventListener {
 	{
 		System.out.print("Parser received message: ");
         System.out.println(Arrays.toString(arg));
+
+        byte[] msg = new byte[4];
+
 		if (arg.length == 4) // must contain at least sender receiver and key
 		{
+            int index = -1;
 			if ( !this.Server_.get_devices().isEmpty()) // if NOT emtpy
 			{
-                int index;
                 if (arg[0] % 2 == 0)
                     index = find_device_sensor_node(arg[0]);
                 else if ( arg[0] % 2 == 1)
@@ -33,11 +36,6 @@ public class parser implements SerialPortEventListener {
                 {
                     System.err.println("Parser Error: incorrect Packet Sender ID");
                     return;
-                }
-
-                if (index != -1)
-                {
-                    //TODO stuff
                 }
 			}
 			else    //if empty -> create new device and fill
@@ -59,8 +57,27 @@ public class parser implements SerialPortEventListener {
                     System.err.println("Parser Error: incorrect Packet Sender ID");
                     return;
                 }
-                this.Server_.get_devices().add( tmp );
+
+                index = this.Server_.get_devices().size();
+                this.Server_.get_devices().add(index, tmp);
 			}
+
+            //send device information
+            if ( this.Server_.get_device(index).get_trigger_map().containsKey(arg[1]))
+            {
+                this.Server_.get_device(index).get_Personality().inc_state();
+                msg[0] = this.Server_.get_device(index).get_actuator_node();
+                msg[1] = reaction_keys.SET_PATTERN.get_key();
+                msg[2] = this.Server_.get_device(index).get_Personality().get_pattern();
+
+                send_msg(msg);
+
+                msg[1] = reaction_keys.SET_COLORS.get_key();
+                msg[2] = this.Server_.get_device(index).get_Personality().get_Color1();
+                msg[3] = this.Server_.get_device(index).get_Personality().get_Color2();
+
+                send_msg(msg);
+            }
 		}
 		else {
 			System.err.println("Parser received empty message!");
@@ -107,4 +124,19 @@ public class parser implements SerialPortEventListener {
 			e.printStackTrace();
 		}
 	}
+
+    private void send_msg(byte[] msg)
+    {
+        try
+        {
+            serial_lib.com_writer writer = new serial_lib.com_writer(this.Server_.get_SerialCom().get_outputstream(),msg);
+            Thread writer_thread = new Thread(writer);
+            writer_thread.run();
+            //TODO mybe join function nessesary
+        }
+        catch(IOException e)
+        {
+            System.out.println("Parser: "+ e.toString());
+        }
+    }
 }

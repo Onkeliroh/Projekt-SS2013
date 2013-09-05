@@ -166,7 +166,7 @@ public class serial_lib
 	}
 	
 	/** */
-    public static class com_writer implements Runnable 
+    public static class com_writer implements Runnable
     {
         private OutputStream out;
         private byte[] str;

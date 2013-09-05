@@ -11,7 +11,7 @@ public class setting_parser {
 	private Map< String , Byte > element_keys = new HashMap< String , Byte >();
 	private Map< String , action_class > action_keys = new HashMap< String , action_class >();
 	
-	final String default_path = "res/keys"; //ToDo set path 
+	final String default_path = "res/keys";
 	
 	void parse_settings()
 	{

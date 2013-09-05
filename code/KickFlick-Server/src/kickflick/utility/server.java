@@ -23,6 +23,9 @@ public class server{
 		Server.init_communication();
 
         //Server.connect_panstamp("/dev/ttyACM0",9600);
+        Server.devices.add(new device());
+        Server.devices.add(new device());
+
 
         Server.input_parser = new parser(Server);
 
@@ -58,11 +61,6 @@ public class server{
 			System.err.println(e.toString());
 		}
 	}
-	
-	public void request_devices()
-	{
-		//TODO write
-	}
 
 	public byte[] compose_bytearray(byte receiver, byte sender, byte key, byte[] data)
 	{
@@ -74,14 +72,14 @@ public class server{
 		return dings;
 	}
 	
-	private void read_settings()
-	{	
-		try {
-			this.set_pars.parse_settings("res/keys");
-		} finally {} 
-		System.out.println(set_pars.get_element_keys());
-		
-	}
+//	private void read_settings()
+//	{
+//		try {
+//			this.set_pars.parse_settings("res/keys");
+//		} finally {}
+//		System.out.println(set_pars.get_element_keys());
+//
+//	}
 	
 	//Getter
 	public kickflick.utility.serial_lib get_SerialCom() {
@@ -92,6 +90,22 @@ public class server{
 	{
 		return this.devices;
 	}
+
+    public void set_device(int index, kickflick.device.device dev)
+    {
+        for ( device d : this.devices)
+        {
+            System.out.print(d.toString() + "\t");
+        }
+
+        try{
+            this.devices.set(index,dev);
+        }
+        catch ( Exception  e)
+        {
+            System.out.println("Server set_device: " + e.toString());
+        }
+    }
 	
 	public device get_device(int index)
 	{

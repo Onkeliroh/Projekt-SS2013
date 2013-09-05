@@ -6,7 +6,7 @@ import java.util.Map;
 
 import kickflick.utility.keys;
 
-//TODO write timertask, timestamp and message composer + sender
+//TODO write timer
 
 public class device {
 	private personality Personality_;
@@ -18,7 +18,17 @@ public class device {
 
     private Timestamp timestamp;
 	//Constructors
-	
+
+    public device (personality Personality, byte sender, byte receiver, Map<keys,Boolean> map)
+    {
+        this.trigger = map;
+        this.Personality_ = Personality;
+        this.sensor_node = sender;
+        this.actuator_node = receiver;
+
+//        this.timestamp = new Timestamp(new Date().getTime()); //TODO decide wether new timestamp on gui change or not
+    }
+
 	public device (personality Personality, byte sender, byte receiver)
 	{
 		this.Personality_ = Personality;
@@ -93,21 +103,6 @@ public class device {
     public Map<keys,Boolean> get_trigger_map()
     {
         return this.trigger;
-    }
-
-    //react function
-    public void react(byte[] arg)
-    {
-//        if ( this.trigger_inc.contains(arg[1]))
-//        {
-//            this.get_Personality().inc_state();
-//        }
-//        else if ( this.trigger_dec.contains(arg[1]))
-//        {
-//            this.get_Personality().dec_state();
-//        }
-
-        //send info
     }
 
     private void create_trigger()

@@ -27,8 +27,6 @@ import org.eclipse.swt.widgets.TableColumn;
 
 public class Server_Main {
 
-	private Server_Main window;
-	private Shell shlKickflickServer;
 	private server Server;
 	private Combo combo_port;
 
@@ -151,7 +149,17 @@ public class Server_Main {
             public void mouseDown(MouseEvent e) {
                 if ( DeviceTable.getSelectionIndex() >= 0)
                 {
-                    new Device_Config_Dialog(shlKickflickServer,SWT.APPLICATION_MODAL,Server.get_device(DeviceTable.getSelectionIndex())).open();
+                    int index = DeviceTable.getSelectionIndex();
+                    Device_Config_Dialog tmp = new Device_Config_Dialog(
+                            shlKickflickServer,
+                            SWT.APPLICATION_MODAL,
+                            Server.get_device(index)
+                    );
+                    tmp.open();
+
+                    device tmp_dev = tmp.get_device();
+//                    System.out.println(index + "\t" + tmp_dev.toString());
+                    Server.set_device(index,tmp.get_device());
                 }
             }
         });
@@ -215,11 +223,6 @@ public class Server_Main {
         };
     }
 
-	public void set_Server ( kickflick.utility.server Server )
-	{
-		this.Server = Server;
-	}
-
 	public Combo getCombo_port() {
 		return combo_port;
 	}
@@ -227,4 +230,15 @@ public class Server_Main {
 	protected Table getDeviceTable() {
 		return DeviceTable;
 	}
+
+    private server get_server()
+    {
+        return this.Server;
+    }
+
+    public void set_Server(kickflick.utility.server serv)
+    {
+        this.Server = serv;
+    }
+
 }

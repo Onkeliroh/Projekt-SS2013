@@ -1,14 +1,16 @@
 package kickflick.device;
 
+import kickflick.utility.color;
+import kickflick.utility.pattern;
+
 public enum presetpersonalities
 {
-    //TODO write correct color and pattern values
 	Paul("Paul",new personality(
 			"Paul",
 			(short)0,
-			new byte[] { 1, 1, 1, 1 },    //Color 1
-            new byte[] { 1, 1, 1, 1 },    //Color 2
-            new byte[] { 1, 1, 1, 1 }     //Pattern
+			new byte[] { color.BLUE.get_key(), color.RED.get_key(), color.GREEN.get_key(), color.FUCHSIA.get_key() },    //Color 1
+            new byte[] { color.BLUE.get_key(), color.RED.get_key(), color.GREEN.get_key(), color.FUCHSIA.get_key() },    //Color 2
+            new byte[] { pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key() }     //Pattern
 			)),
 	
 	Tanja("Tanja",new personality(

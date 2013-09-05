@@ -1,6 +1,5 @@
 package kickflick.device;
 
-import kickflick.device.color;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,9 +9,7 @@ public class personality{
     public final int state_count = 4;
 	private byte[] Color1_ = new byte[4];
     private byte[] Color2_ = new byte[4];
-	private byte[] pattern_ = new byte[4]; //TODO should be the subkey
-
-    private byte[][] actio_reactio = new byte[4][2];
+	private byte[] pattern_ = new byte[4];
 
 	//Constructors
 
