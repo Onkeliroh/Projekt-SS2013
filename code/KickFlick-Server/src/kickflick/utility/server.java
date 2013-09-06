@@ -13,6 +13,14 @@ public class server{
 	public parser input_parser;
 	
 	private List<device> devices = new ArrayList<device>();
+
+    public server()
+    {
+        this.init_communication();
+        this.input_parser = new parser(this);
+
+        this.openWindow();
+    }
 	
 	public static void main(String[] args)
 	{ 
@@ -20,16 +28,16 @@ public class server{
 		
 		
 //		Server.read_settings(); //TODO maybe not needed at all
-		Server.init_communication();
+//		Server.init_communication();
 
         //Server.connect_panstamp("/dev/ttyACM0",9600);
-        Server.devices.add(new device());
-        Server.devices.add(new device());
+//        Server.devices.add(new device());
+//        Server.devices.add(new device());
 
 
-        Server.input_parser = new parser(Server);
+//        Server.input_parser = new parser(Server);
 
-		Server.openWindow();
+//		Server.openWindow();
 	}
 
 	private void openWindow()
