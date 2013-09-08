@@ -51,12 +51,12 @@ public class communicator extends Dialog implements SerialPortEventListener {
 	 * @return the result
 	 */
 	public Object open() {
-		if ( Server.serial_com.is_connected())
+		if ( Server.get_SerialCom().is_connected())
 		{
 			try {
-				Server.serial_com.initIOStream();
-				Server.serial_com.get_connected_Port().addEventListener(this);
-				Server.serial_com.get_connected_Port().notifyOnDataAvailable(true);
+				Server.get_SerialCom().initIOStream();
+				Server.get_SerialCom().get_connected_Port().addEventListener(this);
+				Server.get_SerialCom().get_connected_Port().notifyOnDataAvailable(true);
 			} catch (TooManyListenersException e1) {
 				System.err.println(e1.toString());
 			}	
@@ -137,17 +137,12 @@ public class communicator extends Dialog implements SerialPortEventListener {
 						dings
 						);
 				
-				if (Server.serial_com.is_connected())
+				if (Server.get_SerialCom().is_connected())
 				{
-					try {
-						serial_lib.com_writer writer = new serial_lib.com_writer(Server.serial_com.get_outputstream(), west_package);
-						Thread thread = new Thread(writer);
-						
-						shell.getDisplay().asyncExec(thread);
-						
-					} catch (IOException e1) {
-						System.err.println(e.toString());
-					}
+                    serial_lib.com_writer writer = new serial_lib.com_writer(Server.get_SerialCom().get_outputstream(), west_package);
+                    Thread thread = new Thread(writer);
+
+                    shell.getDisplay().asyncExec(thread);
 				}
 			}
 		});
@@ -201,14 +196,11 @@ public class communicator extends Dialog implements SerialPortEventListener {
 
 	@Override
 	public void serialEvent(SerialPortEvent arg0) {
-		try {
-			System.out.println("INCOMMING!!!");
-			serial_lib.com_listener horcher = new serial_lib.com_listener(Server.serial_com, Server.serial_com.get_inputstream());
+        System.out.println("INCOMMING!!!");
+        serial_lib.com_listener horcher = new serial_lib.com_listener(Server.get_SerialCom(), Server.get_SerialCom().get_inputstream());
 //			horcher.run();
-			Thread read = new Thread(horcher);
-			shell.getDisplay().asyncExec(read);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        Thread read = new Thread(horcher);
+        shell.getDisplay().asyncExec(read);
+
 	}
 }

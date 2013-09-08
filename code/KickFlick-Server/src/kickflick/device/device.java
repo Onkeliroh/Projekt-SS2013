@@ -26,7 +26,7 @@ public class device {
         this.sensor_node = sender;
         this.actuator_node = receiver;
 
-//        this.timestamp = new Timestamp(new Date().getTime()); //TODO decide wether new timestamp on gui change or not
+        this.timestamp = new Timestamp(new Date().getTime()); //TODO decide wether new timestamp on gui change or not
     }
 
 	public device (personality Personality, byte sender, byte receiver)
@@ -47,6 +47,14 @@ public class device {
 
         create_trigger();
 	}
+
+    public device (device dev)
+    {
+        this.set_Personality(dev.get_Personality());
+        this.sensor_node = dev.get_sensor_node();
+        this.actuator_node = dev.get_actuator_node();
+        this.trigger = dev.get_trigger_map();
+    }
 	
 	public device ()
 	{
@@ -111,5 +119,10 @@ public class device {
         {
             this.trigger.put(keys.values()[i],true);
         }
+    }
+
+    public void set_new_timestamp()
+    {
+        this.timestamp = new Timestamp(new Date().getTime());
     }
 }

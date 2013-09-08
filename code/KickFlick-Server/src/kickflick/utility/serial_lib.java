@@ -35,7 +35,7 @@ public class serial_lib
     //some ascii values for for certain things
     final static int SPACE_ASCII = 32;
     final static int DASH_ASCII = 45;
-    final static int NEW_LINE_ASCII = 124;
+    private final static int NEW_LINE_ASCII = 124;
 	
 	
 	//Constructor
@@ -44,7 +44,7 @@ public class serial_lib
 	
 	//searches for all devices connected with a serial port on the pc
 	@SuppressWarnings({ "rawtypes" })
-	public  Enumeration get_ports() {		
+    Enumeration get_ports() {
 		Enumeration enumComm = CommPortIdentifier.getPortIdentifiers();
 	    
 	    if (enumComm != null)
@@ -109,28 +109,25 @@ public class serial_lib
 		}
 	}
 	
-	public InputStream get_inputstream() throws IOException
-	{
+	public InputStream get_inputstream() {
 		return in;
 	}
 	
-	public OutputStream get_outputstream() throws IOException
-	{
+	public OutputStream get_outputstream() {
 		return out;
 	}
 	
 	public boolean is_connected()
 	{
-		if (connected)
-			return true;
-		return false;
-	}
+        return connected;
+    }
 
 	public static class com_listener implements Runnable
 	{
-		private serial_lib bums_;
-		private InputStream in_;
-		private byte[] Buffer_ = new byte[4];
+		private final serial_lib bums_;
+		private final InputStream in_;
+		@SuppressWarnings("CanBeFinal")
+        private byte[] Buffer_ = new byte[4];
 		
 		public com_listener(serial_lib ding, InputStream input)
 		{
@@ -168,8 +165,8 @@ public class serial_lib
 	/** */
     public static class com_writer implements Runnable
     {
-        private OutputStream out;
-        private byte[] str;
+        private final OutputStream out;
+        private final byte[] str;
         
         public com_writer ( OutputStream out, String string )
         {
@@ -218,25 +215,11 @@ public class serial_lib
             return false;
         }
     }
-    
-    public byte[] create_package(byte key, byte id, byte data)
-    {
-    	byte[] header = new byte[]{key,00000000,id};
-    	byte[] west_package = new byte[64];
-    	System.arraycopy(header, 0, west_package, 0, header.length);
-    	System.arraycopy(data, 0, west_package, header.length, west_package.length);
-    	
-    	return west_package;
-    }
 
-	
 	//for a nice cleanup
-	public  boolean exit() throws IOException
-	{		
+	public  void exit() {
 		serialPort.removeEventListener();
         serialPort.close();
         connected = false;
-		
-		return true;
 	}
 }

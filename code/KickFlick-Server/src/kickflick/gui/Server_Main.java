@@ -11,8 +11,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import java.util.List;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Button;
@@ -33,7 +32,7 @@ public class Server_Main {
     final Display display = new Display();
 
 	private Runnable timer_;
-    private final int time = 1000; //TODO make configurable
+    private final int time = 3000; //TODO make configurable
 	private Table DeviceTable;
 
 
@@ -84,7 +83,7 @@ public class Server_Main {
 		btnConnect.setLayoutData(gd_btnConnect);
 		btnConnect.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				if ( Server != null && !Server.serial_com.is_connected())
+				if ( Server != null && !Server.get_SerialCom().is_connected())
 				{
 					Server.connect_panstamp(combo_port.getItem(combo_port.getSelectionIndex()),
 										Integer.parseInt(combo_baut.getItem(combo_baut.getSelectionIndex())));
@@ -92,11 +91,7 @@ public class Server_Main {
 				}
 				else
 				{
-					try {
-						Server.serial_com.exit();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+                    Server.get_SerialCom().exit();
 					btnConnect.setText("Connect");
 				}
 			}
@@ -155,11 +150,8 @@ public class Server_Main {
                             SWT.APPLICATION_MODAL,
                             Server.get_device(index)
                     );
-                    tmp.open();
-
-                    device tmp_dev = tmp.get_device();
-//                    System.out.println(index + "\t" + tmp_dev.toString());
-                    Server.set_device(index,tmp.get_device());
+                    device tmp_dev =  (device) tmp.open();
+                    Server.set_device(index,tmp_dev);
                 }
             }
         });
@@ -203,15 +195,18 @@ public class Server_Main {
             {
                 //DeviceTable.clearAll();
                 int selection = DeviceTable.getSelectionIndex();
+                List<device> list = Server.get_devices();
                 DeviceTable.removeAll();
-                for ( int i = 0; i < Server.get_devices().size(); ++i)
+                int i = 0;
+                for ( device d : list)
                 {
                     TableItem tableItem = new TableItem(DeviceTable, SWT.NONE,i);   //TODO evtl. tabelle vorher löschen
                     tableItem.setText(new String[] {
-                            Server.get_device(i).get_Personality().get_Name(),
-                            Server.get_device(i).get_Personality().get_state_name(),
-                            Server.get_device(i).get_timestamp()
+                            d.get_Personality().get_Name(),
+                            d.get_Personality().get_state_name(),
+                            d.get_timestamp()
                     });
+                    ++i;
                 }
                 try{
                     DeviceTable.setSelection(selection);

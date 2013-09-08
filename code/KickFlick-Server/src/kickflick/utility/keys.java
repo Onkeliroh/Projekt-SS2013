@@ -45,4 +45,12 @@ public enum keys {
         return false;
     }
 
+    public keys get_key ( String str )
+    {
+        for ( keys k : keys.values())
+            if (k.get_name().equals(str))
+                return k;
+        return null;
+    }
+
 }

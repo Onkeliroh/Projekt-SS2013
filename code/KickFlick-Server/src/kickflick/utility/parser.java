@@ -7,8 +7,8 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import kickflick.device.*;
 
-public class parser implements SerialPortEventListener {
-	private server Server_;
+class parser implements SerialPortEventListener {
+	private final server Server_;
 	
 	public parser(server Serv)
 	{
@@ -16,7 +16,7 @@ public class parser implements SerialPortEventListener {
 		this.Server_=Serv;
 	}
 	
-	public void parse(byte[] arg)
+	void parse(byte[] arg)
 	{
 		System.out.print("Parser received message: ");
         System.out.println(Arrays.toString(arg));
@@ -25,7 +25,7 @@ public class parser implements SerialPortEventListener {
 
 		if (arg.length == 4) // must contain at least sender receiver and key
 		{
-            int index = -1;
+            int index;
 			if ( !this.Server_.get_devices().isEmpty()) // if NOT emtpy
 			{
                 if (arg[0] % 2 == 0)
@@ -65,6 +65,8 @@ public class parser implements SerialPortEventListener {
             //send device information
             if ( this.Server_.get_device(index).get_trigger_map().containsKey(arg[1]))
             {
+                this.Server_.get_device(index).set_new_timestamp();
+
                 this.Server_.get_device(index).get_Personality().inc_state();
                 msg[0] = this.Server_.get_device(index).get_actuator_node();
                 msg[1] = reaction_keys.SET_PATTERN.get_key();
@@ -84,7 +86,7 @@ public class parser implements SerialPortEventListener {
 		}
 	}
 	
-	public int find_device_sensor_node(byte address)
+	int find_device_sensor_node(byte address)
 	{
 		for ( int i = 0; i < this.Server_.get_devices().size() ; ++i)
 			if ( this.Server_.get_device(i).get_sensor_node() == address)
@@ -104,39 +106,28 @@ public class parser implements SerialPortEventListener {
 	@Override
 	public void serialEvent(SerialPortEvent arg0) {
         System.out.println("INCOMMING!!!");
-		try {
-			serial_lib.com_listener horcher = new serial_lib.com_listener(
-					this.Server_.serial_com, this.Server_.serial_com.get_inputstream()
-					);
-			Thread thread = new Thread(horcher);
-			thread.start();
-            try
-            {
-                thread.join();
-            }
-            catch(InterruptedException e)
-            {
-                e.fillInStackTrace();
-            }
+        serial_lib.com_listener horcher = new serial_lib.com_listener(
+                this.Server_.get_SerialCom(), this.Server_.get_SerialCom().get_inputstream()
+                );
+        Thread thread = new Thread(horcher);
+        thread.start();
+        try
+        {
+            thread.join();
+        }
+        catch(InterruptedException e)
+        {
+            e.fillInStackTrace();
+        }
 
-			this.parse(horcher.get_buffer());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        this.parse(horcher.get_buffer());
 	}
 
     private void send_msg(byte[] msg)
     {
-        try
-        {
-            serial_lib.com_writer writer = new serial_lib.com_writer(this.Server_.get_SerialCom().get_outputstream(),msg);
-            Thread writer_thread = new Thread(writer);
-            writer_thread.run();
-            //TODO mybe join function nessesary
-        }
-        catch(IOException e)
-        {
-            System.out.println("Parser: "+ e.toString());
-        }
+        serial_lib.com_writer writer = new serial_lib.com_writer(this.Server_.get_SerialCom().get_outputstream(),msg);
+        Thread writer_thread = new Thread(writer);
+        writer_thread.run();
+        //TODO mybe join function nessesary
     }
 }

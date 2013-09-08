@@ -7,14 +7,14 @@ import kickflick.gui.Server_Main;
 import kickflick.device.device;
 
 public class server{
-	private kickflick.gui.Server_Main window;
-	public kickflick.utility.serial_lib serial_com;
-	public setting_parser set_pars = new setting_parser();
-	public parser input_parser;
+    private kickflick.utility.serial_lib serial_com;
+	private setting_parser set_pars = new setting_parser();
+	private final parser input_parser;
 	
-	private List<device> devices = new ArrayList<device>();
+	@SuppressWarnings("CanBeFinal")
+    private List<device> devices = new ArrayList<device>();
 
-    public server()
+    private server()
     {
         this.init_communication();
         this.input_parser = new parser(this);
@@ -43,7 +43,7 @@ public class server{
 	private void openWindow()
 	{
 		try {
-			window = new Server_Main();
+            Server_Main window = new Server_Main();
 			window.set_Server(this);
 			window.open();
 		} catch (Exception e) {
@@ -99,20 +99,9 @@ public class server{
 		return this.devices;
 	}
 
-    public void set_device(int index, kickflick.device.device dev)
+    public void set_device(int index, device dev)
     {
-        for ( device d : this.devices)
-        {
-            System.out.print(d.toString() + "\t");
-        }
-
-        try{
-            this.devices.set(index,dev);
-        }
-        catch ( Exception  e)
-        {
-            System.out.println("Server set_device: " + e.toString());
-        }
+        this.devices.set(index,dev);
     }
 	
 	public device get_device(int index)

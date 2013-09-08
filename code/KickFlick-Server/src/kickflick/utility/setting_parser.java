@@ -25,7 +25,7 @@ public class setting_parser {
 			FileReader reader = new FileReader(file_path);
 			BufferedReader settings_reader = new BufferedReader(reader);
 			
-			String line = null;
+			String line;
 			
 			while (( line = settings_reader.readLine() ) != null) 
 			{
@@ -103,7 +103,7 @@ public class setting_parser {
 		
 		public String toString()
 		{
-			return new String(this.name_ + " | " + this.key_);
+			return this.name_ + " | " + this.key_;
 		}
 	}
 }
