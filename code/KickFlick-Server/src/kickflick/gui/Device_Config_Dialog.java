@@ -313,6 +313,8 @@ public class Device_Config_Dialog extends Dialog {
             else
                 tableItem.setChecked(false);
         }
+
+
     }
 
     private void set_pre_pers(personality pers)
