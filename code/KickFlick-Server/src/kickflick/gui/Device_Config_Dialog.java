@@ -1,5 +1,6 @@
 package kickflick.gui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +32,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import java.util.List;
+
 public class Device_Config_Dialog extends Dialog {
 
 	protected device result;
@@ -47,6 +50,10 @@ public class Device_Config_Dialog extends Dialog {
     
     private final String[] state_names = {"Standby", "First contact", "Playing", "Playing (hard)"};
     private final String[] tabel_heads = {"State","Pattern","1. Color", "2. Color"};
+
+    private List<Combo> pattern_combo_list = new ArrayList<Combo>();
+    private List<CCombo> color1_combo_list = new ArrayList<CCombo>();
+    private List<CCombo> color2_combo_list = new ArrayList<CCombo>();
 
 	/**
 	 * Create the dialog.
@@ -173,78 +180,6 @@ public class Device_Config_Dialog extends Dialog {
 				state_table.setHeaderVisible(true);
 				state_table.setLinesVisible(true);
 				
-				TabItem tbtmTest = new TabItem(tabFolder, SWT.NONE);
-				tbtmTest.setText("test");
-				
-				Composite composite_1 = new Composite(tabFolder, SWT.NONE);
-				tbtmTest.setControl(composite_1);
-				composite_1.setLayout(new GridLayout(4, false));
-				new Label(composite_1, SWT.NONE);
-				
-				Label lblPattern = new Label(composite_1, SWT.NONE);
-				lblPattern.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-				lblPattern.setText("Pattern");
-				
-				Label lblColor = new Label(composite_1, SWT.NONE);
-				lblColor.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-				lblColor.setText("1. Color");
-				
-				Label lblColor_1 = new Label(composite_1, SWT.NONE);
-				lblColor_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-				lblColor_1.setText("2. Color");
-				
-				Label lblStandby = new Label(composite_1, SWT.NONE);
-				lblStandby.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-				lblStandby.setText("Standby");
-				
-				Combo combo_p0 = new Combo(composite_1, SWT.NONE);
-				combo_p0.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Combo combo_c10 = new Combo(composite_1, SWT.NONE);
-				combo_c10.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Combo combo_c20 = new Combo(composite_1, SWT.NONE);
-				combo_c20.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Label lblNewLabel = new Label(composite_1, SWT.NONE);
-				lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-				lblNewLabel.setText("First contact");
-				
-				Combo combo_p1 = new Combo(composite_1, SWT.NONE);
-				combo_p1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Combo combo_c11 = new Combo(composite_1, SWT.NONE);
-				combo_c11.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Combo combo_c21 = new Combo(composite_1, SWT.NONE);
-				combo_c21.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Label lblNewLabel_1 = new Label(composite_1, SWT.NONE);
-				lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-				lblNewLabel_1.setText("Playing");
-				
-				Combo combo_p2 = new Combo(composite_1, SWT.NONE);
-				combo_p2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Combo combo_c12 = new Combo(composite_1, SWT.NONE);
-				combo_c12.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Combo combo_c22 = new Combo(composite_1, SWT.NONE);
-				combo_c22.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Label lblNewLabel_2 = new Label(composite_1, SWT.NONE);
-				lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-				lblNewLabel_2.setText("Playing (hard)");
-				
-				Combo combo_p3 = new Combo(composite_1, SWT.NONE);
-				combo_p3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Combo combo_c13 = new Combo(composite_1, SWT.NONE);
-				combo_c13.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
-				Combo combo_c23 = new Combo(composite_1, SWT.NONE);
-				combo_c23.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				
 				
 				
 				//TODO fix column alignment
@@ -275,24 +210,9 @@ public class Device_Config_Dialog extends Dialog {
 					for ( pattern p : pattern.values())
 						pattern_combo.add(p.get_name());
 					pattern_combo.select(0);
-					pattern_combo.addSelectionListener(new SelectionListener() {
-						
-						@Override
-						public void widgetSelected(SelectionEvent arg0) {
-							// TODO Auto-generated method stub
-							result.get_Personality().set_pattern(
-									(byte) pattern_combo.getSelectionIndex(),
-									(short) arg0.y);
-						}
-						
-						@Override
-						public void widgetDefaultSelected(SelectionEvent arg0) {
-							// TODO Auto-generated method stub
-							
-						}
-					});
 					editor.grabHorizontal = true;
 					editor.setEditor(pattern_combo, items[i], 1);
+                    pattern_combo_list.add(pattern_combo);
 					
 					editor = new TableEditor(state_table);
 					CCombo color1_combo = new CCombo(state_table, SWT.NONE);
@@ -302,6 +222,7 @@ public class Device_Config_Dialog extends Dialog {
 					color1_combo.select(0);
 					editor.grabHorizontal = true;
 					editor.setEditor(color1_combo, items[i], 2);
+                    color1_combo_list.add(color1_combo);
 					
 					editor = new TableEditor(state_table);
 					CCombo color2_combo = new CCombo(state_table, SWT.NONE);
@@ -311,9 +232,8 @@ public class Device_Config_Dialog extends Dialog {
 					color2_combo.select(0);
 					editor.grabHorizontal = true;
 					editor.setEditor(color2_combo, items[i], 3);
-			    }
-			    
-			    
+                    color2_combo_list.add(color2_combo);
+                }
 		
 		Composite composite = new Composite(shlDeviceConfugurationDialog, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, false, 1, 1));
@@ -345,7 +265,28 @@ public class Device_Config_Dialog extends Dialog {
                 result.get_Personality().set_State((short) state_combo.getSelectionIndex());
                 result.get_Personality().set_pattern(new byte[] { pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key() });
 
-		    }
+                short j = 0;
+                for (Combo c : pattern_combo_list)
+                {
+                    result.get_Personality().set_pattern((byte) c.getSelectionIndex(),j);
+                    ++j;
+                }
+
+                j=0;
+                for ( CCombo c : color1_combo_list)
+                {
+                    result.get_Personality().set_Color1((byte) c.getSelectionIndex(),j);
+                    ++j;
+                }
+                j=0;
+                for ( CCombo c : color2_combo_list)
+                {
+                    result.get_Personality().set_Color2((byte) c.getSelectionIndex(),j);
+                    ++j;
+                }
+
+
+            }
 		});
 		
 		Button btnClose = new Button(composite, SWT.RIGHT);
@@ -392,6 +333,26 @@ public class Device_Config_Dialog extends Dialog {
                 tableItem.setChecked(false);
         }
 
+        short i = 0;
+        for (Combo c : pattern_combo_list)
+        {
+            c.select(this.Device.get_Personality().get_pattern(i));
+            ++i;
+        }
+
+        i=0;
+        for ( CCombo c : color1_combo_list)
+        {
+            c.select(this.Device.get_Personality().get_Color1(i));
+            ++i;
+        }
+        i=0;
+        for ( CCombo c : color2_combo_list)
+        {
+            c.select(this.Device.get_Personality().get_Color2(i));
+            ++i;
+        }
+
         result = Device;
     }
 
@@ -404,5 +365,25 @@ public class Device_Config_Dialog extends Dialog {
             this.state_combo.add(pers.get_state_name((short)i),i);
 
         this.state_combo.select(pers.get_State());
+
+        short i = 0;
+        for (Combo c : pattern_combo_list)
+        {
+            c.select(pers.get_pattern(i));
+            ++i;
+        }
+
+        i=0;
+        for ( CCombo c : color1_combo_list)
+        {
+            c.select(pers.get_Color1(i));
+            ++i;
+        }
+        i=0;
+        for ( CCombo c : color2_combo_list)
+        {
+            c.select(pers.get_Color2(i));
+            ++i;
+        }
     }
 }

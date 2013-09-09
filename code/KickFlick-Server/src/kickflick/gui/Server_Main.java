@@ -11,18 +11,21 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Menu;
+
 import java.util.List;
+
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Composite;
 
 public class Server_Main {
 
@@ -103,25 +106,25 @@ public class Server_Main {
 
 		Group grpDevices = new Group(shlKickflickServer, SWT.NONE);
 		grpDevices.setText("Devices");
-		grpDevices.setLayout(new GridLayout(3, false));
+		grpDevices.setLayout(new GridLayout(1, false));
 		grpDevices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-
-		DeviceTable = new Table( grpDevices, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION );
-		DeviceTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
-		DeviceTable.setLinesVisible(true);
-		DeviceTable.setHeaderVisible(true);
-
-		TableColumn tblclmnNewColumn = new TableColumn(DeviceTable, SWT.NONE);
-		tblclmnNewColumn.setWidth(248);
-		tblclmnNewColumn.setText("Personality");
-
-		TableColumn tblclmnNewColumn_1 = new TableColumn(DeviceTable, SWT.RIGHT);
-		tblclmnNewColumn_1.setWidth(79);
-		tblclmnNewColumn_1.setText("State");
-
-		TableColumn tblclmnNewColumn_2 = new TableColumn(DeviceTable, SWT.RIGHT);
-		tblclmnNewColumn_2.setWidth(107);
-		tblclmnNewColumn_2.setText("last seen");
+		
+				DeviceTable = new Table( grpDevices, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION );
+				DeviceTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+				DeviceTable.setLinesVisible(true);
+				DeviceTable.setHeaderVisible(true);
+				
+						TableColumn tblclmnNewColumn = new TableColumn(DeviceTable, SWT.NONE);
+						tblclmnNewColumn.setWidth(248);
+						tblclmnNewColumn.setText("Personality");
+						
+								TableColumn tblclmnNewColumn_1 = new TableColumn(DeviceTable, SWT.RIGHT);
+								tblclmnNewColumn_1.setWidth(79);
+								tblclmnNewColumn_1.setText("State");
+								
+										TableColumn tblclmnNewColumn_2 = new TableColumn(DeviceTable, SWT.RIGHT);
+										tblclmnNewColumn_2.setWidth(107);
+										tblclmnNewColumn_2.setText("last seen");
 
 		if ( this.Server.get_devices().size() > 0 )
 		{
@@ -134,12 +137,36 @@ public class Server_Main {
 												});
 			}
 		}
-
-
-
-		Button Config_btn = new Button(grpDevices, SWT.NONE);
-		Config_btn.setText("Config");
-		Config_btn.addMouseListener(new MouseAdapter()
+		
+		Composite composite = new Composite(grpDevices, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		composite.setLayout(new GridLayout(4, true));
+		
+		Button btnDeleteAll = new Button(composite, SWT.NONE);
+		btnDeleteAll.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnDeleteAll.setText("Delete All");
+		btnDeleteAll.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				Server.get_devices().clear();
+			}
+		});
+		
+		Button btnDelete = new Button(composite, SWT.NONE);
+		btnDelete.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				if ( DeviceTable.getSelectionIndex() >= 0)
+					Server.get_devices().remove(DeviceTable.getSelectionIndex());
+			}
+		});
+		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnDelete.setText("Delete");
+		
+		
+		
+				Button Config_btn = new Button(composite, SWT.NONE);
+				Config_btn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+				Config_btn.setText("Config");
+				Config_btn.addMouseListener(new MouseAdapter()
         {
             public void mouseDown(MouseEvent e) {
                 if ( DeviceTable.getSelectionIndex() >= 0)
@@ -155,16 +182,16 @@ public class Server_Main {
                 }
             }
         });
-
-
-		Button newDevice = new Button(grpDevices, SWT.NONE);
-		newDevice.setText("New Device");
-		new Label(grpDevices, SWT.NONE);
-        newDevice.addMouseListener(new MouseAdapter() {
-            public void mouseDown(MouseEvent e) {
-                Server.get_devices().add(new kickflick.device.device());
-            }
-        });
+				
+				
+						Button newDevice = new Button(composite, SWT.NONE);
+						newDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+						newDevice.setText("New Device");
+						newDevice.addMouseListener(new MouseAdapter() {
+						    public void mouseDown(MouseEvent e) {
+						        Server.get_devices().add(new kickflick.device.device());
+						    }
+						});
 
 		set_up();
 

@@ -38,10 +38,8 @@ public enum keys {
     public boolean contains_key (byte b)
     {
         for (keys k: keys.values())
-        {
-            if (k.get_key() == b)
+            if (k.key_ == b)
                 return true;
-        }
         return false;
     }
 
@@ -49,6 +47,14 @@ public enum keys {
     {
         for ( keys k : keys.values())
             if (k.get_name().equals(str))
+                return k;
+        return null;
+    }
+
+    public keys get_key ( byte b)
+    {
+        for ( keys k : keys.values() )
+            if ( k.get_key() == b)
                 return k;
         return null;
     }

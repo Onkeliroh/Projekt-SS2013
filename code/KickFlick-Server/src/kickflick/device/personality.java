@@ -91,23 +91,13 @@ public class personality{
 	//sets the color of a state
 	public void set_Color1 ( byte Color, short state)
 	{
-		try	{
-			this.Color1_[state] = Color;
-		}
-		finally	{
-			System.err.println("Error while setting Color. Maybe wrong state.");
-		}
+        this.Color1_[state] = Color;
 	}
 
     //sets the color of a state
     public void set_Color2 ( byte Color, short state)
     {
-        try	{
-            this.Color2_[state] = Color;
-        }
-        finally	{
-            System.err.println("Error while setting Color. Maybe wrong state.");
-        }
+        this.Color2_[state] = Color;
     }
 	
 	public void set_pattern(byte pattern)

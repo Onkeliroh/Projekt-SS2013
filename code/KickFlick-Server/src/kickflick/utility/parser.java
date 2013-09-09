@@ -2,7 +2,9 @@ package kickflick.utility;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 
+import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import kickflick.device.*;
@@ -31,26 +33,27 @@ class parser implements SerialPortEventListener {
                 if (arg[0] % 2 == 0)
                     index = find_device_sensor_node(arg[0]);
                 else if ( arg[0] % 2 == 1)
-                    index = find_device_sensor_node(arg[0]);
+                    index = find_device_actuator_node(arg[0]);
                 else
                 {
                     System.err.println("Parser Error: incorrect Packet Sender ID");
                     return;
                 }
 			}
-			else    //if empty -> create new device and fill
+			else    //if empty -> create new device and fill                                                                                               g
 			{
                 device tmp = new device ( new personality());
 
                 if (arg[0] % 2 == 0)
                 {
                     tmp.set_sensor_node(arg[0]);
-                    tmp.set_actuator_node(arg[0]++);     //actuator is next to sensor node
+                    tmp.set_actuator_node(++arg[0]);     //actuator is next to sensor node
                 }
                 else if ( arg[0] % 2 == 1)
                 {
+                    System.out.println("TEST2");
                     tmp.set_actuator_node(arg[0]);
-                    tmp.set_sensor_node(arg[0]--);      //sensor is next to actuator node
+                    tmp.set_sensor_node(--arg[0]);      //sensor is next to actuator node
                 }
                 else
                 {
@@ -63,7 +66,14 @@ class parser implements SerialPortEventListener {
 			}
 
             //send device information
-            if ( this.Server_.get_device(index).get_trigger_map().containsKey(arg[1]))
+            boolean found = false;
+            for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
+            {
+                keys k = (keys) entry.getKey();
+                if (k.get_key() == arg[1] && (Boolean) entry.getValue())
+                    found = true;
+            }
+            if ( found )
             {
                 this.Server_.get_device(index).set_new_timestamp();
 
@@ -80,6 +90,8 @@ class parser implements SerialPortEventListener {
 
                 send_msg(msg);
             }
+            else
+                System.out.println("Parser found no match.");
 		}
 		else {
 			System.err.println("Parser received empty message!");
@@ -103,9 +115,8 @@ class parser implements SerialPortEventListener {
         return -1; //found nothing
     }
 
-	@Override
 	public void serialEvent(SerialPortEvent arg0) {
-        System.out.println("INCOMMING!!!");
+//        System.out.println("INCOMMING!!!");
         serial_lib.com_listener horcher = new serial_lib.com_listener(
                 this.Server_.get_SerialCom(), this.Server_.get_SerialCom().get_inputstream()
                 );
@@ -128,6 +139,14 @@ class parser implements SerialPortEventListener {
         serial_lib.com_writer writer = new serial_lib.com_writer(this.Server_.get_SerialCom().get_outputstream(),msg);
         Thread writer_thread = new Thread(writer);
         writer_thread.run();
+        try
+        {
+            writer_thread.join();
+        }
+        catch(InterruptedException e)
+        {
+            e.fillInStackTrace();
+        }
         //TODO mybe join function nessesary
     }
 }
