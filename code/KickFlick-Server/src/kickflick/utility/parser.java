@@ -1,7 +1,9 @@
 package kickflick.utility;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
@@ -25,7 +27,7 @@ class parser implements SerialPortEventListener {
 
         byte[] msg = new byte[4];
 
-		if (arg.length == 4) // must contain at least sender receiver and key
+		if (arg.length >= 4) // must contain at least sender receiver and key
 		{
             int index;
 			if ( !this.Server_.get_devices().isEmpty()) // if NOT emtpy
@@ -51,7 +53,6 @@ class parser implements SerialPortEventListener {
                 }
                 else if ( arg[0] % 2 == 1)
                 {
-                    System.out.println("TEST2");
                     tmp.set_actuator_node(arg[0]);
                     tmp.set_sensor_node(--arg[0]);      //sensor is next to actuator node
                 }
@@ -65,33 +66,32 @@ class parser implements SerialPortEventListener {
                 this.Server_.get_devices().add(index, tmp);
 			}
 
-            //send device information
-            boolean found = false;
-            for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
+            Timestamp stamp = new Timestamp(new Date().getTime());
+            if ( this.Server_.get_device(index).get_timestamp().getTime() - stamp.getTime() >= -10000)      //if the time difference between the last and this contact is big enougth
             {
-                keys k = (keys) entry.getKey();
-                if (k.get_key() == arg[1] && (Boolean) entry.getValue())
-                    found = true;
+                //send device information
+                boolean found = false;
+                for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
+                {
+                    keys k = (keys) entry.getKey();
+                    if (k.get_key() == arg[1] && (Boolean) entry.getValue())
+                    {
+                        found = true;
+                        System.out.println("Parser: Found key");
+                    }
+                }
+                if ( found )
+                {
+
+                    this.Server_.get_device(index).get_Personality().inc_state(); //TODO set inc delay
+
+                    this.Server_.get_device(index).set_new_timestamp();
+
+                    this.Server_.send_device(index);
+                }
+                else
+                    System.out.println("Parser found no match.");
             }
-            if ( found )
-            {
-                this.Server_.get_device(index).set_new_timestamp();
-
-                this.Server_.get_device(index).get_Personality().inc_state();
-                msg[0] = this.Server_.get_device(index).get_actuator_node();
-                msg[1] = reaction_keys.SET_PATTERN.get_key();
-                msg[2] = this.Server_.get_device(index).get_Personality().get_pattern();
-
-                send_msg(msg);
-
-                msg[1] = reaction_keys.SET_COLORS.get_key();
-                msg[2] = this.Server_.get_device(index).get_Personality().get_Color1();
-                msg[3] = this.Server_.get_device(index).get_Personality().get_Color2();
-
-                send_msg(msg);
-            }
-            else
-                System.out.println("Parser found no match.");
 		}
 		else {
 			System.err.println("Parser received empty message!");
@@ -133,20 +133,4 @@ class parser implements SerialPortEventListener {
 
         this.parse(horcher.get_buffer());
 	}
-
-    private void send_msg(byte[] msg)
-    {
-        serial_lib.com_writer writer = new serial_lib.com_writer(this.Server_.get_SerialCom().get_outputstream(),msg);
-        Thread writer_thread = new Thread(writer);
-        writer_thread.run();
-        try
-        {
-            writer_thread.join();
-        }
-        catch(InterruptedException e)
-        {
-            e.fillInStackTrace();
-        }
-        //TODO mybe join function nessesary
-    }
 }

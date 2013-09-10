@@ -127,7 +127,7 @@ public class serial_lib
 		private final serial_lib bums_;
 		private final InputStream in_;
 		@SuppressWarnings("CanBeFinal")
-        private byte[] Buffer_ = new byte[4];
+        private byte[] Buffer_ = new byte[1024];
 		
 		public com_listener(serial_lib ding, InputStream input)
 		{
@@ -138,27 +138,43 @@ public class serial_lib
 		public void run() {
             int tmp_int;
             byte[] tmp = new byte[1024];
-	        try
-	        {
-                int len = 0;
-                while ( ( tmp_int = this.in_.read()) > -1 )
-                {
-                    if ( tmp_int == '\n' ) {
-                        break;
-                    }
-                    tmp[len++] = (byte) tmp_int;
+//	        try
+//	        {
+//                int len = 0;
+//                while ( ( tmp_int = this.in_.read()) > -1 )
+//                {
+//                    if ( (byte)tmp_int == (byte)10 ) {
+//                        break;
+//                    }
+//                    tmp[len] = (byte) tmp_int;
+//                    ++len;
+//                }
+//
+//                System.arraycopy(tmp,0,this.Buffer_,0,4);
+//	        }
+//            catch ( IOException e )
+//	        {
+//	            e.printStackTrace();
+//	            System.exit(-1);
+//	        }
+
+            try {
+                int availableBytes = this.in_.available();
+                if (availableBytes > 0) {
+                    // Read the serial port
+                    this.in_.read(this.Buffer_, 0, availableBytes);
+//                    System.arraycopy(tmp,0,this.Buffer_,0,4);
                 }
-                System.arraycopy(tmp,0,this.Buffer_,0,4);
-	        }
-            catch ( IOException e )
-	        {
-	            e.printStackTrace();
-	            System.exit(-1);
-	        }
+            } catch (IOException e) {
+            }
+
 		}
 		public byte[] get_buffer()
 		{
-			return this.Buffer_;
+			byte[] tmp = new byte[4];
+            System.arraycopy(this.Buffer_,0,tmp,0,4);
+            return tmp;
+
 		}
 	}
 	
@@ -218,7 +234,6 @@ public class serial_lib
 
 	//for a nice cleanup
 	public  void exit() {
-		serialPort.removeEventListener();
         serialPort.close();
         connected = false;
 	}

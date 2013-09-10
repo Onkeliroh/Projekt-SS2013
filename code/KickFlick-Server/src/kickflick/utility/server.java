@@ -1,23 +1,28 @@
 package kickflick.utility;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.*;
 
 import kickflick.gui.Server_Main;
 import kickflick.device.device;
 
-public class server{
+public class server extends Timer{
     private kickflick.utility.serial_lib serial_com;
 	private setting_parser set_pars = new setting_parser();
 	private final parser input_parser;
+    private Timer timer;
+    private server Server;
 	
 	@SuppressWarnings("CanBeFinal")
     private List<device> devices = new ArrayList<device>();
 
     private server()
     {
+        this.Server = this;
         this.init_communication();
         this.input_parser = new parser(this);
+
+        this.init_timer();
 
         this.openWindow();
     }
@@ -25,19 +30,6 @@ public class server{
 	public static void main(String[] args)
 	{ 
 		server Server = new server();
-		
-		
-//		Server.read_settings(); //TODO maybe not needed at all
-//		Server.init_communication();
-
-        //Server.connect_panstamp("/dev/ttyACM0",9600);
-//        Server.devices.add(new device());
-//        Server.devices.add(new device());
-
-
-//        Server.input_parser = new parser(Server);
-
-//		Server.openWindow();
 	}
 
 	private void openWindow()
@@ -69,6 +61,12 @@ public class server{
 			System.err.println(e.toString());
 		}
 	}
+
+    public void disconnect_pannstamp()
+    {
+        this.serial_com.get_connected_Port().removeEventListener();
+        this.serial_com.exit();
+    }
 
 	public byte[] compose_bytearray(byte receiver, byte sender, byte key, byte[] data)
 	{
@@ -108,4 +106,74 @@ public class server{
 	{
 		return this.devices.get(index);
 	}
+
+    public void send_msg(byte[] msg)
+    {
+        if ( this.serial_com.is_connected())
+        {
+            serial_lib.com_writer writer = new serial_lib.com_writer(this.get_SerialCom().get_outputstream(),msg);
+            Thread writer_thread = new Thread(writer);
+            writer_thread.run();
+            try
+            {
+                writer_thread.join();
+            }
+            catch(InterruptedException e)
+            {
+                e.fillInStackTrace();
+            }
+            //TODO mybe join function nessesary
+        }
+        //TODO remove comment
+    }
+
+    public void send_device(int index)
+    {
+        send_device(this.get_device(index));
+    }
+
+    public void send_device(device d)
+    {
+        byte[] msg = new byte[4];
+        msg[0] = d.get_actuator_node();
+        msg[1] = reaction_keys.SET_PATTERN.get_key();
+        msg[2] = d.get_Personality().get_pattern();
+        msg[3] = (byte)0;
+
+        this.send_msg(msg);
+
+        msg[1] = reaction_keys.SET_COLORS.get_key();
+        msg[2] = d.get_Personality().get_Color1();
+        msg[3] = d.get_Personality().get_Color2();
+
+        this.send_msg(msg);
+    }
+
+    private void init_timer()
+    {
+        this.timer = new Timer();
+        this.timer.schedule(new TimerTask()
+        {
+            @Override
+            public void run() {
+                Timestamp stamp = new Timestamp(new Date().getTime());
+                for (int i = 0 ; i < Server.devices.size() ; ++i)
+                {
+                    if(stamp.getTime() - Server.devices.get(i).get_timestamp().getTime() >= 60000 && Server.devices.get(i).get_Personality().get_State() != 0) //TODO make global
+                    {
+                        System.out.println("Server Timer: set device to default state.");
+                        Server.devices.get(i).get_Personality().set_State((short)0);
+                        Server.devices.get(i).set_new_timestamp();
+                        Server.send_device(i);
+                    }
+                }
+            }
+        },3000,100);
+    }
+
+    public void stop_timer()
+    {
+        this.timer.cancel();
+        this.timer.purge();
+    }
 }

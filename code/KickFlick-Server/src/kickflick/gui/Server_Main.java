@@ -5,6 +5,7 @@ import java.io.IOException;
 import kickflick.device.device;
 import kickflick.utility.server;
 
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
@@ -12,15 +13,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Menu;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.graphics.Point;
@@ -35,17 +33,9 @@ public class Server_Main {
     final Display display = new Display();
 
 	private Runnable timer_;
-    private final int time = 3000; //TODO make configurable
+    private final int time = 1500; //TODO make configurable
 	private Table DeviceTable;
 
-
-	/*
-	public Server_Main()
-	{}*/
-
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	public void open() {
 		//display = Display.getDefault();
 		final Shell shlKickflickServer = new Shell( display );
@@ -58,6 +48,17 @@ public class Server_Main {
 		gl_shlKickflickServer.marginWidth = 0;
 		shlKickflickServer.setLayout(gl_shlKickflickServer);
 
+        shlKickflickServer.addShellListener(new ShellAdapter()
+        {
+            @Override
+            public void shellClosed(ShellEvent e) {
+                if ( Server.get_SerialCom().is_connected())
+                    Server.disconnect_pannstamp();
+                display.timerExec(-1,timer_); //stops timer
+                Server.stop_timer();
+            }
+        });
+
 		Group grpConnection = new Group(shlKickflickServer, SWT.NONE);
 		grpConnection.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 		grpConnection.setLayout(new GridLayout(4, false));
@@ -69,7 +70,7 @@ public class Server_Main {
 		final Combo combo_baut = new Combo(grpConnection, SWT.READ_ONLY);
 		combo_baut.setItems(new String[] {"300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "38400", "57600", "115200"});
 		combo_baut.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		combo_baut.select(5);
+		combo_baut.select(11);
 
 		Button btnRefresh = new Button(grpConnection, SWT.NONE);
 		btnRefresh.addMouseListener(new MouseAdapter() {
@@ -109,22 +110,23 @@ public class Server_Main {
 		grpDevices.setLayout(new GridLayout(1, false));
 		grpDevices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
-				DeviceTable = new Table( grpDevices, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION );
-				DeviceTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-				DeviceTable.setLinesVisible(true);
-				DeviceTable.setHeaderVisible(true);
+        DeviceTable = new Table( grpDevices, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION );
+        DeviceTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+        DeviceTable.setLinesVisible(true);
+        DeviceTable.setHeaderVisible(true);
 				
-						TableColumn tblclmnNewColumn = new TableColumn(DeviceTable, SWT.NONE);
-						tblclmnNewColumn.setWidth(248);
-						tblclmnNewColumn.setText("Personality");
+        TableColumn tblclmnNewColumn = new TableColumn(DeviceTable, SWT.NONE);
+        tblclmnNewColumn.setWidth(248);
+        tblclmnNewColumn.setText("Personality");
 						
-								TableColumn tblclmnNewColumn_1 = new TableColumn(DeviceTable, SWT.RIGHT);
-								tblclmnNewColumn_1.setWidth(79);
-								tblclmnNewColumn_1.setText("State");
+        TableColumn tblclmnNewColumn_1 = new TableColumn(DeviceTable, SWT.RIGHT);
+        tblclmnNewColumn_1.setWidth(100);
+        tblclmnNewColumn_1.setText("State");
 								
-										TableColumn tblclmnNewColumn_2 = new TableColumn(DeviceTable, SWT.RIGHT);
-										tblclmnNewColumn_2.setWidth(107);
-										tblclmnNewColumn_2.setText("last seen");
+        TableColumn tblclmnNewColumn_2 = new TableColumn(DeviceTable, SWT.RIGHT);
+        tblclmnNewColumn_2.setWidth(107);
+        tblclmnNewColumn_2.setText("last seen");
+        DeviceTable.pack();
 
 		if ( this.Server.get_devices().size() > 0 )
 		{
@@ -163,10 +165,10 @@ public class Server_Main {
 		
 		
 		
-				Button Config_btn = new Button(composite, SWT.NONE);
-				Config_btn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-				Config_btn.setText("Config");
-				Config_btn.addMouseListener(new MouseAdapter()
+        Button Config_btn = new Button(composite, SWT.NONE);
+        Config_btn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        Config_btn.setText("Config");
+        Config_btn.addMouseListener(new MouseAdapter()
         {
             public void mouseDown(MouseEvent e) {
                 if ( DeviceTable.getSelectionIndex() >= 0)
@@ -184,14 +186,14 @@ public class Server_Main {
         });
 				
 				
-						Button newDevice = new Button(composite, SWT.NONE);
-						newDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-						newDevice.setText("New Device");
-						newDevice.addMouseListener(new MouseAdapter() {
-						    public void mouseDown(MouseEvent e) {
-						        Server.get_devices().add(new kickflick.device.device());
-						    }
-						});
+        Button newDevice = new Button(composite, SWT.NONE);
+        newDevice.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        newDevice.setText("New Device");
+        newDevice.addMouseListener(new MouseAdapter() {
+            public void mouseDown(MouseEvent e) {
+                Server.get_devices().add(new kickflick.device.device());
+            }
+        });
 
 		set_up();
 
@@ -224,6 +226,9 @@ public class Server_Main {
                 int selection = DeviceTable.getSelectionIndex();
                 List<device> list = Server.get_devices();
                 DeviceTable.removeAll();
+
+
+
                 int i = 0;
                 for ( device d : list)
                 {
@@ -231,7 +236,7 @@ public class Server_Main {
                     tableItem.setText(new String[] {
                             d.get_Personality().get_Name(),
                             d.get_Personality().get_state_name(),
-                            d.get_timestamp()
+                            new SimpleDateFormat("HH:mm:ss").format(d.get_timestamp())
                     });
                     ++i;
                 }

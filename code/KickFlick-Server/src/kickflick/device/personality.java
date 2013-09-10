@@ -69,10 +69,8 @@ public class personality{
 	
 	public void set_State (short state)
 	{
-		if (state < 5 && state >= 0)
+		if (state < state_count && state >= 0)
 			this.State_ = state;
-		else
-            System.err.println("Personality: State is out of range.");
 	}
 	
 	//sets the color of the current state
@@ -177,12 +175,14 @@ public class personality{
 
     public void inc_state()
     {
-        this.set_State(this.State_++);
+        short state = this.State_;
+        state += 1;
+        this.set_State(state);
     }
 
     public void dec_state()
     {
-        this.set_State(this.State_--);
+        this.set_State(--this.State_);
     }
 
 }

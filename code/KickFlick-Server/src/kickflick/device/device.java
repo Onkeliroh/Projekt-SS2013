@@ -102,10 +102,10 @@ public class device {
 		return this.actuator_node;
 	}
 
-    public String get_timestamp()
+    public java.sql.Timestamp get_timestamp()
     {
         //TODO reduce time stamp to minutes and seconds
-        return this.timestamp.toString();
+        return this.timestamp;
     }
 
     public Map<keys,Boolean> get_trigger_map()
