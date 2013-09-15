@@ -16,7 +16,7 @@ class CCSENSORNODE: public CCNODE
                 void setup();  
                 void initBattMonitor();
                 
-                boolean ccReceive();
+                boolean ccGetNewPacket();
                 void ccHandle();
                 boolean bubbleIsSender();
                 

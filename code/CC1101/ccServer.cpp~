@@ -12,7 +12,7 @@ CCSERVER::CCSERVER(byte id)
     _syncWord = (19,9); 
     _twinNode = 0; 
     cleanBuffer();
-        
+    
 }
 
 
@@ -28,13 +28,14 @@ CCSERVER::~CCSERVER(void)
 void CCSERVER::cleanBuffer()
 {
     for(int i=0;i<BUFFERLENGTH;i++)    
-        buffer[i]= 0;      
+      buffer[i]= 0;      
+    
 }
 
 void CCSERVER::setup()
 
 {
-    Serial.begin(BAUDRATE); 
+    Serial.begin(115200); // 9600 // 38400
     
     ledBlinkSetup(); 
 
@@ -43,7 +44,9 @@ void CCSERVER::setup()
 }
 
 
-boolean CCSERVER::ccGetNewPacket(void)
+
+
+boolean CCSERVER::ccReceive(void)
 
 {   
 
@@ -73,9 +76,10 @@ boolean CCSERVER::ccGetNewPacket(void)
 void CCSERVER::ccHandle(void)
 
 {
-    #ifdef SERVERDEBUG
-        _ccPacketHandler.printPacket();		
-    #endif
+    //#ifdef SERVERDEBUG
+       _ccPacketHandler.printPacket();	
+       Serial.print("hey");	
+    //#endif
 
     byte key = _ccPacketHandler.getAdminKey();
   
@@ -86,7 +90,7 @@ void CCSERVER::ccHandle(void)
                 //ccAcknowledge();   
                 _ccPacketHandler.buildPacket(LED_CLIENT_01, _id, CHANGE_COLOR); 
                 _ccPacketHandler.printPacket();
-                ccSendPacket();  
+                ccSend();  
             #endif
             break;
         case NEAR_NODE_EVENT:            
@@ -134,9 +138,24 @@ void CCSERVER::saveDataInBuffer(void)
    
 }
 
+boolean CCSERVER::isSender()
+
+{
+   byte sender = _ccPacketHandler.getPacketSender();   
+ 
+   if(sender == _id)
+       return true;
+   else
+       return false;
+}
+
+
+
+
 int CCSERVER::ccRSSI(byte rawRSSI)
 
 {
+
     int rssi_dBm;
 
     if (rawRSSI >= 128)
@@ -173,8 +192,19 @@ void CCSERVER::lowBatteryAlert()
 }
 
 
-void CCSERVER::setBuffer()
+void CCSERVER::setBufferHash()
+{
+    buffer[BUFFERHASH] = 0;
 
+    for(int i=0;i<BUFFERLENGTH-1; i++)
+    {
+        buffer[BUFFERHASH]+=buffer[i];
+    }
+        
+}
+
+
+void CCSERVER::setBuffer()
 {
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
   
@@ -182,64 +212,62 @@ void CCSERVER::setBuffer()
     buffer[1] = ccPacket.ADMINKEY;
     buffer[2] = 0;   //to do testing 
     buffer[3] = 10;  //to do testing. This corresponds to "end line" in ASCII
-    
+
 }
 
 void CCSERVER::setNearNodeBuffer()
 {
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
-    byte nearNodeRssiDBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
-
+    //byte nearNodeRssiDBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
   
     buffer[0] = ccPacket.SENDER_ID;
     buffer[1] = ccPacket.ADMINKEY;
-    buffer[2] = ccPacket.NEAR_NODE_ID;
-    buffer[3] = 10;
-  
-}
+    buffer[2] = 3;    //to do testing I will assume that the sensor node Id is 3 *ccPacket.NEAR_NODE_ID*
+    buffer[3] = 10;  //to do testing. This corresponds to "end line" in ASCII
 
+}
 
 void CCSERVER::sendBufferToJavaServer()
 {
-    for(int i=0; i<BUFFERLENGTH; i++)
-    {
-        Serial.write(buffer[i]);                     
-    }
+   for(int i=0; i<BUFFERLENGTH; i++)
+   {
+       Serial.write(buffer[i]);                       
+   }
+
+   Serial.println("");  
           
 }
 
-
-void CCSERVER::getJavaCommand()
+void CCSERVER::setRandomBuffer()
 {
-    int i = 0;
-             
-    while((Serial.available() > 0) && (i<BUFFERLENGTH)) 
+    long rand = random(1,100);    
+
+    if(rand < 33)
     {
-        buffer[i] = Serial.read();
-    
-        Serial.print(buffer[i],DEC);
-        Serial.print(" ");
-        Serial.print(i,DEC);
-        Serial.println(" ");
-        ++i;                               
+        buffer[0] = (byte)random(2,50); 
+        buffer[1] = NEAR_NODE_EVENT;
+        buffer[2] = (byte)random(1,255);         
     }
-}
+    else
 
-void CCSERVER::setNewCommand()
-{
-    byte receiverId = RECEIVERID;
-    byte metaKey = METAKEY;
-    byte firstColor = COLOR1;
-    byte secondColor = COLOR2;
-    
-    _ccPacketHandler.buildPatternCommand(receiverId, metaKey, firstColor, secondColor);
+    {
+        if(rand < 66)
+	{
+	    buffer[0] = (byte)random(2,50);
+	    buffer[1] = SHAKE_EVENT;
+            buffer[2] = 0;            
+	}
+        else
+        {
+	    buffer[0] = (byte)random(2,50);
+	    buffer[1] = LOW_BATTERY;
+            buffer[2] = 0;        
+         }
+     }
 
-}              
-                
-void CCSERVER::ccSendCommand()
-{
-    setNewCommand(); 
-    ccSendPacket();
+     buffer[3] = 10;  //ASCII number corresponding to "/n" (end of line)
 
-}
+     //setBufferHash();  
+} 
+
 

@@ -8,7 +8,7 @@
 
 #define LEDOUTPUT   4     //For the ledBl‌ink function (physical panStamp pin 19)
 #define BLINKTIME 100     // blink-time in ms
-
+#define BAUDRATE 115200
 
 class CCNODE
 
@@ -21,12 +21,12 @@ class CCNODE
                 virtual void setup(void) = 0;  
                 void  ledBlinkSetup();
                 void  rfChipInit();
-                void  ccSend();
+                void  ccSendPacket();
                 void  ccAcknowledge();
                 void  ccPrintPacket();
                 void  ledBlink();
                 
-                virtual boolean ccReceive(void) = 0;
+                virtual boolean ccGetNewPacket(void) = 0;
                 virtual void ccHandle(void)  = 0;
 
                 byte _id;  

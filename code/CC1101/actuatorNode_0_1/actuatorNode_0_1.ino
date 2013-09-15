@@ -2,8 +2,8 @@
 #include "ccActuatorNode.h"
 
 
-#define ACTUATORNODE 2
-#define TWIN_NODE_ID 3
+#define ACTUATORNODE 38 //needed a number with a normal ascii character for testing
+#define TWIN_NODE_ID 2
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()    detachInterrupt(0);
@@ -28,7 +28,7 @@ boolean _packetAvailable = false;
 // Handle interrupt from CC1101 (INT0)
 void RFChipInterrupt()
 {
-    _packetAvailable = true;            // set the flag thar a package is available        
+    _packetAvailable = true;            // set the flag that a package is available        
 }
 
 
@@ -53,7 +53,7 @@ void loop()
     {
         disableRFChipInterrupt();
         
-        if(_actuatorNode.ccReceive())
+        if(_actuatorNode.ccGetNewPacket())
         {
 
             _actuatorNode.ccHandle();  
@@ -63,12 +63,8 @@ void loop()
         _packetAvailable = false; 
         
         enableRFChipInterrupt();  
-    }
-    else 
-    {
-        _actuatorNode.ledBlink();
-        delay(100);
-    } 
+    }    
 }
+
 
 

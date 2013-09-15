@@ -13,15 +13,9 @@
 
 #define BUFFERLENGTH 4
 
-#define RECEIVERID  buffer[0]
-#define METAKEY     buffer[1]
-#define COLOR1      buffer[2]
-#define COLOR2      buffer[3] 
-
 #define RSSI_OFFSET 74 
 
 #define BUFFERHASH 4 
-
 
 //According to the Design Note DN505 http://www.ti.com/lit/an/swra114d/swra114d.pdf
 
@@ -34,22 +28,23 @@ class CCSERVER: public CCNODE
 
                 void cleanBuffer();
                 void setup();  
-                boolean ccGetNewPacket(void);
+                boolean ccReceive(void);
                 void ccHandle(void); 
+                boolean isSender();
                 int  ccRSSI(byte rawRSSI);
                 void distanceAlert(void);
                 void lowBatteryAlert(void);
 
                 void saveDataInBuffer();
-                void setBuffer();
+                void setBufferHash();
                 void setNearNodeBuffer();
+                void setBuffer();
                 void sendBufferToJavaServer();
-                void getJavaCommand();
-                void setNewCommand();
-                void ccSendCommand();
-               
+
+                void setRandomBuffer(); //For testing.   
+
        private:
-                byte buffer[BUFFERLENGTH];                  
+                byte buffer[BUFFERLENGTH];                
 };
 
 #endif // CCSERVER_H

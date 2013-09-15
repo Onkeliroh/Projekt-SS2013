@@ -1,10 +1,14 @@
 #include "ccActuatorNode.h"
 
-LPD6803 _ledStrip = LPD6803(50, DATAPIN, CLOCKPIN); // Set the first variable to the NUMBER of pixels. 20 = 20 pixels in a row
+
+LPD6803 _ledStrip = LPD6803(NUMLEDS, DATAPIN, CLOCKPIN); // Set the first variable to the NUMBER of pixels. 20 = 20 pixels in a row
 
 int _pillarHead = 0;
 int _pillarLength = 4;
 unsigned int _pillarColor;
+
+uint16_t color1;
+uint16_t color2;
 
 boolean _flagRainbow = false; // true := rainbow()
 boolean _clear = true;
@@ -36,7 +40,7 @@ void CCACTUATORNODE::setup()
 
 {
     
-    Serial.begin(115200); // 9600 // 38400
+    Serial.begin(BAUDRATE); 
 
     ledBlinkSetup();
   
@@ -49,7 +53,7 @@ void CCACTUATORNODE::setup()
 
 
 
-boolean CCACTUATORNODE::ccReceive()
+boolean CCACTUATORNODE::ccGetNewPacket()
 
 {   
     
@@ -66,8 +70,8 @@ boolean CCACTUATORNODE::ccReceive()
             {                 
                 validPacket = true; 
                 _ccPacketHandler.setPacket(ccPacket);
-            }          
-       
+            }   
+                 
         }
     }
     
@@ -81,6 +85,8 @@ void CCACTUATORNODE::ccHandle()
 {
 
     byte key = _ccPacketHandler.getAdminKey();
+    byte firstColor;
+    byte secondColor;
       
     switch (key)
     {
@@ -94,6 +100,13 @@ void CCACTUATORNODE::ccHandle()
         case ACKNOWLEDGE_RESPONSE:
             _clear = true;
             break;
+        case STRIPES:
+            firstColor = _ccPacketHandler.getFirstColor();
+            secondColor = _ccPacketHandler.getSecondColor();
+            color1 = findColor(firstColor);
+            color2 = findColor(secondColor);
+            setPatternStripes(color1, color2);    
+            break; 
         case TEST: 
             //flipRainbow();
             //ccAcknowledge();
@@ -109,14 +122,11 @@ void CCACTUATORNODE::ccHandle()
 // Initializing the LED-strip
 void CCACTUATORNODE::ledStripInit()
 {
-    _ledStrip.setCPUmax(10);
+    _ledStrip.setCPUmax(40);
     _ledStrip.begin();
     _ledStrip.show();
    
 }
-
-
-
 
 void CCACTUATORNODE::caterpillarChangeColor()
 {
@@ -168,6 +178,23 @@ void CCACTUATORNODE::caterpillarBw()
   }
   _ledStrip.show();
 }
+
+void CCACTUATORNODE::setPatternStripes(uint16_t color1, uint16_t color2)
+{ 
+  int i = 0;
+
+  while(i < _ledStrip.numPixels())
+  {
+      _ledStrip.setPixelColor(i, color1);  
+      ++i;  
+      _ledStrip.setPixelColor(i, color2);
+      ++i;
+      _ledStrip.show();
+      delay(50);
+ }
+ 
+}
+
 
 unsigned int CCACTUATORNODE::randomColor()
 {
@@ -231,13 +258,93 @@ unsigned int CCACTUATORNODE::Wheel(byte WheelPos)
   return(Color(r, g, b));
 }
 
+unsigned int CCACTUATORNODE::findColor(byte colorIndex)
+
+{
+    unsigned int pickedColor;
+    
+    switch(colorIndex)
+    {
+        case 0: //!
+            pickedColor = Color(0, 0, 31); //green
+            break; 
+        case 1:  //"
+            pickedColor = Color(0, 15, 31); //lemon green
+            break; 
+        case 2:  //#
+            pickedColor = Color(0, 8, 0); //red
+            break;
+        case 3:  //$
+            pickedColor = Color(0, 15, 0); //red
+            break;
+        case 4:  //%
+            pickedColor = Color(0, 31, 0); //red
+            break;
+        case 5:  //&
+            pickedColor = Color(31, 0, 31); //ligth blue
+            break;
+        case 6:  //'
+            pickedColor = Color(15, 0, 31);  //blue
+            break;
+        case 7:  //(
+            pickedColor = Color(15, 0, 15); //blue
+            break;
+        case 8:  //)
+            pickedColor = Color(0, 31, 31); //yellow
+            break;
+        case 9:  //*
+            pickedColor = Color(0, 15, 15); //yellow
+            break; 
+        case 10: // +
+            pickedColor = Color(5, 5, 31);  //turquoise
+            break; 
+        case 11: // ,
+            pickedColor = Color(10, 10, 31); //yellow or lemon green
+            break; 
+        case 12: // -
+            pickedColor = Color(15, 15, 31); //blue 
+            break;
+        case 13: // .
+            pickedColor = Color(20, 20, 31); //
+            break;
+        case 14: // /
+            pickedColor = Color(25, 25, 31);
+            break;
+        case 15: // 0
+            pickedColor = Color(5, 5, 0);
+            break;
+        case 16: // 1
+            pickedColor = Color(10, 10, 0);
+            break;
+        case 17:  //2
+            pickedColor = Color(15, 15, 0);
+            break;
+        case 18:  //3
+            pickedColor = Color(20, 20, 0);
+            break;
+        case 19:  //4
+            pickedColor = Color(25, 25, 0);
+            break; 
+        case 20:  //5
+            pickedColor = Color(5, 15, 30);
+            break; 
+        case 21:  //6
+            pickedColor = Color(30, 15, 5);
+            break;
+        case 22:  //7
+            pickedColor = Color(0, 20, 5);
+            break;
+        case 23:  //8
+            pickedColor = Color(31, 31, 31);
+            break; //9       
+      }
+  return pickedColor;
+}
+
 // Create a 16 bit color value from R, G, B
 unsigned int CCACTUATORNODE::Color(byte r, byte g, byte b)
 {
   //Take the lowest 5 bits of each value and append them end to end
   return(((unsigned int)g & 0x1F ) << 10 | ((unsigned int)b & 0x1F) << 5 | (unsigned int)r & 0x1F);
 }
-
-
-
-
+ 

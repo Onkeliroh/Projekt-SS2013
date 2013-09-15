@@ -51,7 +51,7 @@ void CCSENSORNODE::initBattMonitor()
 
 }
 
-boolean CCSENSORNODE::ccReceive()
+boolean CCSENSORNODE::ccGetNewPacket()
 
 {   
     
@@ -123,7 +123,7 @@ void CCSENSORNODE::reportAccelEvent()
 {
 
     _ccPacketHandler.buildPacket(BROADCAST, _id, SHAKE_EVENT);
-    ccSend();    
+    ccSendPacket();    
 
 }
 
@@ -144,14 +144,14 @@ void CCSENSORNODE::reportLowBatt()
 
 {
     _ccPacketHandler.buildPacket(SERVER_01, _id, LOW_BATTERY);
-    ccSend();    
+    ccSendPacket();    
 }
 
 
 void CCSENSORNODE::sendRSSI(byte rawRSSI,byte nearNodeId)
 {
     _ccPacketHandler.buildRSSIPacket(_id, rawRSSI,nearNodeId);
-    ccSend();  
+    ccSendPacket();  
     _ccPacketHandler._ccClear = true;      
 }
 

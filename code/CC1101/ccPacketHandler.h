@@ -17,17 +17,24 @@
 #define NEAR_NODE_RSSI  data[4]
 #define NEAR_NODE_ID    data[5]
 
+#define METAKEY         data[2]
+#define COLOR1          data[3]
+#define COLOR2          data[4]
+
+
 ///*ADMIN KEYS*///
 
 /*EVENTS*/
 #define TURN_LEFT_EVENT        27
 #define TURN_RIGHT_EVENT       28
+
 #define SHAKE_EVENT            31
 
 #define NEAR_NODE_EVENT        51
 #define LOW_BATTERY            52
 
-/*COMMANDS*/
+///*META KEYS*////
+#define STRIPES                44
 #define BACKWARD_CATERPILLAR   45
 #define FORWARD_CATERPILLAR    46
 #define CHANGE_COLOR           47
@@ -75,6 +82,8 @@ class ccPacketHandler
         void addToPacket(byte data);
 
         void buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourID);
+ 
+        void buildPatternCommand(byte receiver, byte PatternKey, byte color1, byte color2);
 
         /// setters
 
@@ -103,6 +112,12 @@ class ccPacketHandler
         void setSender(byte sender);
 
         void setAdminKey(byte adminKey);
+
+        void setMetaKey(byte metaKey);
+
+        void setFirstColor(byte firstColor);
+
+        void setSecondColor(byte secondColor);
         
         void setPackNum(byte packNum);
 
@@ -120,6 +135,12 @@ class ccPacketHandler
         byte getPacketSender();
 
         byte getAdminKey();
+
+        byte getMetaKey();
+
+        byte getFirstColor();
+
+        byte getSecondColor();
 
         byte getPackNum();
       

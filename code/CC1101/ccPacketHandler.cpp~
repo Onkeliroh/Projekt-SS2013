@@ -147,26 +147,6 @@ void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourI
     setBuildCounter(5); /// set build counter to next free byte's position    
 }
 
-void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte color1, byte color2)
-{
-    clearPacket(); /// clear the packet
-
-    setReceiver(receiver); 
-
-    setSender(SERVER_01); 
-
-    setMetaKey(PatternKey);
-
-    setFirstColor(color1);
-
-    setSecondColor(color2);
-
-    setBuildCounter(5); /// set build counter to next free byte's position    
-
-}
-
-
-
 boolean ccPacketHandler::hashMatches()
 {
     if(getHash() == ccHash())
@@ -295,35 +275,7 @@ void ccPacketHandler::setAdminKey(byte adminKey)
 {
 
     _ccPacket.ADMINKEY = adminKey; 
-
 }
-
-void ccPacketHandler::setMetaKey(byte metaKey)
-
-{
-
-    _ccPacket.METAKEY = metaKey; 
-
-}
-
-
-void ccPacketHandler::setFirstColor(byte firstColor)
-
-{
-
-    _ccPacket.COLOR1 = firstColor; 
-
-}
-
-void ccPacketHandler::setSecondColor(byte secondColor)
-
-{
-
-    _ccPacket.COLOR2 = secondColor; 
-
-}
-
-
 
 void ccPacketHandler::setPackNum(byte packNum)
 
@@ -389,33 +341,6 @@ byte ccPacketHandler::getAdminKey()
 {
 
     return _ccPacket.ADMINKEY; 
-
-}
-
-
-byte ccPacketHandler::getMetaKey()
-
-{
-
-     return _ccPacket.METAKEY;
-
-
-}
-
-byte ccPacketHandler::getFirstColor()
-
-{
-
-    return _ccPacket.COLOR1;  
-
-}
-
-
-byte ccPacketHandler::getSecondColor()
-
-{
-
-    return _ccPacket.COLOR2;  
 
 }
 

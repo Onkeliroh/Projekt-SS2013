@@ -3,8 +3,8 @@
 #include "ccSensorNode.h"
 #include "accel.h"
 
-#define SENSOR_NODE_ID 3
-#define TWIN_NODE_ID 2
+#define SENSOR_NODE_ID 2
+#define TWIN_NODE_ID 3
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()    detachInterrupt(0);
@@ -76,7 +76,7 @@ void loop()
     {
         disableRFChipInterrupt();
         
-        if(_sensorNode.ccReceive())
+        if(_sensorNode.ccGetNewPacket())
         {
             //_sensorNode.ccPrintPacket();
             _sensorNode.ccHandle();  

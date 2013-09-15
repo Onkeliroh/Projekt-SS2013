@@ -33,13 +33,13 @@ void CCNODE::rfChipInit(void)
 }
 
 
-void CCNODE::ccSend(void)
+void CCNODE::ccSendPacket(void)
 
 {
 
-    CCPACKET cp = _ccPacketHandler.getPacket();
+    CCPACKET ccPacket = _ccPacketHandler.getPacket();
   
-    if(_cc1101.sendData(cp))
+    if(_cc1101.sendData(ccPacket))
     {
         
         _ccPacketHandler._ccClear = false;
@@ -57,7 +57,7 @@ void CCNODE::ccAcknowledge(void)
 
 {
     _ccPacketHandler.acknowledge(); 
-    ccSend(); 
+    ccSendPacket(); 
     _ccPacketHandler._ccClear = true;
 
 }
