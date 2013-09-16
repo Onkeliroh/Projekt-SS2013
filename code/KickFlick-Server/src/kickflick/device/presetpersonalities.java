@@ -11,7 +11,7 @@ public enum presetpersonalities
 			new byte[] { color.BLUE.get_key(), color.RED.get_key(), color.GREEN.get_key(), color.FUCHSIA.get_key() },    //Color 1
             new byte[] { color.BLUE.get_key(), color.RED.get_key(), color.GREEN.get_key(), color.FUCHSIA.get_key() },    //Color 2
             new byte[] { pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key() }     //Pattern
-			)),
+			git statg
 	
 	Tanja("Tanja",new personality(
 			"Tanja",
