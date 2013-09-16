@@ -2,6 +2,8 @@ package kickflick.device;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Map;
+import java.util.HashMap;
 
 public class personality{
 	private String Name_;
@@ -10,7 +12,8 @@ public class personality{
 	private byte[] Color1_ = new byte[4];
     private byte[] Color2_ = new byte[4];
 	private byte[] pattern_ = new byte[4];
-
+	private Map<String, byte[]> neighbours_ = new HashMap<String, byte[]>();
+	
 	//Constructors
 
 	// default
@@ -21,6 +24,31 @@ public class personality{
         this.Color1_ = presetpersonalities.Paul.get_personality().Color1_;
         this.Color2_ = presetpersonalities.Paul.get_personality().Color2_;
         this.pattern_ = presetpersonalities.Paul.get_personality().pattern_;
+    }
+
+	// default including neighbours_
+	public personality()
+	{
+		this.Name_ = presetpersonalities.Paul.get_personality().Name_;
+        this.State_ = presetpersonalities.Paul.get_personality().State_;
+        this.Color1_ = presetpersonalities.Paul.get_personality().Color1_;
+        this.Color2_ = presetpersonalities.Paul.get_personality().Color2_;
+        this.pattern_ = presetpersonalities.Paul.get_personality().pattern_;
+        byte[] defaultArray;
+        defaultArray[0] = 0;
+        defaultArray[1] = 0;
+        defaultArray[2] = 0;
+        this.neighbours_.put("DEFAULT", defaultArray);
+	}
+	
+	public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp, byte[] patterns, HashMap<String, byte[]> neighbours)
+	{
+		this.Name_ = name;
+		this.State_ = state;
+		this.Color1_ = color1_tmp;
+        this.Color2_ = color2_tmp;
+		this.pattern_ = patterns;
+		this.neighbours_ = neighbours;
 	}
 	
 	public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp, byte[] patterns)
@@ -59,7 +87,8 @@ public class personality{
         this.Color2_ = pers.Color2_;
         this.pattern_ = pers.pattern_;
     }
-	
+    
+    
 	//Setter
 	
 	public void set_Name(String name)
@@ -113,6 +142,11 @@ public class personality{
 		this.pattern_ = pattern;
 	}
 	
+	public void set_pattern( String PersName, byte[] PatternColor )
+	{
+		this.neighbours_.put(PersName, PatternColor);
+	}
+
 	//Getter
 	
 	public String get_Name ()
@@ -172,6 +206,10 @@ public class personality{
         }
     }
 
+    public Map<String, byte[]> get_Neighbours()
+    {
+    	return this.neighbours_;
+    }
 
     public void inc_state()
     {
@@ -184,5 +222,5 @@ public class personality{
     {
         this.set_State(--this.State_);
     }
-
+    
 }
