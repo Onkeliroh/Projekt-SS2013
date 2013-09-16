@@ -28,7 +28,7 @@ class CCNODE
                 
                 virtual boolean ccGetNewPacket(void) = 0;
                 virtual void ccHandle(void)  = 0;
-
+                
                 byte _id;  
                 byte _twinNode;
                 byte _syncWord;                  
