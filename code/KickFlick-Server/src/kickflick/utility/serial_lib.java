@@ -202,9 +202,6 @@ public class serial_lib
             {
                 this.out.write(this.str);
                 this.out.flush();
-                
-                this.out.write(NEW_LINE_ASCII);
-                this.out.flush();
             }
             catch (Exception e)
             {

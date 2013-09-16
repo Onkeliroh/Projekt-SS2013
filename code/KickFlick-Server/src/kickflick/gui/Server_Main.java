@@ -56,6 +56,7 @@ public class Server_Main {
                     Server.disconnect_pannstamp();
                 display.timerExec(-1,timer_); //stops timer
                 Server.stop_timer();
+//                shlKickflickServer.close();
             }
         });
 
@@ -181,6 +182,7 @@ public class Server_Main {
                     );
                     device tmp_dev =  (device) tmp.open();
                     Server.set_device(index,tmp_dev);
+                    Server.send_device(index);
                 }
             }
         });

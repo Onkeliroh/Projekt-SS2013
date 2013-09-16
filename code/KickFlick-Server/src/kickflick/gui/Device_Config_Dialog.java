@@ -50,10 +50,15 @@ public class Device_Config_Dialog extends Dialog {
     
     private final String[] state_names = {"Standby", "First contact", "Playing", "Playing (hard)"};
     private final String[] tabel_heads = {"State","Pattern","1. Color", "2. Color"};
+    private final String[] neighbor_table_heads = {"Neighbor", "Pattern", "1. Color", "2. Color"};
 
     private List<Combo> pattern_combo_list = new ArrayList<Combo>();
     private List<CCombo> color1_combo_list = new ArrayList<CCombo>();
     private List<CCombo> color2_combo_list = new ArrayList<CCombo>();
+    private Table neighbor_table;
+    private List<Combo> neighbor_pattern_combo_list = new ArrayList<Combo>();
+    private List<CCombo> neighbor_color1_combo_list = new ArrayList<CCombo>();
+    private List<CCombo> neighbor_color2_combo_list = new ArrayList<CCombo>();
 
 	/**
 	 * Create the dialog.
@@ -180,6 +185,71 @@ public class Device_Config_Dialog extends Dialog {
 				state_table.setHeaderVisible(true);
 				state_table.setLinesVisible(true);
 				
+				TabItem tbtmNeighbor = new TabItem(tabFolder, SWT.NONE);
+				tbtmNeighbor.setText("Neighbor");
+				
+				Composite neighbor_composite = new Composite(tabFolder, SWT.NONE);
+				tbtmNeighbor.setControl(neighbor_composite);
+				neighbor_composite.setLayout(new GridLayout(1, false));
+				
+				neighbor_table = new Table(neighbor_composite, SWT.BORDER | SWT.FULL_SELECTION);
+				neighbor_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+				neighbor_table.setHeaderVisible(true);
+				neighbor_table.setLinesVisible(true);
+				
+				//TODO fix column alignment
+				for (int i = 0; i < 4; i++) 
+				{
+					TableColumn column = new TableColumn(neighbor_table, SWT.CENTER);
+					column.setText(neighbor_table_heads[i]);
+					column.setWidth(100);
+				}
+				
+				for (int i = 0; i < state_names.length; i++) 
+				{
+					new TableItem(neighbor_table, SWT.NONE);
+			    }
+				TableItem[] neighbor_items = neighbor_table.getItems();
+			    for (int i = 0; i < neighbor_table.getItems().length; i++) 
+			    {
+					TableEditor editor = new TableEditor(neighbor_table);
+					Text text = new Text(neighbor_table, SWT.NONE);
+					text.setText(state_names[i]); //TODO change to neighbor name
+					text.setEditable(false);
+					text.setCapture(false);
+					editor.grabHorizontal = true;
+					editor.setEditor(text, neighbor_items[i], 0);
+					
+					editor = new TableEditor(neighbor_table);
+					final Combo pattern_combo = new Combo(neighbor_table, SWT.READ_ONLY);
+					for ( pattern p : pattern.values())
+						pattern_combo.add(p.get_name());
+					pattern_combo.select(0);
+					editor.grabHorizontal = true;
+					editor.setEditor(pattern_combo, neighbor_items[i], 1);
+					neighbor_pattern_combo_list.add(pattern_combo);
+					
+					editor = new TableEditor(neighbor_table);
+					CCombo color1_combo = new CCombo(neighbor_table, SWT.NONE);
+					for (color c : color.values())
+						color1_combo.add(c.get_name());
+					color1_combo.setEditable(false);
+					color1_combo.select(0);
+					editor.grabHorizontal = true;
+					editor.setEditor(color1_combo, neighbor_items[i], 2);
+					neighbor_color1_combo_list.add(color1_combo);
+					
+					editor = new TableEditor(neighbor_table);
+					CCombo color2_combo = new CCombo(neighbor_table, SWT.NONE);
+					for (color c : color.values())
+						color2_combo.add(c.get_name());
+					color2_combo.setEditable(false);
+					color2_combo.select(0);
+					editor.grabHorizontal = true;
+					editor.setEditor(color2_combo, neighbor_items[i], 3);
+					neighbor_color2_combo_list.add(color2_combo);
+                }
+				
 				
 				
 				//TODO fix column alignment
@@ -248,8 +318,10 @@ public class Device_Config_Dialog extends Dialog {
 
 
 
-                result.set_sensor_node(Byte.parseByte(sensor_adr_text.getText()));
-                result.set_actuator_node(Byte.parseByte(actuator_adr_text.getText()));
+//                result.set_sensor_node(Byte.parseByte(sensor_adr_text.getText()));
+                System.out.println("Actuator: " + Integer.parseInt(actuator_adr_text.getText()) + "\t" + (byte) Integer.parseInt(actuator_adr_text.getText()));
+                result.set_sensor_node((byte) Integer.parseInt(sensor_adr_text.getText()));
+                result.set_actuator_node((byte) Integer.parseInt(actuator_adr_text.getText()));
 
 		        Map<kickflick.utility.keys,Boolean> trigger = Device.get_trigger_map();
 

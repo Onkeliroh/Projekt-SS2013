@@ -30,6 +30,8 @@ public class server extends Timer{
 	public static void main(String[] args)
 	{ 
 		server Server = new server();
+
+        System.exit(0);
 	}
 
 	private void openWindow()
@@ -111,6 +113,7 @@ public class server extends Timer{
     {
         if ( this.serial_com.is_connected())
         {
+            System.out.println("Sending: " + Arrays.toString(msg));
             serial_lib.com_writer writer = new serial_lib.com_writer(this.get_SerialCom().get_outputstream(),msg);
             Thread writer_thread = new Thread(writer);
             writer_thread.run();
@@ -132,17 +135,14 @@ public class server extends Timer{
         send_device(this.get_device(index));
     }
 
+
+    //creates a byte array which will then be send to the server-panstamp
     public void send_device(device d)
     {
         byte[] msg = new byte[4];
         msg[0] = d.get_actuator_node();
-        msg[1] = reaction_keys.SET_PATTERN.get_key();
-        msg[2] = d.get_Personality().get_pattern();
-        msg[3] = (byte)0;
-
-        this.send_msg(msg);
-
-        msg[1] = reaction_keys.SET_COLORS.get_key();
+//        msg[1] = d.get_Personality().get_pattern();
+        msg[1] = (byte) 44;
         msg[2] = d.get_Personality().get_Color1();
         msg[3] = d.get_Personality().get_Color2();
 

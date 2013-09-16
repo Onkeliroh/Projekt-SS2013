@@ -1,8 +1,8 @@
 #include "EEPROM.h"
 #include "ccActuatorNode.h"
+#include "pearLeds.h"
 
-
-#define ACTUATORNODE 38 //needed a number with a normal ascii character for testing
+#define ACTUATORNODE 3 //needed a number with a normal ascii character for testing
 #define TWIN_NODE_ID 2
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
@@ -13,12 +13,16 @@
 /////////////////////
 
 CCACTUATORNODE _actuatorNode = CCACTUATORNODE(ACTUATORNODE,TWIN_NODE_ID); 
+PEARLEDS _pearLeds = PEARLEDS();
+
 
 ////////////////////
 //--- MEMBERS ---//
 ///////////////////
 
 boolean _packetAvailable = false;
+byte patternKey;
+byte firstColor,secondColor;
 
 
 //////////////////////
@@ -39,6 +43,7 @@ void RFChipInterrupt()
 void setup()
 {
     _actuatorNode.setup();
+    _pearLeds.setup();
     enableRFChipInterrupt();   
 }
 
@@ -55,8 +60,15 @@ void loop()
         
         if(_actuatorNode.ccGetNewPacket())
         {
-
-            _actuatorNode.ccHandle();  
+           if(_actuatorNode.keyforLeds())  
+           {
+               patternKey = _actuatorNode.getKey();
+               firstColor = _actuatorNode.getFirstColor();
+               secondColor = _actuatorNode.getSecondColor();
+               _pearLeds.setLedPattern(patternKey, firstColor, secondColor);
+           }
+           else         
+               _actuatorNode.ccHandle();  
             
         }
                 
