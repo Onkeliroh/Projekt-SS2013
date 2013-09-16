@@ -176,4 +176,17 @@ public class server extends Timer{
         this.timer.cancel();
         this.timer.purge();
     }
+
+    public int get_PersonalitiesCount() 
+    {
+    	int c = 0;
+    	for(device d : this.Server.get_devices()) {
+    		for(device e : this.Server.get_devices()) {
+    			if( d.get_Personality().get_Name().equals(e.get_Personality().get_Name()) )
+        			c += 1;
+    		}
+    	}
+    	return c;
+    }
+
 }
