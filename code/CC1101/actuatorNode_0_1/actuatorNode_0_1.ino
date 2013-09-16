@@ -2,7 +2,7 @@
 #include "ccActuatorNode.h"
 #include "pearLeds.h"
 
-#define ACTUATORNODE 38 //needed a number with a normal ascii character for testing
+#define ACTUATORNODE 3 //needed a number with a normal ascii character for testing
 #define TWIN_NODE_ID 2
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);

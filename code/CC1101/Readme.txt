@@ -21,5 +21,7 @@ LIBRARIES
 - LPD6803.h und -.cpp
 - PinChangeInt.h
 - SerialCommand.h und -.cpp
+- Leds.h und -.cpp
+- pearLeds.h und -.cpp
 - alle Files in den Ordner "Arduino/libraries/panstamp"
 
