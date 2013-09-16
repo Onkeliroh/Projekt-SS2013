@@ -161,7 +161,7 @@ public class server extends Timer{
                 {
                     if(stamp.getTime() - Server.devices.get(i).get_timestamp().getTime() >= 60000 && Server.devices.get(i).get_Personality().get_State() != 0) //TODO make global
                     {
-                        System.out.println("Server Timer: set device to default state.");
+                        System.out.println("Server Timer: set device '"+ Server.devices.get(i).get_Personality().get_Name() +"' to default state.");
                         Server.devices.get(i).get_Personality().set_State((short)0);
                         Server.devices.get(i).set_new_timestamp();
                         Server.send_device(i);
