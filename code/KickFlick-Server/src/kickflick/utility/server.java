@@ -175,4 +175,16 @@ public class server extends Timer{
         this.timer.cancel();
         this.timer.purge();
     }
+
+    public ArrayList<String> get_PersonalitiesCount()
+    {
+        ArrayList<String> PersNames = new ArrayList<String>();
+        for( device d : this.Server.get_devices() ) {
+            PersNames.add(d.get_Personality().get_Name());
+        }
+        Set<String> setNames = new LinkedHashSet<String>(PersNames);
+        PersNames = new ArrayList<String>(setNames);
+        return PersNames;
+    }
+
 }
