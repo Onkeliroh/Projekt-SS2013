@@ -12,5 +12,8 @@
 
 .classpath
 .idea/
+.metadata/
+
+out/
 
 bin/
