@@ -7,7 +7,7 @@
 #include "cc1101.h"
 
 
-#define CCPACKETHANDLER_LENGTH          10  
+#define CCPACKETHANDLER_LENGTH          5  
 #define CCPACKETHANDLER_MAXLENGTH       61
 
 #define RECEIVER_ID     data[0] 
@@ -83,7 +83,7 @@ class ccPacketHandler
 
         void buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourID);
  
-        void buildPatternCommand(byte receiver, byte PatternKey, byte color1, byte color2);
+        void buildPatternCommand(byte receiver, byte PatternKey, byte colorKey1, byte colorKey2);
 
         /// setters
 

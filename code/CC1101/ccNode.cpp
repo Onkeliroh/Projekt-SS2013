@@ -14,7 +14,7 @@ CCNODE::~CCNODE(void)
 void CCNODE::ledBlinkSetup()
 
 {
-    Serial.begin(115200); // 9600 // 38400
+    Serial.begin(BAUDRATE); // 9600 // 38400
     pinMode(LEDOUTPUT, OUTPUT); // setup the blinker output
     digitalWrite(LEDOUTPUT, LOW);   
 

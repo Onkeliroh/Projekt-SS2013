@@ -208,38 +208,63 @@ void CCSERVER::sendBufferToJavaServer()
           
 }
 
+boolean CCSERVER::newJavaCommand()
+{
+    boolean newCommand = false;
+   
+    if(Serial.available() > 0)    
+    {  
+        newCommand = true;       
+     }
+   
+     return newCommand;
+} 
+
 
 void CCSERVER::getJavaCommand()
 {
-    int i = 0;
-             
-    while((Serial.available() > 0) && (i<BUFFERLENGTH)) 
+    for(int i=0; i<BUFFERLENGTH; i++)
     {
-        buffer[i] = Serial.read();
-    
-        Serial.print(buffer[i],DEC);
-        Serial.print(" ");
-        Serial.print(i,DEC);
-        Serial.println(" ");
-        ++i;                               
+        if(Serial.available() > 0)
+        {
+             buffer[i] = Serial.read();      
+             delay(1);      
+        }
     }
+} 
+
+void CCSERVER::TestBuffer1()
+{
+   buffer[0] = 38;
+   buffer[1] = 44;
+   buffer[2] = 4;
+   buffer[3] = 7; 
 }
 
-void CCSERVER::setNewCommand()
+void CCSERVER::TestBuffer2()
 {
-    byte receiverId = RECEIVERID;
-    byte metaKey = METAKEY;
-    byte firstColor = COLOR1;
-    byte secondColor = COLOR2;
-    
-    _ccPacketHandler.buildPatternCommand(receiverId, metaKey, firstColor, secondColor);
+   buffer[0] = 38;
+   buffer[1] = 44;
+   buffer[2] = 10;
+   buffer[3] = 15; 
+}
 
-}              
-                
 void CCSERVER::ccSendCommand()
 {
     setNewCommand(); 
     ccSendPacket();
 
 }
+
+void CCSERVER::setNewCommand()
+{
+    byte receiverId = buffer[0];
+    byte metaKey = buffer[1];
+    byte firstColor = buffer[2];
+    byte secondColor = buffer[3];
+    
+    _ccPacketHandler.buildPatternCommand(receiverId, metaKey, firstColor, secondColor);    
+}              
+                
+
 

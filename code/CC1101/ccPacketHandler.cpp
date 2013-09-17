@@ -147,19 +147,19 @@ void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourI
     setBuildCounter(5); /// set build counter to next free byte's position    
 }
 
-void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte color1, byte color2)
+void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte colorKey1, byte colorKey2)
 {
     clearPacket(); /// clear the packet
 
-    setReceiver(receiver); 
+    setReceiver(receiver);
 
-    setSender(SERVER_01); 
+    setSender(SERVER_01);
+ 
+    setAdminKey(PatternKey);   
+ 
+    setFirstColor(colorKey1);
 
-    setMetaKey(PatternKey);
-
-    setFirstColor(color1);
-
-    setSecondColor(color2);
+    setSecondColor(colorKey2);
 
     setBuildCounter(5); /// set build counter to next free byte's position    
 
@@ -446,13 +446,9 @@ void ccPacketHandler::printPacket()
     for (byte i = 0; i < _ccPacket.length; ++i)
     {
 
-        Serial.print(_ccPacket.data[i]);
+        Serial.print(_ccPacket.data[i]);        
 
-        Serial.print("|");
-
-    }
-
-    Serial.println("");
+    }   
 
 }
 
