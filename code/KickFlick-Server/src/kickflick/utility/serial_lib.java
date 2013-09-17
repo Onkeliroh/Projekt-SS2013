@@ -131,7 +131,7 @@ public class serial_lib
 		
 		public com_listener(serial_lib ding, InputStream input)
 		{
-			System.out.println("create Com-Listener");
+//			System.out.println("create Com-Listener");
 			this.bums_ = ding;
 			this.in_ = input;
 		}
@@ -146,7 +146,7 @@ public class serial_lib
                     // Read the serial port
 //                    this.in_.read(this.Buffer_, 0, availableBytes);
                     this.Buffer_[tmp_int] = (byte) this.in_.read();
-                    System.out.print(this.Buffer_[tmp_int]+"\t");
+//                    System.out.print(this.Buffer_[tmp_int]+"\t");
                     ++tmp_int;
                 }
             } catch (IOException e) {
@@ -157,7 +157,7 @@ public class serial_lib
 		{
 			byte[] tmp = new byte[4];
             System.arraycopy(this.Buffer_,0,tmp,0,4);
-            System.out.println(Arrays.toString(this.Buffer_));
+//            System.out.println(Arrays.toString(this.Buffer_));
             return tmp;
 
 		}
@@ -185,7 +185,7 @@ public class serial_lib
         {
             try
             {
-                System.out.println("Send: "+ Arrays.toString(this.str));
+//                System.out.println("Send: "+ Arrays.toString(this.str));
                 this.out.write(this.str);
                 this.out.flush();
             }

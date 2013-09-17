@@ -320,11 +320,7 @@ public class Device_Config_Dialog extends Dialog {
 		btnApply.addMouseListener( new MouseAdapter()
 		{
 		    public void mouseDown(MouseEvent e) {
-
-
-
-//                result.set_sensor_node(Byte.parseByte(sensor_adr_text.getText()));
-                System.out.println("Actuator: " + Integer.parseInt(actuator_adr_text.getText()) + "\t" + (byte) Integer.parseInt(actuator_adr_text.getText()));
+//                System.out.println("Actuator: " + Integer.parseInt(actuator_adr_text.getText()) + "\t" + (byte) Integer.parseInt(actuator_adr_text.getText()));
                 result.set_sensor_node((byte) Integer.parseInt(sensor_adr_text.getText()));
                 result.set_actuator_node((byte) Integer.parseInt(actuator_adr_text.getText()));
 
@@ -345,21 +341,53 @@ public class Device_Config_Dialog extends Dialog {
                 short j = 0;
                 for (Combo c : pattern_combo_list)
                 {
-                    result.get_Personality().set_pattern((byte) c.getSelectionIndex(),j);
+                    for (pattern p : pattern.values())
+                        if ( p.get_name().equalsIgnoreCase(c.getText()) )
+                            result.get_Personality().set_pattern(p.get_key(),j);
                     ++j;
                 }
 
                 j=0;
                 for ( CCombo c : color1_combo_list)
                 {
-                    result.get_Personality().set_Color1((byte) c.getSelectionIndex(),j);
+                    for (color p : color.values())
+                        if ( p.get_name().equalsIgnoreCase(c.getText()) )
+                            result.get_Personality().set_Color1(p.get_key(),j);
                     ++j;
                 }
                 j=0;
                 for ( CCombo c : color2_combo_list)
                 {
-                    result.get_Personality().set_Color2((byte) c.getSelectionIndex(),j);
+                    for (color p : color.values())
+                        if ( p.get_name().equalsIgnoreCase(c.getText()) )
+                            result.get_Personality().set_Color2(p.get_key(),j);
                     ++j;
+                }
+
+                for ( String str : neighbor_pers)
+                {
+                    if ( !Device.get_Personality().get_Neighbours().containsKey(str) )
+                    {
+                        for ( int text = 0 ; text < neighbor_text_list.size() ; ++text)
+                        {
+                            if ( neighbor_text_list.get(text).getText().equalsIgnoreCase(str))
+                            {
+                                byte[] settings = new byte[3];
+                                for (color p : color.values())
+                                    if ( p.get_name().equalsIgnoreCase(neighbor_pattern_combo_list.get(text).getText()) )
+                                        settings[0]=p.get_key();
+                                for (color p : color.values())
+                                    if ( p.get_name().equalsIgnoreCase(neighbor_color1_combo_list.get(text).getText()) )
+                                        settings[1]=p.get_key();
+                                for (color p : color.values())
+                                    if ( p.get_name().equalsIgnoreCase(neighbor_color2_combo_list.get(text).getText()) )
+                                        settings[2]=p.get_key();
+
+                                Device.get_Personality().get_Neighbours().put( str, settings );
+                            }
+                        }
+
+                    }
                 }
             }
 		});
@@ -411,20 +439,35 @@ public class Device_Config_Dialog extends Dialog {
         short i = 0;
         for (Combo c : pattern_combo_list)
         {
-            c.select(this.Device.get_Personality().get_pattern(i));
+            for ( int j = 0; j < pattern.values().length ; ++j)
+                if (pattern.values()[j].get_key() == this.Device.get_Personality().get_pattern((short)i))
+                {
+                    c.select(j);
+                    break;
+                }
             ++i;
         }
 
         i=0;
         for ( CCombo c : color1_combo_list)
         {
-            c.select(this.Device.get_Personality().get_Color1(i));
+            for ( int j = 0; j < color.values().length ; ++j)
+                if (color.values()[j].get_key() == this.Device.get_Personality().get_Color1((short)i))
+                {
+                    c.select(j);
+                    break;
+                }
             ++i;
         }
         i=0;
         for ( CCombo c : color2_combo_list)
         {
-            c.select(this.Device.get_Personality().get_Color2(i));
+            for ( int j = 0; j < color.values().length ; ++j)
+                if (color.values()[j].get_key() == this.Device.get_Personality().get_Color2((short)i))
+                {
+                    c.select(j);
+                    break;
+                }
             ++i;
         }
 
@@ -444,15 +487,10 @@ public class Device_Config_Dialog extends Dialog {
                 if ( settings[1] == color.values()[k].get_key() )
                 {
                     this.neighbor_color1_combo_list.get(j).select(k);
-                    break;
                 }
-            }
-            for ( int k = 0; k < color.values().length; ++k)
-            {
                 if ( settings[2] == color.values()[k].get_key() )
                 {
                     this.neighbor_color2_combo_list.get(j).select(k);
-                    break;
                 }
             }
 
@@ -473,20 +511,35 @@ public class Device_Config_Dialog extends Dialog {
         short i = 0;
         for (Combo c : pattern_combo_list)
         {
-            c.select(pers.get_pattern(i));
+            for ( int j = 0; j < pattern.values().length ; ++j)
+                if (pattern.values()[j].get_key() == pers.get_pattern((short)i))
+                {
+                    c.select(j);
+                    break;
+                }
             ++i;
         }
 
         i=0;
         for ( CCombo c : color1_combo_list)
         {
-            c.select(pers.get_Color1(i));
+            for ( int j = 0; j < color.values().length ; ++j)
+                if (color.values()[j].get_key() == pers.get_Color1((short)i))
+                {
+                    c.select(j);
+                    break;
+                }
             ++i;
         }
         i=0;
         for ( CCombo c : color2_combo_list)
         {
-            c.select(pers.get_Color2(i));
+            for ( int j = 0; j < color.values().length ; ++j)
+                if (color.values()[j].get_key() == pers.get_Color2((short)i))
+                {
+                    c.select(j);
+                    break;
+                }
             ++i;
         }
     }

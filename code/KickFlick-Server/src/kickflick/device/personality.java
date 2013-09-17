@@ -1,5 +1,8 @@
 package kickflick.device;
 
+import kickflick.utility.color;
+import kickflick.utility.pattern;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -198,14 +201,10 @@ public class personality{
     public byte[] get_neighbor(String str)
     {
         for ( Map.Entry e : neighbours_.entrySet())
-        {
-            System.out.println(e.getKey()+" vs. "+ str);
             if ( e.getKey().equals(str) )
-            {
                 return (byte[])e.getValue();
-            }
-        }
-        return new byte[]{0,0,0};
+        //if the string was'nt found in the map as a key, return default values
+        return new byte[]{pattern.BLINK.get_key(), color.BLUE.get_key(),color.LEMON_GREEN.get_key()};
     }
 
     public void inc_state()

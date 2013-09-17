@@ -18,7 +18,6 @@ public enum presetpersonalities
                 {
                     put("Tanja",new byte[] {pattern.BLINK.get_key(),color.RED.get_key(),color.BLUE.get_key()});
                     put("Mama",new byte[] {pattern.BLINK.get_key(),color.WHITE.get_key(),color.BLACK.get_key()});
-                    put("DEFAULT", new byte[] {pattern.BLINK.get_key(),color.WHITE.get_key(),color.BLUE.get_key()});
                 }
             }
     )),
@@ -33,7 +32,6 @@ public enum presetpersonalities
                 {
                     put("Paul",new byte[] {pattern.FADE.get_key(),color.RED.get_key(),color.RED_BRIGHT.get_key()});
                     put("Mama",new byte[] {pattern.BLINK.get_key(),color.RED.get_key(),color.RED_BRIGHT.get_key()});
-                    put("DEFAULT", new byte[] {pattern.BLINK.get_key(),color.WHITE.get_key(),color.BLUE.get_key()});
                 }
             }
 	)),
@@ -48,7 +46,6 @@ public enum presetpersonalities
                 {
                     put("Paul",new byte[] {pattern.BLINK.get_key(),color.GREEN.get_key(),color.LEMON_GREEN.get_key()});
                     put("Tanja",new byte[] {pattern.FADE.get_key(),color.GREEN.get_key(),color.LEMON_GREEN.get_key()});
-                    put("DEFAULT", new byte[] {pattern.BLINK.get_key(),color.WHITE.get_key(),color.BLUE.get_key()});
                 }
             }
 	));

@@ -72,7 +72,7 @@ public class Server_Main {
 		final Combo combo_baut = new Combo(grpConnection, SWT.READ_ONLY);
 		combo_baut.setItems(new String[] {"300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "38400", "57600", "115200"});
 		combo_baut.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		combo_baut.select(11);
+		combo_baut.select(10);
 
 		Button btnRefresh = new Button(grpConnection, SWT.NONE);
 		btnRefresh.addMouseListener(new MouseAdapter() {
@@ -121,11 +121,11 @@ public class Server_Main {
         tblclmnNewColumn.setWidth(248);
         tblclmnNewColumn.setText("Personality");
 						
-        TableColumn tblclmnNewColumn_1 = new TableColumn(DeviceTable, SWT.RIGHT);
+        TableColumn tblclmnNewColumn_1 = new TableColumn(DeviceTable, SWT.CENTER);
         tblclmnNewColumn_1.setWidth(100);
         tblclmnNewColumn_1.setText("State");
 								
-        TableColumn tblclmnNewColumn_2 = new TableColumn(DeviceTable, SWT.RIGHT);
+        TableColumn tblclmnNewColumn_2 = new TableColumn(DeviceTable, SWT.CENTER);
         tblclmnNewColumn_2.setWidth(107);
         tblclmnNewColumn_2.setText("last seen");
         DeviceTable.pack();
