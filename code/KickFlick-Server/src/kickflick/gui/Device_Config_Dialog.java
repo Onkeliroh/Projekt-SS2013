@@ -37,12 +37,16 @@ import java.util.List;
 public class Device_Config_Dialog extends Dialog {
 
 	protected device result;
+    private device Device;
+    private int pers_count;
+    private List<String> neighbor_pers = new ArrayList<String>();
+
 	protected Shell shlDeviceConfugurationDialog;
 	private Text name_text;
     private Combo state_combo;
     private Combo preset_pers_combo;
 
-    private device Device;
+
     private Table trigger_table;
     private Text sensor_adr_text;
     private Text actuator_adr_text;
@@ -55,21 +59,21 @@ public class Device_Config_Dialog extends Dialog {
     private List<Combo> pattern_combo_list = new ArrayList<Combo>();
     private List<CCombo> color1_combo_list = new ArrayList<CCombo>();
     private List<CCombo> color2_combo_list = new ArrayList<CCombo>();
+
     private Table neighbor_table;
     private List<Combo> neighbor_pattern_combo_list = new ArrayList<Combo>();
     private List<CCombo> neighbor_color1_combo_list = new ArrayList<CCombo>();
     private List<CCombo> neighbor_color2_combo_list = new ArrayList<CCombo>();
+    private List<Text> neighbor_text_list = new ArrayList<Text>();
 
-	/**
-	 * Create the dialog.
-	 * @param parent
-	 * @param style
-	 */
-	public Device_Config_Dialog(Shell parent, int style, device Dev) {
+
+	public Device_Config_Dialog(Shell parent, int style, device Dev, List<String> neighbor_pers) {
 		super(parent, SWT.SHELL_TRIM | SWT.BORDER | SWT.APPLICATION_MODAL);
 		setText("SWT Dialog");
 
         this.Device = Dev;
+        this.neighbor_pers = neighbor_pers;
+        this.pers_count = this.neighbor_pers.size();
 	}
 
 	/**
@@ -198,14 +202,14 @@ public class Device_Config_Dialog extends Dialog {
 				neighbor_table.setLinesVisible(true);
 				
 				//TODO fix column alignment
-				for (int i = 0; i < 4; i++) 
+				for (int i = 0; i < this.neighbor_table_heads.length; i++)
 				{
 					TableColumn column = new TableColumn(neighbor_table, SWT.CENTER);
 					column.setText(neighbor_table_heads[i]);
 					column.setWidth(100);
 				}
 				
-				for (int i = 0; i < state_names.length; i++) 
+				for (int i = 0; i < this.pers_count ; i++)
 				{
 					new TableItem(neighbor_table, SWT.NONE);
 			    }
@@ -214,11 +218,12 @@ public class Device_Config_Dialog extends Dialog {
 			    {
 					TableEditor editor = new TableEditor(neighbor_table);
 					Text text = new Text(neighbor_table, SWT.NONE);
-					text.setText(state_names[i]); //TODO change to neighbor name
+					text.setText(this.neighbor_pers.get(i)); //TODO change to neighbor name
 					text.setEditable(false);
 					text.setCapture(false);
 					editor.grabHorizontal = true;
 					editor.setEditor(text, neighbor_items[i], 0);
+                    neighbor_text_list.add(text);
 					
 					editor = new TableEditor(neighbor_table);
 					final Combo pattern_combo = new Combo(neighbor_table, SWT.READ_ONLY);
@@ -356,8 +361,6 @@ public class Device_Config_Dialog extends Dialog {
                     result.get_Personality().set_Color2((byte) c.getSelectionIndex(),j);
                     ++j;
                 }
-
-
             }
 		});
 		
@@ -425,6 +428,35 @@ public class Device_Config_Dialog extends Dialog {
             ++i;
         }
 
+        for ( int j = 0 ; j < this.neighbor_text_list.size(); ++j)
+        {
+            byte[] settings = this.Device.get_Personality().get_neighbor(this.neighbor_text_list.get(j).getText());
+            for ( int k = 0 ; k < pattern.values().length; ++k)
+            {
+                if ( settings[0] == pattern.values()[k].get_key())
+                {
+                    this.neighbor_pattern_combo_list.get(j).select(k);
+                    break;
+                }
+            }
+            for ( int k = 0; k < color.values().length; ++k)
+            {
+                if ( settings[1] == color.values()[k].get_key() )
+                {
+                    this.neighbor_color1_combo_list.get(j).select(k);
+                    break;
+                }
+            }
+            for ( int k = 0; k < color.values().length; ++k)
+            {
+                if ( settings[2] == color.values()[k].get_key() )
+                {
+                    this.neighbor_color2_combo_list.get(j).select(k);
+                    break;
+                }
+            }
+
+        }
         result = Device;
     }
 

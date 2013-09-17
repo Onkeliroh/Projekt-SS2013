@@ -136,34 +136,18 @@ public class serial_lib
 			this.in_ = input;
 		}
 		public void run() {
-            int tmp_int;
+            int tmp_int = 0;
             byte[] tmp = new byte[1024];
-//	        try
-//	        {
-//                int len = 0;
-//                while ( ( tmp_int = this.in_.read()) > -1 )
-//                {
-//                    if ( (byte)tmp_int == (byte)10 ) {
-//                        break;
-//                    }
-//                    tmp[len] = (byte) tmp_int;
-//                    ++len;
-//                }
-//
-//                System.arraycopy(tmp,0,this.Buffer_,0,4);
-//	        }
-//            catch ( IOException e )
-//	        {
-//	            e.printStackTrace();
-//	            System.exit(-1);
-//	        }
-
             try {
                 int availableBytes = this.in_.available();
-                if (availableBytes > 0) {
+//                if (availableBytes > 0) {
+                while (tmp_int < availableBytes)
+                {
                     // Read the serial port
-                    this.in_.read(this.Buffer_, 0, availableBytes);
-//                    System.arraycopy(tmp,0,this.Buffer_,0,4);
+//                    this.in_.read(this.Buffer_, 0, availableBytes);
+                    this.Buffer_[tmp_int] = (byte) this.in_.read();
+                    System.out.print(this.Buffer_[tmp_int]+"\t");
+                    ++tmp_int;
                 }
             } catch (IOException e) {
             }
@@ -173,6 +157,7 @@ public class serial_lib
 		{
 			byte[] tmp = new byte[4];
             System.arraycopy(this.Buffer_,0,tmp,0,4);
+            System.out.println(Arrays.toString(this.Buffer_));
             return tmp;
 
 		}
@@ -200,6 +185,7 @@ public class serial_lib
         {
             try
             {
+                System.out.println("Send: "+ Arrays.toString(this.str));
                 this.out.write(this.str);
                 this.out.flush();
             }
