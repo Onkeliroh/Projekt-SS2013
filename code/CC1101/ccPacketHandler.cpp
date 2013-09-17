@@ -9,7 +9,7 @@ ccPacketHandler::ccPacketHandler()
 
 {
 
-    _ccPacket.length = CCPACKETHANDLER_LENGTH; 
+    _ccPacket.length = CCPACKETHANDLER_LENGTH;
     
 
 }
@@ -126,7 +126,7 @@ void ccPacketHandler::addToPacket(byte data)    //modified by Jenny
 
     else
 
-        Serial.println("ERROR - end ofccAcknowledge() ccPacket reached.");
+        Serial.println("ERROR - end of ccAcknowledge() ccPacket reached.");
 
 }
 
@@ -445,11 +445,12 @@ void ccPacketHandler::printPacket()
 {
     for (byte i = 0; i < _ccPacket.length; ++i)
     {
-
+        //Serial.write(_ccPacket.data[i]);
+        Serial.print("|");
         Serial.print(_ccPacket.data[i]);        
 
     }   
-
+    Serial.println();
 }
 
 

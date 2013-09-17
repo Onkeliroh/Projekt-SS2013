@@ -27,14 +27,28 @@ void PEARLEDS::setLedPattern(byte keyPattern, byte ColorKey1, byte ColorKey2)
 
     switch (keyPattern)
     {
-        case CHANGE_COLOR: 
-            colorWipe(randomColor());            
+        
+        case BLINK:
+            Color1 = findColor(ColorKey1);
+            Color2 = findColor(ColorKey2);
+            setPatternStripes(Color1,Color2);
+            delay(BLINKINTERVAL);
+            colorWipe(BLACK);  
+            delay(BLINKINTERVAL);
             break;
-        case STRIPES:
+        case FADE:            
+            break;
+        case RAINBOW:
+            rainbow();
+            break;
+        case LEDSON:
             Color1 = findColor(ColorKey1);
             Color2 = findColor(ColorKey2);
             setPatternStripes(Color1,Color2);    
             break; 
+        case LEDSOFF:
+            colorWipe(BLACK);   
+            break;
         default: // unknown packet received
             Serial.print("ERROR");
             break; 

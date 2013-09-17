@@ -4,6 +4,10 @@
 
 #include "Leds.h"
 
+#define BLINKINTERVAL  50
+
+//PATTERN KEYS
+
 class PEARLEDS : public LEDS
 {
 

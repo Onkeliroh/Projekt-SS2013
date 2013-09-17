@@ -28,20 +28,16 @@ void CCSENSORNODE::setup()
 
 {
 
-    Serial.begin(115200); // 9600 // 38400
+    Serial.begin(BAUDRATE); 
     
     ledBlinkSetup();
     
     rfChipInit();
 
-    initBattMonitor();   
+    //initBattMonitor();    //Had to repair the BattMonitor circuit 
 
 }
     
-
-
-
-
 
 void CCSENSORNODE::initBattMonitor()
 
@@ -103,7 +99,7 @@ void CCSENSORNODE::ccHandle()
 }
 
 
-boolean CCSENSORNODE::bubbleIsSender()
+boolean CCSENSORNODE::isPacketsSender()
 
 {
    byte sender = _ccPacketHandler.getPacketSender();   

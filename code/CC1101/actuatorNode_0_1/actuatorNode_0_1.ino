@@ -2,7 +2,7 @@
 #include "ccActuatorNode.h"
 #include "pearLeds.h"
 
-#define ACTUATORNODE 38     //needed a number with a normal ascii character for testing
+#define ACTUATORNODE 3     //needed a number with a normal ascii character for testing
 #define TWIN_NODE_ID 2
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
@@ -21,8 +21,9 @@ PEARLEDS _pearLeds = PEARLEDS();
 ///////////////////
 
 boolean _packetAvailable = false;
-byte patternKey;
-byte firstColor,secondColor;
+byte patternKey = LEDSOFF;
+byte firstColor = 0;
+byte secondColor = 0;
 
 
 //////////////////////
@@ -44,7 +45,8 @@ void setup()
 {
     _actuatorNode.setup();
     _pearLeds.setup();
-    enableRFChipInterrupt();   
+    enableRFChipInterrupt();  
+    _pearLeds.setLedPattern(patternKey, firstColor, secondColor); 
 }
 
 
@@ -58,11 +60,9 @@ void loop()
     {              
         disableRFChipInterrupt();
         
+               
         if(_actuatorNode.ccGetNewPacket())
         {
-          _actuatorNode.ledBlink(); 
-          _actuatorNode.ccPrintPacket();  
-          
            if(_actuatorNode.keyforLeds())  
            {
                patternKey = _actuatorNode.getKey();
@@ -74,11 +74,19 @@ void loop()
                _actuatorNode.ccHandle();  
             
         }
+     
                 
         _packetAvailable = false; 
         
         enableRFChipInterrupt();  
-    }    
+    } 
+    else 
+    {
+      
+        _pearLeds.setLedPattern(patternKey, firstColor, secondColor);     
+          
+    }   
+    
 }
 
 

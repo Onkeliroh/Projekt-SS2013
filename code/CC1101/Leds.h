@@ -10,11 +10,18 @@
 #define DATAPIN   3 // 'green' wire 
 #define NUMLEDS   50
 
-//*PATTERNKEYS*//
-#define STRIPES                44
-#define BACKWARD_CATERPILLAR   45
-#define FORWARD_CATERPILLAR    46
-#define CHANGE_COLOR           47
+//*UNIVERSAL PATTERNKEYS*//
+#define BLINK        0
+#define FADE         1
+#define RAINBOW      2
+#define LEDSON       3
+#define LEDSOFF      4
+
+
+
+//COLORKEYS
+#define BLACK    0
+
 
 
 class LEDS

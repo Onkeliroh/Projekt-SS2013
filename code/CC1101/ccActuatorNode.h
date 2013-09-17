@@ -4,6 +4,8 @@
 
 #include "ccNode.h"
 
+#define MAXKEYPATTERN 25
+
 class CCACTUATORNODE: public CCNODE
 {
 

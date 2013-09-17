@@ -37,7 +37,7 @@ class CCSERVER: public CCNODE
                 boolean ccGetNewPacket(void);
                 void ccHandle(void); 
                 int  ccRSSI(byte rawRSSI);
-                void distanceAlert(void);
+                void showRSSI();
                 void lowBatteryAlert(void);
 
                 void saveDataInBuffer();

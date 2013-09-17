@@ -71,7 +71,8 @@ boolean CCACTUATORNODE::keyforLeds()
 {  
     boolean keyForLeds = false;
     byte key = _ccPacketHandler.getAdminKey();
-    if(key>40)
+
+    if(key < MAXKEYPATTERN)
     {
         keyForLeds = true;
     }
@@ -105,7 +106,7 @@ void CCACTUATORNODE::ccHandle()
       
     switch (key)
     {
-        case ACKNOWLEDGE_REQUEST: 
+       case ACKNOWLEDGE_REQUEST: 
             break;
         case ACKNOWLEDGE_RESPONSE:
             _clear = true;

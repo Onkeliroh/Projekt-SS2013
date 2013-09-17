@@ -18,7 +18,7 @@ class CCSENSORNODE: public CCNODE
                 
                 boolean ccGetNewPacket();
                 void ccHandle();
-                boolean bubbleIsSender();
+                boolean isPacketsSender();
                 
                           
                 //REPORTS TO THE SERVER

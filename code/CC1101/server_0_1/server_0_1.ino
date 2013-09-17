@@ -41,7 +41,6 @@ void setup()
 /////////////////////&
 
 
-
 void loop()
 {
     if(_packetAvailable) 
@@ -50,10 +49,8 @@ void loop()
         
           if(_server.ccGetNewPacket())
           {
-              _server.saveDataInBuffer();             
-              _server.sendBufferToJavaServer();
-            
-              delay(10);
+              _server.ccHandle();
+              //delay(10);
             
           }
         
@@ -66,6 +63,7 @@ void loop()
            if(_server.newJavaCommand())
            {
               _server.getJavaCommand();
+              _server.ccSendCommand();
               _server.ccPrintPacket();  
               _server.cleanBuffer();
            } 

@@ -27,8 +27,10 @@ CCSERVER::~CCSERVER(void)
 //METHODS
 void CCSERVER::cleanBuffer()
 {
-    for(int i=0;i<BUFFERLENGTH;i++)    
-        buffer[i]= 0;      
+    for(int i=0;i<BUFFERLENGTH;i++) 
+    {   
+        buffer[i]= 0;       
+    }
 }
 
 void CCSERVER::setup()
@@ -88,11 +90,16 @@ void CCSERVER::ccHandle(void)
                 _ccPacketHandler.printPacket();
                 ccSendPacket();  
             #endif
+            setBuffer();         
+            sendBufferToJavaServer();
             break;
         case NEAR_NODE_EVENT:            
             #ifdef SERVERDEBUG
                 distanceAlert();
-            #endif      
+            #endif
+            showRSSI();
+            setNearNodeBuffer();      
+            sendBufferToJavaServer();      
             break;    
         case ACKNOWLEDGE_REQUEST:
             if (_ccPacketHandler.hashMatches()) 
@@ -106,6 +113,8 @@ void CCSERVER::ccHandle(void)
             #ifdef SERVERDEBUG
                 lowBatteryAlert();
             #endif
+            setBuffer();         
+            sendBufferToJavaServer();
         case TEST: 
             ccAcknowledge();
             break;
@@ -148,7 +157,7 @@ int CCSERVER::ccRSSI(byte rawRSSI)
 }
 
 
-void CCSERVER::distanceAlert()
+void CCSERVER::showRSSI()
 {
 
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
@@ -170,6 +179,7 @@ void CCSERVER::lowBatteryAlert()
     Serial.print("Node Nr. " );
     Serial.print(nodeLowBattery);
     Serial.println("  is running out of Battery!!!");      
+
 }
 
 
@@ -194,7 +204,7 @@ void CCSERVER::setNearNodeBuffer()
     buffer[0] = ccPacket.SENDER_ID;
     buffer[1] = ccPacket.ADMINKEY;
     buffer[2] = ccPacket.NEAR_NODE_ID;
-    buffer[3] = 10;
+    buffer[3] = 10; //to do testing. This corresponds to "end line" in ASCII
   
 }
 
@@ -212,7 +222,7 @@ boolean CCSERVER::newJavaCommand()
 {
     boolean newCommand = false;
    
-    if(Serial.available() > 0)    
+    if(Serial.available() == BUFFERLENGTH)    
     {  
         newCommand = true;       
      }
@@ -223,14 +233,17 @@ boolean CCSERVER::newJavaCommand()
 
 void CCSERVER::getJavaCommand()
 {
+        
     for(int i=0; i<BUFFERLENGTH; i++)
-    {
+    { 
         if(Serial.available() > 0)
         {
-             buffer[i] = Serial.read();      
-             delay(1);      
+             buffer[i] = Serial.read();                               
         }
-    }
+	
+     }
+
+     Serial.flush();
 } 
 
 void CCSERVER::TestBuffer1()
