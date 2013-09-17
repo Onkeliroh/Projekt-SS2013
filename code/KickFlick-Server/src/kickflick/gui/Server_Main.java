@@ -116,6 +116,7 @@ public class Server_Main {
         DeviceTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         DeviceTable.setLinesVisible(true);
         DeviceTable.setHeaderVisible(true);
+
 				
         TableColumn tblclmnNewColumn = new TableColumn(DeviceTable, SWT.NONE);
         tblclmnNewColumn.setWidth(248);

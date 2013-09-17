@@ -366,30 +366,52 @@ public class Device_Config_Dialog extends Dialog {
 
                 for ( String str : neighbor_pers)
                 {
+                    byte[] settings = new byte[3];
+                    for ( int text = 0 ; text < neighbor_text_list.size() ; ++text)
+                    {
+                        if ( neighbor_text_list.get(text).getText().equalsIgnoreCase(str))
+                        {
+                            for (pattern p : pattern.values())
+                                if ( p.get_name().equalsIgnoreCase(neighbor_pattern_combo_list.get(text).getText()) )
+                                {
+                                    settings[0]=p.get_key();
+                                    break;
+                                }
+                            for (color c : color.values())
+                            {
+                                if ( c.get_name().equalsIgnoreCase(neighbor_color1_combo_list.get(text).getText()) )
+                                {
+                                    settings[1]=c.get_key();
+                                    break;
+                                }
+                            }
+                            for (color p : color.values())
+                                if ( p.get_name().equalsIgnoreCase(neighbor_color2_combo_list.get(text).getText()) )
+                                {
+                                    settings[2]=p.get_key();
+                                    break;
+                                }
+
+
+                        }
+                    }
+                    // if no entry of this personality exsists
                     if ( !Device.get_Personality().get_Neighbours().containsKey(str) )
                     {
-                        for ( int text = 0 ; text < neighbor_text_list.size() ; ++text)
-                        {
-                            if ( neighbor_text_list.get(text).getText().equalsIgnoreCase(str))
+                        Device.get_Personality().get_Neighbours().put( str, settings );
+                    }
+                    else //if personality allready exsistsgit
+                    {
+                        for ( Map.Entry entry : Device.get_Personality().get_Neighbours().entrySet())
+                            if ( entry.getKey().equals(str))
                             {
-                                byte[] settings = new byte[3];
-                                for (color p : color.values())
-                                    if ( p.get_name().equalsIgnoreCase(neighbor_pattern_combo_list.get(text).getText()) )
-                                        settings[0]=p.get_key();
-                                for (color p : color.values())
-                                    if ( p.get_name().equalsIgnoreCase(neighbor_color1_combo_list.get(text).getText()) )
-                                        settings[1]=p.get_key();
-                                for (color p : color.values())
-                                    if ( p.get_name().equalsIgnoreCase(neighbor_color2_combo_list.get(text).getText()) )
-                                        settings[2]=p.get_key();
-
-                                Device.get_Personality().get_Neighbours().put( str, settings );
+                                entry.setValue(settings);
+                                break;
                             }
-                        }
-
                     }
                 }
             }
+
 		});
 		
 		Button btnClose = new Button(composite, SWT.RIGHT);

@@ -141,7 +141,6 @@ public class server extends Timer{
         byte[] msg = new byte[4];
         msg[0] = d.get_actuator_node();
         msg[1] = d.get_Personality().get_pattern();
-//        msg[1] = 44;
         msg[2] = d.get_Personality().get_Color1();
         msg[3] = d.get_Personality().get_Color2();
 
