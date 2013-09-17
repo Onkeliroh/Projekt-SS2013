@@ -173,11 +173,6 @@ public class Server_Main {
         Config_btn.addMouseListener(new MouseAdapter()
         {
             public void mouseDown(MouseEvent e) {
-                List<String> persos = new ArrayList<String>();
-                persos.add("Daniel");
-                persos.add("Ingo");
-                persos.add("Paul");
-                persos.add("Mama");
 
                 if ( DeviceTable.getSelectionIndex() >= 0)
                 {
@@ -186,7 +181,7 @@ public class Server_Main {
                             shlKickflickServer,
                             SWT.APPLICATION_MODAL,
                             Server.get_device(index),
-                            persos
+                            Server.get_PersonalitiesCount()
                     );
                     device tmp_dev =  (device) tmp.open();
                     Server.set_device(index,tmp_dev);
