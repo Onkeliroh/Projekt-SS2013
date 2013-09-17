@@ -178,16 +178,15 @@ public class server extends Timer{
         this.timer.purge();
     }
 
-    public int get_PersonalitiesCount() 
+    public ArrayList<String> get_PersonalitiesCount()
     {
-    	int c = 0;
-    	for(device d : this.Server.get_devices()) {
-    		for(device e : this.Server.get_devices()) {
-    			if( d.get_Personality().get_Name().equals(e.get_Personality().get_Name()) )
-        			c += 1;
-    		}
-    	}
-    	return c;
+        ArrayList<String> PersNames = new ArrayList<String>();
+        for( device d : this.Server.get_devices() ) {
+            PersNames.add(d.get_Personality().get_Name());
+        }
+        Set<String> setNames = new LinkedHashSet<String>(PersNames);
+        PersNames = new ArrayList<String>(setNames);
+        return PersNames;
     }
 
 }
