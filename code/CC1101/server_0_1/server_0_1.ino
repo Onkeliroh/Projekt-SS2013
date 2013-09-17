@@ -63,8 +63,13 @@ void loop()
        }
     else 
        {
-           _server.getJavaCommand(); 
-           _server.ccSendCommand();
+           if(_server.newJavaCommand())
+           {
+              _server.getJavaCommand();
+              _server.ccPrintPacket();  
+              _server.cleanBuffer();
+           } 
+           
        }   
          
 }

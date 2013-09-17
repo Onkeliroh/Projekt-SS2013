@@ -10,7 +10,8 @@ class PEARLEDS : public LEDS
 	public:
                 PEARLEDS();
                 ~PEARLEDS(void);
-                void setLedPattern(byte keyPattern, byte ColorKey1, byte ColorKey2);           
+                void setLedPattern(byte keyPattern, byte ColorKey1, byte ColorKey2);   
+                //void setColorA1(unsigned int color);        
 };
 
 

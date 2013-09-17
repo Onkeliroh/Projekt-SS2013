@@ -41,3 +41,14 @@ void PEARLEDS::setLedPattern(byte keyPattern, byte ColorKey1, byte ColorKey2)
     }
 }
 
+
+//void PEARLEDS::setColorA1(unsigned int color)
+//{
+  //  for(int i = 0; i < _ledStrip.numPixels(); ++i)
+    //{
+      //  _ledStrip.setPixelColor(i, c);
+    //}
+    //_ledStrip.show();   
+//}    
+
+

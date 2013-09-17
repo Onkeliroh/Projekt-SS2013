@@ -182,13 +182,13 @@ unsigned int LEDS::findColor(byte colorIndex)
             pickedColor = Color(0, 15, 31); //lemon green
             break; 
         case 2:  //#
-            pickedColor = Color(0, 8, 0); //red dim
+            pickedColor = Color(0, 8, 0); //red
             break;
         case 3:  //$
             pickedColor = Color(0, 15, 0); //red
             break;
         case 4:  //%
-            pickedColor = Color(0, 31, 0); //red bright
+            pickedColor = Color(0, 31, 0); //red
             break;
         case 5:  //&
             pickedColor = Color(31, 0, 31); //ligth blue

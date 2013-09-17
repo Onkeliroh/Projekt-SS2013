@@ -44,11 +44,14 @@ class CCSERVER: public CCNODE
                 void setBuffer();
                 void setNearNodeBuffer();
                 void sendBufferToJavaServer();
+                boolean newJavaCommand();
                 void getJavaCommand();
                 void setNewCommand();
                 void ccSendCommand();
+
+                void TestBuffer1();
+                void TestBuffer2();
                
-       private:
                 byte buffer[BUFFERLENGTH];                  
 };
 

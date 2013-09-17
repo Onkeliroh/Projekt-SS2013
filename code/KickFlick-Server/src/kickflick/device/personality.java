@@ -1,7 +1,5 @@
 package kickflick.device;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -25,21 +23,6 @@ public class personality{
         this.Color2_ = presetpersonalities.Paul.get_personality().Color2_;
         this.pattern_ = presetpersonalities.Paul.get_personality().pattern_;
     }
-
-	// default including neighbours_
-	public personality()
-	{
-		this.Name_ = presetpersonalities.Paul.get_personality().Name_;
-        this.State_ = presetpersonalities.Paul.get_personality().State_;
-        this.Color1_ = presetpersonalities.Paul.get_personality().Color1_;
-        this.Color2_ = presetpersonalities.Paul.get_personality().Color2_;
-        this.pattern_ = presetpersonalities.Paul.get_personality().pattern_;
-        byte[] defaultArray;
-        defaultArray[0] = 0;
-        defaultArray[1] = 0;
-        defaultArray[2] = 0;
-        this.neighbours_.put("DEFAULT", defaultArray);
-	}
 	
 	public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp, byte[] patterns, HashMap<String, byte[]> neighbours)
 	{

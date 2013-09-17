@@ -20,7 +20,8 @@ public enum color {
     ORANGE("ORANGE", (byte)12),
     WHITE("WHITE", (byte)13),
     FUCHSIA("FUCHSIA", (byte)14),
-    TURQUOISE("TURQUOISE", (byte)15);
+    TURQUOISE("TURQUOISE", (byte)15),
+    BLACK("Black",(byte)16);
 
     private final String colorName;
     private final byte color_key;
