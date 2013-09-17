@@ -22,6 +22,7 @@ public class personality{
         this.Color1_ = presetpersonalities.Paul.get_personality().Color1_;
         this.Color2_ = presetpersonalities.Paul.get_personality().Color2_;
         this.pattern_ = presetpersonalities.Paul.get_personality().pattern_;
+        this.neighbours_ = presetpersonalities.Paul.get_personality().neighbours_;
     }
 	
 	public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp, byte[] patterns, HashMap<String, byte[]> neighbours)
@@ -192,6 +193,19 @@ public class personality{
     public Map<String, byte[]> get_Neighbours()
     {
     	return this.neighbours_;
+    }
+
+    public byte[] get_neighbor(String str)
+    {
+        for ( Map.Entry e : neighbours_.entrySet())
+        {
+            System.out.println(e.getKey()+" vs. "+ str);
+            if ( e.getKey().equals(str) )
+            {
+                return (byte[])e.getValue();
+            }
+        }
+        return new byte[]{0,0,0};
     }
 
     public void inc_state()

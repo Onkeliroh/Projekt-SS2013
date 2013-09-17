@@ -14,6 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Menu;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Group;
@@ -172,13 +173,20 @@ public class Server_Main {
         Config_btn.addMouseListener(new MouseAdapter()
         {
             public void mouseDown(MouseEvent e) {
+                List<String> persos = new ArrayList<String>();
+                persos.add("Daniel");
+                persos.add("Ingo");
+                persos.add("Paul");
+                persos.add("Mama");
+
                 if ( DeviceTable.getSelectionIndex() >= 0)
                 {
                     int index = DeviceTable.getSelectionIndex();
                     Device_Config_Dialog tmp = new Device_Config_Dialog(
                             shlKickflickServer,
                             SWT.APPLICATION_MODAL,
-                            Server.get_device(index)
+                            Server.get_device(index),
+                            persos
                     );
                     device tmp_dev =  (device) tmp.open();
                     Server.set_device(index,tmp_dev);
