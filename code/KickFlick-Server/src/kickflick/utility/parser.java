@@ -12,7 +12,7 @@ import kickflick.device.*;
 class parser implements SerialPortEventListener {
 	private final server Server_;
 
-    private final int STATE_CHANGE_DELAY = 10000;
+    private final int STATE_CHANGE_DELAY = 50000;
 	
 	public parser(server Serv)
 	{
@@ -36,7 +36,8 @@ class parser implements SerialPortEventListener {
                 index = find_device_actuator_node(arg[0]);
 
             if ( index == -1 )
-			{    //if empty OR no device found -> create new device and fill                                                                                               g
+			{    //if empty OR no device found -> create new device and fill
+			    System.out.println("Parser: create new Device");
                 device tmp = new device ( new personality());
 
                 if (arg[0] % 2 == 0)
@@ -91,8 +92,6 @@ class parser implements SerialPortEventListener {
                             {
                                 this.Server_.get_device(index).get_Personality().inc_state();
 
-                                this.Server_.get_device(index).set_new_timestamp();
-
                                 this.Server_.send_device(index);
 
                                 break;
@@ -101,6 +100,7 @@ class parser implements SerialPortEventListener {
                     }
                 }
             }
+            this.Server_.get_device(index).set_new_timestamp();
 		}
 		else {
 			System.err.println("Parser received empty message!");
