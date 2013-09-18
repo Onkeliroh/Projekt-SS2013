@@ -7,6 +7,11 @@ import kickflick.gui.Server_Main;
 import kickflick.device.device;
 
 public class server extends Timer{
+
+    private final int OUT_OF_RANGE = 120000;
+    private final int CHECK_STATE_TIME = 60000;
+
+
     private kickflick.utility.serial_lib serial_com;
 	private setting_parser set_pars = new setting_parser();
 	private final parser input_parser;
@@ -124,9 +129,7 @@ public class server extends Timer{
             {
                 e.fillInStackTrace();
             }
-            //TODO mybe join function nessesary
         }
-        //TODO remove comment
     }
 
     public void send_device(int index)
@@ -157,12 +160,17 @@ public class server extends Timer{
                 Timestamp stamp = new Timestamp(new Date().getTime());
                 for (int i = 0 ; i < Server.devices.size() ; ++i)
                 {
-                    if(stamp.getTime() - Server.devices.get(i).get_timestamp().getTime() >= 60000 && Server.devices.get(i).get_Personality().get_State() != 0) //TODO make global
+                    if(stamp.getTime() - Server.devices.get(i).get_timestamp().getTime() >= CHECK_STATE_TIME)
+                        if (Server.devices.get(i).get_Personality().get_State() != 0) //TODO make global
+                        {
+                            System.out.println("Server Timer: set device '"+ Server.devices.get(i).get_Personality().get_Name() + "\t Id: " + i +"' to default state.");
+                            Server.devices.get(i).get_Personality().set_State((short)0);
+                            Server.devices.get(i).set_new_timestamp();
+                            Server.send_device(i);
+                        }
+                    if (stamp.getTime() - Server.devices.get(i).get_timestamp_last_heard_of().getTime() >= OUT_OF_RANGE)
                     {
-                        System.out.println("Server Timer: set device '"+ Server.devices.get(i).get_Personality().get_Name() +"' to default state.");
-                        Server.devices.get(i).get_Personality().set_State((short)0);
-                        Server.devices.get(i).set_new_timestamp();
-                        Server.send_device(i);
+                        //TODO create warning
                     }
                 }
             }

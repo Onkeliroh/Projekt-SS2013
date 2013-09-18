@@ -1,18 +1,18 @@
 package kickflick.utility;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
-import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import kickflick.device.*;
 
 class parser implements SerialPortEventListener {
 	private final server Server_;
+
+    private final int STATE_CHANGE_DELAY = 10000;
 	
 	public parser(server Serv)
 	{
@@ -29,21 +29,14 @@ class parser implements SerialPortEventListener {
 
 		if (arg.length >= 4) // must contain at least sender receiver and key
 		{
-            int index;
-			if ( !this.Server_.get_devices().isEmpty()) // if NOT emtpy
-			{
-                if (arg[0] % 2 == 0)
-                    index = find_device_sensor_node(arg[0]);
-                else if ( arg[0] % 2 == 1)
-                    index = find_device_actuator_node(arg[0]);
-                else
-                {
-                    System.err.println("Parser Error: incorrect Packet Sender ID");
-                    return;
-                }
-			}
-			else    //if empty -> create new device and fill                                                                                               g
-			{
+            int index = -1; //by default parser assumes, that no device is present
+            if (arg[0] % 2 == 0)
+                index = find_device_sensor_node(arg[0]);
+            else if ( arg[0] % 2 == 1)
+                index = find_device_actuator_node(arg[0]);
+
+            if ( index == -1 )
+			{    //if empty OR no device found -> create new device and fill                                                                                               g
                 device tmp = new device ( new personality());
 
                 if (arg[0] % 2 == 0)
@@ -67,30 +60,54 @@ class parser implements SerialPortEventListener {
 			}
 
             Timestamp stamp = new Timestamp(new Date().getTime());
-            if ( this.Server_.get_device(index).get_timestamp().getTime() - stamp.getTime() >= -10000)      //if the time difference between the last and this contact is big enougth
+            if ( this.Server_.get_device(index).get_timestamp().getTime() - stamp.getTime() >= -STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
             {
-                //send device information
-                boolean found = false;
-                for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
+
+                switch (arg[1])
                 {
-                    keys k = (keys) entry.getKey();
-                    if (k.get_key() == arg[1] && (Boolean) entry.getValue())
+                    case system_keys.BATTERY_LOW:
                     {
-                        found = true;
-                        System.out.println("Parser: Found key");
+                        if ( this.Server_.get_device(index).is_battery_low())
+                        this.Server_.get_device(index).toggle_battery_low();
+                        break;
+                    }
+                    case system_keys.STILL_ALIVE:
+                    {
+                        this.Server_.get_device(index).set_new_timestamp_last_heard_of();
+                        //TODO send acknowledge
+                        break;
+                    }
+                    case system_keys.FOUND_NEIGHBOR:
+                    {
+                        //TODO found neighbor
+                    }
+                    default:
+                    {
+                        //send device information
+                        boolean found = false;
+                        for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
+                        {
+                            keys k = (keys) entry.getKey();
+                            if (k.get_key() == arg[1] && (Boolean) entry.getValue())
+                            {
+                                found = true;
+                                System.out.println("Parser: Found key");
+                            }
+                        }
+                        if ( found )
+                        {
+
+                            this.Server_.get_device(index).get_Personality().inc_state();
+
+                            this.Server_.get_device(index).set_new_timestamp();
+
+                            this.Server_.send_device(index);
+                        }
+                        else
+                            System.out.println("Parser found no match.");
+                        break;
                     }
                 }
-                if ( found )
-                {
-
-                    this.Server_.get_device(index).get_Personality().inc_state(); //TODO set inc delay
-
-                    this.Server_.get_device(index).set_new_timestamp();
-
-                    this.Server_.send_device(index);
-                }
-                else
-                    System.out.println("Parser found no match.");
             }
 		}
 		else {
