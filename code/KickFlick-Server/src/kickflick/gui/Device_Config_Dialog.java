@@ -52,7 +52,7 @@ public class Device_Config_Dialog extends Dialog {
     private Text actuator_adr_text;
     private Table state_table;
     
-    private final String[] state_names = {"Standby", "First contact", "Playing", "Playing (hard)"};
+//    private final String[] state_names = {"Standby", "First contact", "Playing", "Playing (hard)"};
     private final String[] tabel_heads = {"State","Pattern","1. Color", "2. Color"};
     private final String[] neighbor_table_heads = {"Neighbor", "Pattern", "1. Color", "2. Color"};
 
@@ -151,7 +151,9 @@ public class Device_Config_Dialog extends Dialog {
 						state_label.setText("State:");
 						
 						state_combo = new Combo(Config_composite, SWT.READ_ONLY);
-						state_combo.setItems(state_names);
+                        for (int i = 0; i < Device.get_Personality().state_count; ++i)
+                            state_combo.add(Device.get_Personality().get_state_name((short)i) , i);
+//						state_combo.setItems(state_names);
 						state_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 						state_combo.select(0);
 						new Label(Config_composite, SWT.NONE);
@@ -265,7 +267,7 @@ public class Device_Config_Dialog extends Dialog {
 					column.setWidth(100);
 				}
 				
-				for (int i = 0; i < state_names.length; i++) 
+				for (int i = 0; i < Device.get_Personality().state_count; i++)
 				{
 					new TableItem(state_table, SWT.NONE);
 			    }
@@ -274,7 +276,7 @@ public class Device_Config_Dialog extends Dialog {
 			    {
 					TableEditor editor = new TableEditor(state_table);
 					Text text = new Text(state_table, SWT.NONE);
-					text.setText(state_names[i]);
+					text.setText(Device.get_Personality().get_state_name((short) i));
 					text.setEditable(false);
 					text.setCapture(false);
 					editor.grabHorizontal = true;

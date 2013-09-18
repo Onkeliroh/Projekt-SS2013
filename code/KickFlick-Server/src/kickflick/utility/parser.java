@@ -62,23 +62,23 @@ class parser implements SerialPortEventListener {
             Timestamp stamp = new Timestamp(new Date().getTime());
             if ( this.Server_.get_device(index).get_timestamp().getTime() - stamp.getTime() >= -STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
             {
-
                 switch (arg[1])
                 {
                     case system_keys.BATTERY_LOW:
                     {
-                        if ( this.Server_.get_device(index).is_battery_low())
-                        this.Server_.get_device(index).toggle_battery_low();
+                        if ( !this.Server_.get_device(index).is_battery_low() )
+                            this.Server_.get_device(index).toggle_battery_low();
                         break;
                     }
                     case system_keys.STILL_ALIVE:
                     {
                         this.Server_.get_device(index).set_new_timestamp_last_heard_of();
-                        //TODO send acknowledge
+                        this.Server_.send_msg(new byte[]{arg[0],system_keys.MESSAGE_RECEIVED,0,0});
                         break;
                     }
                     case system_keys.FOUND_NEIGHBOR:
                     {
+
                         //TODO found neighbor
                     }
                     default:

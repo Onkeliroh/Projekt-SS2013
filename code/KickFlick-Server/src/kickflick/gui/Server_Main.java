@@ -127,8 +127,13 @@ public class Server_Main {
         tblclmnNewColumn_1.setText("State");
 								
         TableColumn tblclmnNewColumn_2 = new TableColumn(DeviceTable, SWT.CENTER);
-        tblclmnNewColumn_2.setWidth(107);
+        tblclmnNewColumn_2.setWidth(100);
         tblclmnNewColumn_2.setText("last seen");
+
+        TableColumn tblclmnNewColumn_3 = new TableColumn(DeviceTable, SWT.CENTER);
+        tblclmnNewColumn_3.setWidth(100);
+        tblclmnNewColumn_3.setText("Battery");
+
         DeviceTable.pack();
 
 		if ( this.Server.get_devices().size() > 0 )
@@ -242,7 +247,8 @@ public class Server_Main {
                     tableItem.setText(new String[] {
                             d.get_Personality().get_Name(),
                             d.get_Personality().get_state_name(),
-                            new SimpleDateFormat("HH:mm:ss").format(d.get_timestamp())
+                            new SimpleDateFormat("HH:mm:ss").format(d.get_timestamp_last_heard_of()),
+                            d.get_battery_state()
                     });
                     ++i;
                 }

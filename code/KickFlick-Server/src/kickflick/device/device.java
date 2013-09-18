@@ -137,6 +137,13 @@ public class device {
         return this.battery_low;
     }
 
+    public final String get_battery_state()
+    {
+        if (this.battery_low)
+            return "LOW";
+        return "OK";
+    }
+
     //setter for last action send by sensor node
     public void set_new_timestamp()
     {

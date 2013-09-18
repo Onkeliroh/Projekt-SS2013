@@ -85,7 +85,7 @@ public class personality{
 	
 	public void set_State (short state)
 	{
-		if (state < state_count && state >= 0)
+		if (state < state_count && state >= -1)
 			this.State_ = state;
 	}
 	
@@ -185,6 +185,7 @@ public class personality{
     {
         switch (state)
         {
+            case -1: return "Out of Range";
             case 0: return "Standbye";
             case 1: return "First contact";
             case 2: return "Playing ";
