@@ -84,28 +84,20 @@ class parser implements SerialPortEventListener {
                     default:
                     {
                         //send device information
-                        boolean found = false;
                         for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
                         {
                             keys k = (keys) entry.getKey();
                             if (k.get_key() == arg[1] && (Boolean) entry.getValue())
                             {
-                                found = true;
-                                System.out.println("Parser: Found key");
+                                this.Server_.get_device(index).get_Personality().inc_state();
+
+                                this.Server_.get_device(index).set_new_timestamp();
+
+                                this.Server_.send_device(index);
+
+                                break;
                             }
                         }
-                        if ( found )
-                        {
-
-                            this.Server_.get_device(index).get_Personality().inc_state();
-
-                            this.Server_.get_device(index).set_new_timestamp();
-
-                            this.Server_.send_device(index);
-                        }
-                        else
-                            System.out.println("Parser found no match.");
-                        break;
                     }
                 }
             }

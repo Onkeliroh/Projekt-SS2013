@@ -185,7 +185,7 @@ public class serial_lib
         {
             try
             {
-//                System.out.println("Send: "+ Arrays.toString(this.str));
+                System.out.println("Send: "+ Arrays.toString(this.str));
                 this.out.write(this.str);
                 this.out.flush();
             }
