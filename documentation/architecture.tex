@@ -1,0 +1,14 @@
+\subsection{Architecture}
+\subsubsection{Goals}
+
+The main goal of the software is managing the incoming informations, from a via USB connected panstamp, and reacting, depending on the personality of the hardware, accordingly. To achive this goal, we spllited this major goal into smaller once and began working on one after another.
+
+ The smaller goals were implementing a basic serial port communication, creating a basic graphical user interface, getting to know thread and runnable concepts in Java and coming up with a general structure for managing the hardware devices.
+
+\subsubsection{Preparation}
+First we needed to implement a basic serial port communication for demonstration and understanding purposes. For that matter we wrote a small application using the RxTx-library to get a better understanding how the library behaves. This small application only wrote information to the serial outputstream and if there were available data incomming from the serial port, also read and printed them to the console.
+
+After understanding the ground princibles of the library we could begin planning the basic structure of the java server.
+
+
+% vim: spell spelllang=en_gb 
