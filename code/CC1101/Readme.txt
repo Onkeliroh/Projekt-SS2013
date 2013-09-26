@@ -1,10 +1,10 @@
 SKETCHES
 ========
 
-- Ordner für den Server v0.6 ist server_0_1
-- Ordner für den sensorNode ist sensorNode_0_1
-- Ordner für den ActuatorNode ist actuatorNode_0_1
-- alle Ordner in das Standard-Verzeichnis für Sketches
+- Ordner fÃ¼r den Server v0.6 ist server_0_1
+- Ordner fÃ¼r den sensorNode ist sensorNode_0_1
+- Ordner fÃ¼r den ActuatorNode ist actuatorNode_0_1
+- alle Ordner in das Standard-Verzeichnis fÃ¼r Sketches
 
 
 LIBRARIES
@@ -24,4 +24,5 @@ LIBRARIES
 - Leds.h und -.cpp
 - pearLeds.h und -.cpp
 - alle Files in den Ordner "Arduino/libraries/panstamp"
+
 

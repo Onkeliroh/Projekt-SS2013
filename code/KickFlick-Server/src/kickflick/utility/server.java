@@ -1,12 +1,19 @@
 package kickflick.utility;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
 
 import kickflick.gui.Server_Main;
 import kickflick.device.device;
 
-public class server extends Timer{
+public class server extends Timer implements Serializable{
 
     private final int OUT_OF_RANGE = 120000;
     private final int CHECK_STATE_TIME = 60000;
@@ -193,5 +200,42 @@ public class server extends Timer{
         PersNames = new ArrayList<String>(setNames);
         return PersNames;
     }
+    
+    public void loadDevicesFromFile(String fName) throws FileNotFoundException, IOException, ClassNotFoundException{
+		FileInputStream f_in;
+		
+		f_in = new FileInputStream(fName);
+		// Read object using ObjectInputStream
+		ObjectInputStream obj_in = 	new ObjectInputStream (f_in);
+
+		// Read an object
+		Object obj = obj_in.readObject(); 
+		
+		devices = (((ArrayList<device>) obj));//.getAnimations());
+		System.out.println("The devices were loaded from: ");
+		
+		obj_in.close();
+	}
+	
+	public void saveDevicesToFile(String fname) throws IOException {
+		// Write to disk with FileOutputStream
+		FileOutputStream f_out;
+		
+		f_out = new FileOutputStream(fname);
+		
+		ObjectOutputStream obj_out;
+		obj_out = new ObjectOutputStream(f_out);
+		
+
+		// Write object out to disk
+		obj_out.writeObject(devices);
+		// MessageDialog.openInformation(shlAnimationBuilder, "Info",
+		// "The animations have been saved");
+		
+		obj_out.close();
+		System.out.println("Devices were saved to file.");
+	
+	}
+    
 
 }

@@ -3,10 +3,11 @@ package kickflick.device;
 import kickflick.utility.color;
 import kickflick.utility.pattern;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.HashMap;
 
-public class personality{
+public class personality implements Serializable{
 	private String Name_;
 	private short State_ = 0;
     public final int state_count = 4;
