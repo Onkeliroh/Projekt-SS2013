@@ -139,7 +139,7 @@ public class Device_Config_Dialog extends Dialog {
 						new Label(Config_composite, SWT.NONE);
 						
 						Label lblSenderId = new Label(Config_composite, SWT.NONE);
-						lblSenderId.setText("Sender Id:");
+						lblSenderId.setText("Sensor Id:");
 						
 						sensor_adr_text = new Text(Config_composite, SWT.BORDER | SWT.READ_ONLY);
 						sensor_adr_text.setEditable(true);

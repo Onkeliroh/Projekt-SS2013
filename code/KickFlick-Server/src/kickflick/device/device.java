@@ -1,12 +1,12 @@
 package kickflick.device;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.Map;
 
 import kickflick.utility.keys;
 
-public class device {
+public class device implements Serializable{
 	private personality Personality_;
 	
 	private byte sensor_node; //sensor panstamp address

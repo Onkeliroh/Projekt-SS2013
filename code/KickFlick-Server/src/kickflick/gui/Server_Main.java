@@ -1,5 +1,6 @@
 package kickflick.gui;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import kickflick.device.device;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.MenuItem;
 
 public class Server_Main {
 
@@ -37,6 +39,9 @@ public class Server_Main {
     private final int time = 1500; //TODO make configurable
 	private Table DeviceTable;
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public void open() {
 		//display = Display.getDefault();
 		final Shell shlKickflickServer = new Shell( display );
@@ -106,6 +111,45 @@ public class Server_Main {
 
 		Menu menu = new Menu(shlKickflickServer, SWT.BAR);
 		shlKickflickServer.setMenuBar(menu);
+		
+		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
+		mntmFile.setText("File");
+		
+		Menu menu_1 = new Menu(mntmFile);
+		mntmFile.setMenu(menu_1);
+		
+		MenuItem mntmLoad = new MenuItem(menu_1, SWT.NONE);
+		mntmLoad.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					Server.loadDevicesFromFile("test");
+					
+				} catch (ClassNotFoundException
+						| IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		mntmLoad.setText("Load");
+		
+		MenuItem mntmSave = new MenuItem(menu_1, SWT.NONE);
+		mntmSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					Server.saveDevicesToFile("test");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		mntmSave.setText("Save");
+		
+		MenuItem mntmExit = new MenuItem(menu_1, SWT.NONE);
+		mntmExit.setText("Exit");
 
 		Group grpDevices = new Group(shlKickflickServer, SWT.NONE);
 		grpDevices.setText("Devices");
@@ -279,5 +323,4 @@ public class Server_Main {
     {
         this.Server = serv;
     }
-
 }
