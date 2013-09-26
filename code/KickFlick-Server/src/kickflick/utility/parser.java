@@ -27,7 +27,7 @@ class parser implements SerialPortEventListener {
 
         byte[] msg = new byte[4];
 
-		if (arg.length >= 4) // must contain at least sender receiver and key
+		if (arg.length >= 4 && checksum_check(arg)) // must contain at least sender receiver and key and must have correct checksum
 		{
             int index = -1; //by default parser assumes, that no device is present
             if (arg[0] % 2 == 0)
@@ -94,13 +94,15 @@ class parser implements SerialPortEventListener {
 
                                 this.Server_.send_device(index);
 
+                                this.Server_.get_device(index).set_new_timestamp();
+
                                 break;
                             }
                         }
                     }
                 }
             }
-            this.Server_.get_device(index).set_new_timestamp();
+            this.Server_.get_device(index).set_new_timestamp_last_heard_of();
 		}
 		else {
 			System.err.println("Parser received empty message!");
@@ -122,6 +124,19 @@ class parser implements SerialPortEventListener {
             if ( this.Server_.get_device(i).get_actuator_node() == address)
                 return i;
         return -1; //found nothing
+    }
+
+    private boolean checksum_check(byte[] arg)
+    {
+        byte sum = 0;
+        for ( int i = 0; i < arg.length-1; ++i)
+        {
+            sum += arg[i];
+            System.out.println(i + "\t" + sum + "\t" + arg[arg.length-1]);
+        }
+        if ( sum == arg[arg.length-1])
+            return true;
+        return false;
     }
 
 	public void serialEvent(SerialPortEvent arg0) {

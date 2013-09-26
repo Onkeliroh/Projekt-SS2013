@@ -4,22 +4,21 @@ import java.util.Enumeration;
 
 public enum keys {
     //Wheel events
-    has_moded_cs("Has moved",(byte)21),
-    speed_reached("Speed reached",(byte)22),
-    direction_changed("Direction changed",(byte)23),
-    distance_covered("Distance covered",(byte)24),
-    has_stopped_wheel("Has stopped",(byte)26),
-    turned_left("Turned left",(byte)27),
-    turned_right("Turned right",(byte)28),
+//    has_moded_cs("Has moved",(byte)21),
+//    speed_reached("Speed reached",(byte)22),
+//    direction_changed("Direction changed",(byte)23),
+//    distance_covered("Distance covered",(byte)24),
+//    has_stopped_wheel("Has stopped",(byte)26),
+//    turned_left("Turned left",(byte)27),
+//    turned_right("Turned right",(byte)28),
 
     //Accelerometer-Events
     has_moved("Has moved",(byte)31),
     kicked("Kicked",(byte)32),
     tipped("Tipped",(byte)33),
     rolledx("Rolled X",(byte)34),
-    picked_up("Picked up",(byte)35),
-    falled_down("Fallen down",(byte)36),
-    has_stopped_accelerometer("Has stopped",(byte)37),
+//    falled_down("Fallen down",(byte)36),
+//    has_stopped_accelerometer("Has stopped",(byte)37),
     rolledy("Rolled Y",(byte)38),
     rolledz("Rolled Z",(byte)39),
 
