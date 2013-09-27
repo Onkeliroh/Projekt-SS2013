@@ -1,9 +1,11 @@
 \subsection{Graphical User Interface}
-\subsubsection{Description}
-\subsubsubsection{Main Window}
-The User Interface is meant to provide the user with all necessary informations about the registered devices. The main window consists of two parts. 
-The first part is form connecting and disconnecting the server panstamp. While attempting to establish a connection, the users can select every serial port with an attached device as well as the baut-rate. Once the Java-Server is connected, the Connect-Buttons label changes it's text and turns into a Disconnect-Button.
-The second part displays a table of all the known devices, their state and a timestamp as well as their personalities name. This table updates itself with a fixed frequency, to ensure that for example every new device and/or every change in state is visible to the user.
+\subsubsection{Main Window}
+The User Interface is meant to provide the user with all necessary informations about the registered devices without showing to much information at once. Therefore the main window consists of two parts. 
+The first part is form connecting and disconnecting the server panstamp. While attempting to establish a connection, the users can select every serial port with an attached device as well as the baut-rate. Once the Java-Server is connected, the Connect-Buttons label changes it's text and turns into a Disconnect-Button. This option is accessable at all times, so that the user can disconnect/reconnect at any time. For example if one decides to change the used serial port. 
+If the server did not recocnise a device on any of the serial ports. The connect button will be unavailable. This is realized through disabling the button. To prevent the user from constantly restarting the server, we implemented a refresh button, which can be pressed at any time and if this time a device on one of the serial ports was detected it/they will be displayed in the according combobox for selection and connection.
+
+
+The second part displays a table of all the known devices, their state and a timestamp as well as their personalities name. This table updates itself with a fixed frequency, to ensure that for example every new device and/or every change in state is visible to the user. The update process was realized through a timed task provided by the swt-library. The frequency is configurable. More information in the interface architecture section. %insert link here
 
 \begin{figure}[h!]
  \centering
@@ -15,14 +17,14 @@ The second part displays a table of all the known devices, their state and a tim
 
 
 
-If the server got at least one device, the user can select it in the device-table and open a configuration dialog by pressing either the configuration button on the bottom of the table or double clicking on the selected table item.
+If the server got at least one device, the user can select it in the device-table and open a configuration dialog by pressing either the configuration button, on the bottom of the table, or double clicking on the selected table item. A configuration dialog will then open, were this particular device and its personality can be altered.
 
-\subsubsubsection{Configuration Dialog}
+\subsubsection{Configuration Dialog}
 Once the user decided to configure on device, this dialog opens and provides him, on three tabs, with all the necessary informations and options to configure the device and its personality full scope. %anders formulieren%
 
-The user can decide whether he wants use a preconfigured personality for this particular device or not. No matter how the users decides, he can then begin configuring the device and personality.
+The user can decide whether he wants use a preconfigured personality for this particular device or not. A preconfigured personality will, if selected, change all settings to its own settings and thereby overwrite, temporarly, ale previous settings. No matter how the users decides, he can then begin configuring the device and personality. The configuration process can be determinated every time by pressing the operation systems colse button in one corner of the dialog window. No settings will then be written.
 
-On the first tab, labeled ''Basic'', the basic informations like the name of the personality, the current state and the addresses of both node. Below the users finds a table with all known action keys, and whether the device will react to this particulary key or not. The reaction willingness is hereby repressented by a checkbox showing a hock when a reaction will happen and no hock when ther will be no reaction to this key. The user can change every key value as he wishes.
+On the first tab, labeled ''Basic'', the basic informations like the name of the personality and the addresses of both nodes are shown. Below the user finds a table with all known action keys, and whether the device will react to this particularly key or not. The reaction willingness is hereby represented by a checkbox showing a hock, if a reaction will happen and no hock when there will be no reaction to this key. The user can change every key value as he wishes.
 
 \begin{figure}[h!]
  \centering
@@ -32,7 +34,7 @@ On the first tab, labeled ''Basic'', the basic informations like the name of the
  \label{fig:java-server-config01}
 \end{figure}
 
-The second tab shows the seperate states a personality can reach and its color pattern and both colors for this particular state. The user can then change the pattern and the colors for every state.
+The second tab shows in a checkbox the current state of the device. The state can be changed by the user. Below the checkbox a table with all seperate states of the personality is shown and one can change the pattern and both colors for a particular state. 
 
 
 \begin{figure}[h!]
@@ -44,8 +46,10 @@ The second tab shows the seperate states a personality can reach and its color p
 \end{figure}
 
 
-The third tab displays the actions performed when a neighbor was detected, the user can once again configure the pattern and colors of this neighbor reaction. Those settings will then be transmitted to both devices, the one who noticed the neighbor
+The third tab displays the actions performed when a neighbor is detected. The table shows every known personality, known by the server at this time. Except for the preset personalities. The preset personalities already know their reaction to the other preset personalities, even if they are yet unknown by the server.
+The user can once again configure the pattern and colors of this neighbor reaction. Those settings will then be transmitted to both devices, the one who noticed the neighbor and the neighbor.
 
+After the user finished the configuration and wants to write the new settings to the device, he will need to first press the apply button and then the save and close button to actually writhe the settings. Otherwise if just the save and close button was pressed, no changes will be written and the device remains like before the configuration process.
 \begin{figure}[h!]
  \centering
  \includegraphics[width= 0.5\textwidth, clip=true  ,keepaspectratio=true]{./pic/java-server-config03.png}
@@ -54,8 +58,12 @@ The third tab displays the actions performed when a neighbor was detected, the u
  \label{fig:java-server-config01}
 \end{figure}
 
-\subsubsection{Archticture}
-The inferface was realised with the swt widget toolkit from eclipse. The main window uses a swt timerevent to periodicly update the device table. Every eventbased action, like button clicks or selection were also realized withe the build in eventlistener structure of the swt toolkit.
+\subsubsection{Interface Archticture}
+The inferface was realised with the swt widget toolkit from eclipse. %insert cite
+The main window uses a swt timerevent to periodicly update the device table. Every eventbased action, like button clicks or selection were also realized with the build-in eventlistener structure of the swt toolkit. %insert cite again
+
+When the dialog is opened, the device will be passed as a parameter in the constructor, the dialog will then create the interface and afterwards read the settings of the device. 
+The configuration will have no effect on the device at all, except the user says so. All changes will only be written when the apply button is pressen and even then a temporally device will be created to first save all settings in the instance
 
 
 % vim: spell spelllang=en_gb 
