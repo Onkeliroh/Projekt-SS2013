@@ -110,6 +110,7 @@ public class Device_Config_Dialog extends Dialog {
 		grpDefaultConfigurations.setText("Default Configurations");
 		
 		preset_pers_combo = new Combo(grpDefaultConfigurations, SWT.READ_ONLY);
+		preset_pers_combo.setToolTipText("Selects a pre configured personality. Please be carefull. This will overwrite your current settings!!!");
 		preset_pers_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(grpDefaultConfigurations, SWT.NONE);
         preset_pers_combo.addSelectionListener(new SelectionAdapter()
@@ -127,48 +128,55 @@ public class Device_Config_Dialog extends Dialog {
 				
 						Composite Config_composite = new Composite(tabFolder, SWT.NONE);
 						Basic_tab.setControl(Config_composite);
-						Config_composite.setLayout(new GridLayout(7, false));
-						new Label(Config_composite, SWT.NONE);
+						Config_composite.setLayout(new GridLayout(8, false));
 						
 						Label name_label = new Label(Config_composite, SWT.NONE);
 						name_label.setText("Name:");
 						
 						name_text = new Text(Config_composite, SWT.BORDER);
-						name_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-						new Label(Config_composite, SWT.NONE);
-						new Label(Config_composite, SWT.NONE);
-						
-						Label lblSenderId = new Label(Config_composite, SWT.NONE);
-						lblSenderId.setText("Sensor Id:");
-						
-						sensor_adr_text = new Text(Config_composite, SWT.BORDER | SWT.READ_ONLY);
-						sensor_adr_text.setEditable(true);
-						sensor_adr_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-						sensor_adr_text.setText(Byte.toString(this.Device.get_sensor_node()));
+						GridData gd_name_text = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+						gd_name_text.widthHint = 200;
+						name_text.setLayoutData(gd_name_text);
 						new Label(Config_composite, SWT.NONE);
 						
-						Label state_label = new Label(Config_composite, SWT.NONE);
-						state_label.setText("State:");
-						
-						state_combo = new Combo(Config_composite, SWT.READ_ONLY);
-                        for (int i = 0; i < Device.get_Personality().state_count; ++i)
-                            state_combo.add(Device.get_Personality().get_state_name((short)i) , i);
-//						state_combo.setItems(state_names);
-						state_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-						state_combo.select(0);
+						Label label = new Label(Config_composite, SWT.SEPARATOR | SWT.VERTICAL);
+						label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 2));
 						new Label(Config_composite, SWT.NONE);
-						new Label(Config_composite, SWT.NONE);
+
 						
 						Label lblActuatorId = new Label(Config_composite, SWT.NONE);
+						lblActuatorId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 						lblActuatorId.setText("Actuator Id:");
 						
 						actuator_adr_text = new Text(Config_composite, SWT.BORDER | SWT.READ_ONLY);
+						actuator_adr_text.setToolTipText("Sets the adress of the actuator node.");
 						actuator_adr_text.setEditable(true);
-						actuator_adr_text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+						GridData gd_actuator_adr_text = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+						gd_actuator_adr_text.widthHint = 100;
+						actuator_adr_text.setLayoutData(gd_actuator_adr_text);
 						actuator_adr_text.setText(Byte.toString(this.Device.get_actuator_node()));
+						new Label(Config_composite, SWT.NONE);
+						new Label(Config_composite, SWT.NONE);
+						new Label(Config_composite, SWT.NONE);
+						new Label(Config_composite, SWT.NONE);
+						new Label(Config_composite, SWT.NONE);
+						
+												
+												Label lblSenderId = new Label(Config_composite, SWT.NONE);
+												lblSenderId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+												lblSenderId.setText("Sensor Id:");
+						
+						sensor_adr_text = new Text(Config_composite, SWT.BORDER | SWT.READ_ONLY);
+						sensor_adr_text.setToolTipText("Sets the adress of the sensor node.");
+						sensor_adr_text.setEditable(true);
+						GridData gd_sensor_adr_text = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+						gd_sensor_adr_text.widthHint = 100;
+						sensor_adr_text.setLayoutData(gd_sensor_adr_text);
+						sensor_adr_text.setText(Byte.toString(this.Device.get_sensor_node()));
+						new Label(Config_composite, SWT.NONE);
 						
 						trigger_table = new Table(Config_composite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
-						GridData gd_trigger_table = new GridData(SWT.FILL, SWT.FILL, true, true, 7, 1);
+						GridData gd_trigger_table = new GridData(SWT.FILL, SWT.FILL, true, true, 8, 1);
 						gd_trigger_table.widthHint = 242;
 						gd_trigger_table.heightHint = 61;
 						trigger_table.setLayoutData(gd_trigger_table);
@@ -186,6 +194,23 @@ public class Device_Config_Dialog extends Dialog {
 				Personality_tab.setControl(state_composite);
 				state_composite.setLayout(new GridLayout(1, false));
 				
+				Label state_label = new Label(state_composite, SWT.NONE);
+				state_label.setText("State:");
+				
+				state_combo = new Combo(state_composite, SWT.READ_ONLY);
+				state_combo.setToolTipText("Selects and sets a new state for the current device.");
+                for (int i = 0; i < Device.get_Personality().state_count; ++i)
+                    state_combo.add(Device.get_Personality().get_state_name((short)i) , i);
+//				state_combo.setItems(state_names);
+				state_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+				state_combo.select(0);
+				
+				Label label_1 = new Label(state_composite, SWT.SEPARATOR | SWT.HORIZONTAL);
+				label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+				
+				Label lblStateTable = new Label(state_composite, SWT.NONE);
+				lblStateTable.setText("State Table:");
+				
 				state_table = new Table(state_composite, SWT.BORDER | SWT.FULL_SELECTION);
 				state_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 				state_table.setHeaderVisible(true);
@@ -199,6 +224,7 @@ public class Device_Config_Dialog extends Dialog {
 				neighbor_composite.setLayout(new GridLayout(1, false));
 				
 				neighbor_table = new Table(neighbor_composite, SWT.BORDER | SWT.FULL_SELECTION);
+				neighbor_table.setToolTipText("This table allows you to configure the reacton to every currently known personality. Provided, this device detects the neighbor.");
 				neighbor_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 				neighbor_table.setHeaderVisible(true);
 				neighbor_table.setLinesVisible(true);
@@ -317,7 +343,8 @@ public class Device_Config_Dialog extends Dialog {
 		composite.setLayout(new GridLayout(2, true));
 		
 		Button btnApply = new Button(composite, SWT.NONE);
-		btnApply.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 1, 1));
+		btnApply.setToolTipText("Apply the current settings the the device.");
+		btnApply.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
 		btnApply.setText("Apply");
 		btnApply.addMouseListener( new MouseAdapter()
 		{
@@ -417,8 +444,9 @@ public class Device_Config_Dialog extends Dialog {
 		});
 		
 		Button btnClose = new Button(composite, SWT.RIGHT);
-		btnClose.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 1, 1));
-		btnClose.setText("Close");
+		btnClose.setToolTipText("Close and save the Settings.");
+		btnClose.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
+		btnClose.setText("Save|Close");
 		
         btnClose.addMouseListener(new MouseAdapter()
         {
