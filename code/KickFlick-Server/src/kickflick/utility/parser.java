@@ -85,9 +85,13 @@ class parser implements SerialPortEventListener {
                             this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(index).get_Personality().get_Name());
 
                             this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(neighbor_id).get_Personality().get_Name());
+
+                            System.out.println("Found  Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
                         }
                         else
-                            System.err.println("Found no Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
+                            System.err.println("Found NO Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
+
+                        break;
                     }
                     default:
                     {
@@ -112,7 +116,7 @@ class parser implements SerialPortEventListener {
             this.Server_.get_device(index).set_new_timestamp_last_heard_of();
 		}
 		else {
-			System.err.println("Parser received empty message!");
+			System.err.println("Parser received corrupt message!");
 		}
 	}
 	
@@ -139,7 +143,7 @@ class parser implements SerialPortEventListener {
         for ( int i = 0; i < arg.length-1; ++i)
         {
             sum += arg[i];
-            System.out.println(i + "\t" + sum + "\t" + arg[arg.length-1]);
+//            System.out.println(i + "\t" + sum + "\t" + arg[arg.length-1]);
         }
         if ( sum == arg[arg.length-1])
             return true;

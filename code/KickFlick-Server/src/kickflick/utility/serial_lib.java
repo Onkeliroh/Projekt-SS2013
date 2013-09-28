@@ -159,7 +159,6 @@ public class serial_lib
             System.arraycopy(this.Buffer_,0,tmp,0,4);
 //            System.out.println(Arrays.toString(this.Buffer_));
             return tmp;
-
 		}
 	}
 	
