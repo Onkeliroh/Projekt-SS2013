@@ -124,12 +124,14 @@ public class Server_Main {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					Server.loadDevicesFromFile("test");
-					
-				} catch (ClassNotFoundException
-						| IOException e1) {
+				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
+				} catch (ClassNotFoundException e2) {
+                    e2.printStackTrace();
+                }
+
+
 			}
 		});
 		mntmLoad.setText("Load");

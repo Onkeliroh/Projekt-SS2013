@@ -63,7 +63,12 @@ The inferface was realised with the swt widget toolkit from eclipse. %insert cit
 The main window uses a swt timerevent to periodicly update the device table. Every eventbased action, like button clicks or selection were also realized with the build-in eventlistener structure of the swt toolkit. %insert cite again
 
 When the dialog is opened, the device will be passed as a parameter in the constructor, the dialog will then create the interface and afterwards read the settings of the device. 
-The configuration will have no effect on the device at all, except the user says so. All changes will only be written when the apply button is pressen and even then a temporally device will be created to first save all settings in the instance
+The configuration will have no effect on the device at all, except the user says so. All changes will only be written when the apply button is pressed and even then a temporally device will be created to first save all settings in the instance. If the user decides not to use the new settings and wants them to ignored, he then needs to press the windows close button. The close action will pass a null pointer to the main window instance, signaling that no changes were commited.
+If, on the other hand, the user wants, after applying, to overwritte the device with the new settings he needs to close the configuration dialog by pressing the save and close button. This will pass a device instance to the main window with all settings and therefor overwrite the previous settings of the device.
+
+The configuration dialog widgets will be filled on the creation of the dialog with all available data, e.g. reaction key names. After the interface is build, the device settings will be set. This happens by for example setting the right selection for a combobox.
+
+The neighbor and state tables are dynamicly created. This way one can decide to add more states and the number of possible neighbors is theoraticly unlimited.
 
 
 % vim: spell spelllang=en_gb 

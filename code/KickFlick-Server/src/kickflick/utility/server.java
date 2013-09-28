@@ -157,6 +157,19 @@ public class server extends Timer implements Serializable{
         this.send_msg(msg);
     }
 
+    public void send_neighbor(device d, String name)
+    {
+        //takes the neighbor values and puts them in to a byte array, which is to be send
+        byte[] msg = new byte[4];
+        byte[] neighbor = d.get_Personality().get_neighbor(name);
+        msg[0] = d.get_actuator_node();
+        msg[1] = neighbor[0];
+        msg[2] = neighbor[1];
+        msg[3] = neighbor[2];
+
+        this.send_msg(msg);
+    }
+
     private void init_timer()
     {
         this.timer = new Timer();

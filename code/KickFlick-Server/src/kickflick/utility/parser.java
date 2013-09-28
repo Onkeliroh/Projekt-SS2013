@@ -79,8 +79,15 @@ class parser implements SerialPortEventListener {
                     }
                     case system_keys.FOUND_NEIGHBOR:
                     {
+                        int neighbor_id = find_device_sensor_node(arg[2]);
+                        if (neighbor_id != -1)
+                        {
+                            this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(index).get_Personality().get_Name());
 
-                        //TODO found neighbor
+                            this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(neighbor_id).get_Personality().get_Name());
+                        }
+                        else
+                            System.err.println("Found no Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
                     }
                     default:
                     {
