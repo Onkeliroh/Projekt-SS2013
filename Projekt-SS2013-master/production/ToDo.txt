@@ -1,2 +1,0 @@
-- next-neighbour recognition
-- getting all connectet panstamps to the server
