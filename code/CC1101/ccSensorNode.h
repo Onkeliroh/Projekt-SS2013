@@ -16,11 +16,10 @@ class CCSENSORNODE: public CCNODE
                 void setup();  
                 void initBattMonitor();
                 
-                boolean ccGetNewPacket();
+                boolean ccGetNewPacket(void);
                 void ccHandle();
                 boolean isPacketsSender();
                 
-                          
                 //REPORTS TO THE SERVER
                 void reportAccelEvent();
                 void reportRSSI();
