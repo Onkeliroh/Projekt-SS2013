@@ -140,9 +140,11 @@ void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourI
 
     setAdminKey(NEAR_NODE_EVENT);
 
+    setNeighbourId(neighbourID);
+
     setDetectedRSSI(rawRSSI);
 
-    setNeighbourId(neighbourID);
+    
 
     setBuildCounter(5); /// set build counter to next free byte's position    
 }
@@ -188,7 +190,7 @@ byte ccPacketHandler::ccHash()
 
     byte ccHash = 0;
 
-    for (byte i = 3; i < _ccPacket.length; ++i)
+    for (byte i = 0; i < _ccPacket.length; ++i)
 
     {
 
@@ -445,7 +447,7 @@ void ccPacketHandler::printPacket()
 {
     for (byte i = 0; i < _ccPacket.length; ++i)
     {
-        //Serial.write(_ccPacket.data[i]);
+        //Serial.write(_ccPacket.data[i]);   //for debugging
         Serial.print("|");
         Serial.print(_ccPacket.data[i]);        
 
@@ -472,7 +474,7 @@ void ccPacketHandler::acknowledge()
 
     setSender(receiver); /// set receiver as sender
 
-    setAdminKey(ACKNOWLEDGE_REQUEST); /// set acknowlegde key
+    setAdminKey(ACKNOWLEDGE); /// set acknowlegde key
 
     setPackNum(ulf); /// set the hash as data
 

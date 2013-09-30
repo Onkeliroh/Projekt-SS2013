@@ -8,7 +8,7 @@
 
 #define LEDOUTPUT   4     //For the ledBl‌ink function (physical panStamp pin 19)
 #define BLINKTIME 100     // blink-time in ms
-#define BAUDRATE 57600
+#define BAUDRATE  57600
 
 class CCNODE
 

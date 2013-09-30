@@ -38,56 +38,6 @@ void LEDS::ledStripInit()
    
 }
 
-void LEDS::caterpillarChangeColor()
-{
-    _pillarColor = randomColor();  
-}
-
-void LEDS::caterpillarFw() 
-{  
-  if(_pillarHead != _ledStrip.numPixels()) // head not at the end
-  {
-    _ledStrip.setPixelColor(_pillarHead, _pillarColor); 
-    ++_pillarHead;
-  }
-  else // head at the end
-  {
-    _pillarHead = 0;
-  }
-  
-  if(_pillarHead < _pillarLength) // head not across the border
-  {
-    _ledStrip.setPixelColor((_ledStrip.numPixels() - (_pillarLength - _pillarHead)), Color(0, 0, 0));
-  }
-  else // head across the border
-  {
-    _ledStrip.setPixelColor((_pillarHead - _pillarLength), Color(0, 0, 0));
-  }
-  _ledStrip.show();
-}
-
-void LEDS::caterpillarBw()
-{  
-  if(_pillarHead != -1) // head not at the end
-  {
-    _ledStrip.setPixelColor(_pillarHead, _pillarColor); 
-    --_pillarHead;
-  }
-  else // head at the end
-  {
-    _pillarHead = _ledStrip.numPixels() - 1;
-  }
-  
-  if(_pillarHead < (_ledStrip.numPixels() - _pillarLength)) // head not across the border
-  {
-    _ledStrip.setPixelColor((_pillarHead + _pillarLength), Color(0, 0, 0));
-  }
-  else
-  {
-    _ledStrip.setPixelColor((_pillarLength - (_ledStrip.numPixels() - _pillarHead)), Color(0, 0, 0));
-  }
-  _ledStrip.show();
-}
 
 void LEDS::setPatternStripes(uint16_t color1, uint16_t color2)
 { 
@@ -97,11 +47,11 @@ void LEDS::setPatternStripes(uint16_t color1, uint16_t color2)
   {
       _ledStrip.setPixelColor(i, color1);  
       ++i;  
-      _ledStrip.setPixelColor(i, color2);
-      ++i;
       _ledStrip.show();
-      delay(50);
- }
+      _ledStrip.setPixelColor(i, color2);
+      ++i;   
+      _ledStrip.show();
+   }
  
 }
 
@@ -117,8 +67,9 @@ void LEDS::colorWipe(uint16_t c)
   for(int i = 0; i < _ledStrip.numPixels(); ++i)
   {
     _ledStrip.setPixelColor(i, c);
+    _ledStrip.show();
   }
-  _ledStrip.show();
+  delay(50);
 }
 
 void LEDS::flipRainbow()
@@ -168,10 +119,10 @@ unsigned int LEDS::Wheel(byte WheelPos)
   return(Color(r, g, b));
 }
 
-unsigned int LEDS::findColor(byte colorIndex)
+uint16_t LEDS::findColor(byte colorIndex)
 
 {
-    unsigned int pickedColor;
+    uint16_t pickedColor;
     
     switch(colorIndex)
     {

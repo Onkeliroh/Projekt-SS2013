@@ -14,6 +14,7 @@
 CCSERVER  _server = CCSERVER(SERVER_ID);
 
 boolean   _packetAvailable = false;
+boolean   testVariable = false;
 
 //////////////////////
 //--- INTERRUPTS ---//
@@ -46,11 +47,22 @@ void loop()
     if(_packetAvailable) 
       {
           disableRFChipInterrupt();
+         
         
           if(_server.ccGetNewPacket())
-          {
+          { 
               _server.ccHandle();
-              //delay(10);
+              _server.ledBlink(); 
+              
+//              _server.ccPrintPacket();  //For debugging
+//              testVariable = !testVariable;
+//              if(testVariable)
+//              {
+//                  _server.sendTestLedCommand1();
+//               
+//              }
+//              else
+//                  _server.sendTestLedCommand2();
             
           }
         
@@ -61,13 +73,20 @@ void loop()
     else 
        {
            if(_server.newJavaCommand())
-           {
+           { 
+              disableRFChipInterrupt();
+              
               _server.getJavaCommand();
               _server.ccSendCommand();
-              _server.ccPrintPacket();  
               _server.cleanBuffer();
+              
+              enableRFChipInterrupt();
+              
            } 
            
-       }   
+       }        
          
 }
+
+
+

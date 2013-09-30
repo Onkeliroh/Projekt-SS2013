@@ -29,7 +29,7 @@ void CCSERVER::cleanBuffer()
 {
     for(int i=0;i<BUFFERLENGTH;i++) 
     {   
-        buffer[i]= 0;       
+        buffer[i]= 0x00;       
     }
 }
 
@@ -37,6 +37,8 @@ void CCSERVER::setup()
 
 {
     Serial.begin(BAUDRATE); 
+     
+    Serial.flush();
     
     ledBlinkSetup(); 
 
@@ -68,79 +70,44 @@ boolean CCSERVER::ccGetNewPacket(void)
     }
 
     return validPacket;
-      
 }
 
 
 void CCSERVER::ccHandle(void)
 
 {
-    #ifdef SERVERDEBUG
-        _ccPacketHandler.printPacket();		
-    #endif
-
+ 
     byte key = _ccPacketHandler.getAdminKey();
-  
-    switch (key)
+
+      switch (key)
     {
         case SHAKE_EVENT: 
-            #ifdef BYPASS_JAVASERVER
-                //ccAcknowledge();   
-                _ccPacketHandler.buildPacket(LED_CLIENT_01, _id, CHANGE_COLOR); 
-                _ccPacketHandler.printPacket();
-                ccSendPacket();  
-            #endif
             setBuffer();         
             sendBufferToJavaServer();
+            cleanBuffer();
             break;
         case NEAR_NODE_EVENT:            
-            #ifdef SERVERDEBUG
-                distanceAlert();
-            #endif
-            showRSSI();
+            //showRSSI();  //For debugging purposes
             setNearNodeBuffer();      
-            sendBufferToJavaServer();      
+            sendBufferToJavaServer();
+            cleanBuffer();      
             break;    
-        case ACKNOWLEDGE_REQUEST:
-            if (_ccPacketHandler.hashMatches()) 
-                _ccPacketHandler._ccClear = true;
-            else
-                #ifdef SERVERDEBUG
-                    Serial.println("False acknowledge! Resending prev. package");
-                #endif
-            break;   
-        case LOW_BATTERY:
-            #ifdef SERVERDEBUG
-                lowBatteryAlert();
-            #endif
+        case ACKNOWLEDGE:
             setBuffer();         
             sendBufferToJavaServer();
-        case TEST: 
-            ccAcknowledge();
-            break;
+            break;   
+        case LOW_BATTERY:
+            setBuffer();         
+            sendBufferToJavaServer();
+            cleanBuffer();
+        case INRANGE:
+            setBuffer();         
+            sendBufferToJavaServer(); 
+            cleanBuffer();      
         default: // unknown packet received
-            #ifdef SERVERDEBUG
-                Serial.print("Unknown packet received, key: ");
-                Serial.println(key);
-            #endif
+            //SEND MESSAGE TO ORDER A PACKAGE. NEED TO IMPLEMENT THIS
             break; 
     }
-}
-
-
-void CCSERVER::saveDataInBuffer(void)
-{
-    byte key = _ccPacketHandler.getAdminKey();
-  
-    if(key == NEAR_NODE_EVENT)
-    {
-        setNearNodeBuffer();
-    } 
-    else
-    {
-        setBuffer();
-    } 
-   
 }
 
 int CCSERVER::ccRSSI(byte rawRSSI)
@@ -164,10 +131,10 @@ void CCSERVER::showRSSI()
     byte rssi_dBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
     byte emisorID = ccPacket.NEAR_NODE_ID;
   
-    Serial.print("Detected RSSI " );
-    Serial.print(rssi_dBm);
-    Serial.print(" from device Nr: \t");
-    Serial.println(emisorID);    
+    //Serial.print("Detected RSSI " );
+    //Serial.print(rssi_dBm);
+    //Serial.print(" from device Nr: \t");
+    //Serial.println(emisorID);    
 }
 
 
@@ -176,9 +143,9 @@ void CCSERVER::lowBatteryAlert()
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
     byte nodeLowBattery = ccPacket.SENDER_ID;
  
-    Serial.print("Node Nr. " );
-    Serial.print(nodeLowBattery);
-    Serial.println("  is running out of Battery!!!");      
+    //Serial.print("Node Nr. " );
+    //Serial.print(nodeLowBattery);
+    //Serial.println("  is running out of Battery!!!");      
 
 }
 
@@ -187,25 +154,24 @@ void CCSERVER::setBuffer()
 
 {
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
-  
-    buffer[0] = ccPacket.SENDER_ID;
-    buffer[1] = ccPacket.ADMINKEY;
-    buffer[2] = 0;   //to do testing 
-    buffer[3] = 10;  //to do testing. This corresponds to "end line" in ASCII
     
+    buffer[SENDERID] = ccPacket.SENDER_ID;  
+    buffer[KEY] = ccPacket.ADMINKEY;
+    buffer[DUMMY] = NULL; 
+    buffer[CHECKSUM] = getBufferChecksum(); 
+       
 }
 
 void CCSERVER::setNearNodeBuffer()
 {
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
     byte nearNodeRssiDBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
-
-  
-    buffer[0] = ccPacket.SENDER_ID;
-    buffer[1] = ccPacket.ADMINKEY;
-    buffer[2] = ccPacket.NEAR_NODE_ID;
-    buffer[3] = 10; //to do testing. This corresponds to "end line" in ASCII
-  
+      
+    buffer[SENDERID] = ccPacket.SENDER_ID;
+    buffer[KEY] = ccPacket.ADMINKEY;
+    buffer[NEARNODEID] = ccPacket.NEAR_NODE_ID;
+    buffer[CHECKSUM] = getBufferChecksum(); 
+     
 }
 
 
@@ -213,16 +179,17 @@ void CCSERVER::sendBufferToJavaServer()
 {
     for(int i=0; i<BUFFERLENGTH; i++)
     {
-        Serial.write(buffer[i]);                     
-    }
-          
+        Serial.write(buffer[i]); 
+                                   
+    }       
+    delay(1);      //Let's see if this is necessary 29-09       
 }
 
 boolean CCSERVER::newJavaCommand()
 {
     boolean newCommand = false;
    
-    if(Serial.available() == BUFFERLENGTH)    
+    if(Serial.available() >= BUFFERLENGTH)    
     {  
         newCommand = true;       
      }
@@ -239,45 +206,45 @@ void CCSERVER::getJavaCommand()
         if(Serial.available() > 0)
         {
              buffer[i] = Serial.read();                               
-        }
-	
-     }
-
-     Serial.flush();
+        }	
+     }     
+    
 } 
-
-void CCSERVER::TestBuffer1()
-{
-   buffer[0] = 38;
-   buffer[1] = 44;
-   buffer[2] = 4;
-   buffer[3] = 7; 
-}
-
-void CCSERVER::TestBuffer2()
-{
-   buffer[0] = 38;
-   buffer[1] = 44;
-   buffer[2] = 10;
-   buffer[3] = 15; 
-}
 
 void CCSERVER::ccSendCommand()
 {
     setNewCommand(); 
     ccSendPacket();
-
 }
+
 
 void CCSERVER::setNewCommand()
 {
-    byte receiverId = buffer[0];
-    byte metaKey = buffer[1];
-    byte firstColor = buffer[2];
-    byte secondColor = buffer[3];
-    
-    _ccPacketHandler.buildPatternCommand(receiverId, metaKey, firstColor, secondColor);    
+    //Serial.write(RECEIVERID);   
+    //Serial.write(METAKEY);      
+    //Serial.write(COLOR1);       
+    //Serial.write(COLOR2);       
+ 
+    _ccPacketHandler.buildPatternCommand(RECEIVERID, METAKEY, COLOR1, COLOR2); 
 }              
-                
+     
+byte CCSERVER::getBufferChecksum()
+{
+    byte checkSum = 0;
+
+    for (byte i = 0; i < BUFFERLENGTH-1; ++i)
+
+    {
+
+        checkSum += buffer[i];
+
+    }
+
+    return checkSum;
+
+}
+           
+
+
 
 

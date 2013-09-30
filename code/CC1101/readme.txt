@@ -15,7 +15,6 @@ LIBRARIES
 - ccServer.h und -.cpp
 - ccActuatorNode.h und -.cpp
 - ccSensorNode.h und -.cpp
-- ccAccel.h und -.cpp
 - LPD6803.h und -.cpp
 - analogComp.h und -.cpp
 - LPD6803.h und -.cpp
@@ -24,5 +23,4 @@ LIBRARIES
 - Leds.h und -.cpp
 - pearLeds.h und -.cpp
 - alle Files in den Ordner "Arduino/libraries/panstamp"
-
-
+- Ordner "accel" in den Ordner "Arduino/libraries"
