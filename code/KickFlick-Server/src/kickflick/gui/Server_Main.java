@@ -58,13 +58,8 @@ public class Server_Main {
 
         shlKickflickServer.addShellListener(new ShellAdapter()
         {
-            @Override
             public void shellClosed(ShellEvent e) {
-                if ( Server.get_SerialCom().is_connected())
-                    Server.disconnect_pannstamp();
-                display.timerExec(-1,timer_); //stops timer
-                Server.stop_timer();
-//                shlKickflickServer.close();
+                close_server();
             }
         });
 
@@ -154,6 +149,13 @@ public class Server_Main {
 		
 		MenuItem mntmExit = new MenuItem(menu_1, SWT.NONE);
 		mntmExit.setText("Exit");
+
+        mntmExit.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                close_server();
+            }
+        });
+
 
 		Group grpDevices = new Group(shlKickflickServer, SWT.NONE);
 		grpDevices.setText("Devices");
@@ -336,4 +338,13 @@ public class Server_Main {
     {
         this.Server = serv;
     }
+
+    private void close_server() {
+        if ( Server.get_SerialCom().is_connected())
+            Server.disconnect_pannstamp();
+        display.timerExec(-1,timer_); //stops timer
+        Server.stop_timer();
+    }
 }
+
+
