@@ -15,6 +15,7 @@ class PEARLEDS : public LEDS
                 PEARLEDS();
                 ~PEARLEDS(void);
                 void setLedPattern(byte keyPattern, byte ColorKey1, byte ColorKey2);   
+                //void turnOnFrontSection(FRONTLEDS *p, byte sectionNumber)
                 //void setColorA1(unsigned int color);        
 };
 

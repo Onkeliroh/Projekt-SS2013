@@ -34,7 +34,7 @@ void CCSENSORNODE::setup()
     
     rfChipInit();
 
-    //initBattMonitor();    //Had to repair the BattMonitor circuit 
+    initBattMonitor();    //Had to repair the BattMonitor circuit 
 
 }
     

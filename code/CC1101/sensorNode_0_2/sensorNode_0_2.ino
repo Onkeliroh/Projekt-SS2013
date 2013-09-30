@@ -56,6 +56,7 @@ void setup()
     _sensorNode.setup();
     enableaLowBattInterrupt();
     enableRFChipInterrupt(); 
+    delay(5); //For the batteryLow System
 }
 
 
@@ -67,19 +68,13 @@ void setup()
 void loop()
 {
   
-//    if(_batteryIsLow)
-//    {
-//        _sensorNode.reportLowBatt(); 
-//        disableLowBattInterrupt();         
-//    }
-        
     if(_packetAvailable)
     {
         disableRFChipInterrupt();
         
         if(_sensorNode.ccGetNewPacket())
         {
-            _sensorNode.ccPrintPacket();  
+            //_sensorNode.ccPrintPacket();  
             _sensorNode.ccHandle();  
         }
         else
@@ -99,6 +94,13 @@ void loop()
     if(_accel.wasShaken())
     {
         _sensorNode.reportAccelEvent();  
+    }
+    
+    
+    if(_batteryIsLow)
+    {
+        _sensorNode.reportLowBatt(); 
+        disableLowBattInterrupt();         
     }
     
 }

@@ -110,7 +110,7 @@ void PEARLEDS::setLedPattern(byte keyPattern, byte ColorKey1, byte ColorKey2)
     }
 }
 
-//void PEARLEDS::turnOnFrontSection(FRONTLEDS *p, byte sectionNumber)
+//void PEARLEDS::turnOnFrontSection(byte sectionNumber)
 //{
 
 
