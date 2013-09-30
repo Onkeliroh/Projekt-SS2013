@@ -14,10 +14,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Menu;
 
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Button;
@@ -296,6 +298,16 @@ public class Server_Main {
                             new SimpleDateFormat("HH:mm:ss").format(d.get_timestamp_last_heard_of()),
                             d.get_battery_state()
                     });
+                    if( d.is_battery_low() ) {
+                        MessageBox alert = new MessageBox( Display.getCurrent().getActiveShell(), SWT.RESIZE | SWT.ICON_WARNING | SWT.OK );
+                        alert.setMessage("Battery low on device "+d.get_Personality().get_Name());
+                        alert.open();
+                    }
+                    if( d.get_Personality().get_State() == -1 ) {
+                        MessageBox alert = new MessageBox( Display.getCurrent().getActiveShell(), SWT.RESIZE | SWT.ICON_WARNING | SWT.OK );
+                        alert.setMessage("Didn't receive signal from "+d.get_Personality().get_Name()+" for 2 minutes" );
+                        alert.open();
+                    }
                     ++i;
                 }
                 try{
