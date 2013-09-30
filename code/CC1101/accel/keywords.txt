@@ -1,0 +1,22 @@
+#######################################
+# Syntax Coloring Map For ccAccel
+####################################### 
+# Datatypes (KEYWORD1)
+#######################################
+
+accel	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init	KEYWORD2
+update	KEYWORD2
+setDelta	KEYWORD2
+wasShaken	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+

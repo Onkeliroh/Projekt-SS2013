@@ -13,13 +13,16 @@
 #define RECEIVER_ID     data[0] 
 #define SENDER_ID       data[1]
 #define ADMINKEY        data[2]
-#define PACKNUM         data[3]
+
+#define NEAR_NODE_ID    data[3]
 #define NEAR_NODE_RSSI  data[4]
-#define NEAR_NODE_ID    data[5]
+
 
 #define METAKEY         data[2]
 #define COLOR1          data[3]
 #define COLOR2          data[4]
+
+#define PACKNUM        data[2]
 
 
 ///*ADMIN KEYS*///
@@ -32,6 +35,7 @@
 
 #define NEAR_NODE_EVENT        51
 #define LOW_BATTERY            52
+#define INRANGE                53
 
 ///*META KEYS*////
 #define STRIPES                44
@@ -39,8 +43,9 @@
 #define FORWARD_CATERPILLAR    46
 #define CHANGE_COLOR           47
 
-#define ACKNOWLEDGE_REQUEST   200
-#define ACKNOWLEDGE_RESPONSE  201
+#define ACKNOWLEDGE           200
+
+
 
 /*TEST CASES*/
 #define TEST                  255

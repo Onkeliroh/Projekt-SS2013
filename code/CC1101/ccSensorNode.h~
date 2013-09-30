@@ -1,0 +1,33 @@
+#ifndef CCSENSORNODE_H
+
+#define CCSENSORNODE_H
+
+#include "ccNode.h"
+#include "analogComp.h"
+
+
+class CCSENSORNODE: public CCNODE
+{
+
+	public:
+                CCSENSORNODE(byte id, byte twinNode);
+                ~CCSENSORNODE(void);
+
+                void setup();  
+                void initBattMonitor();
+                
+                boolean ccGetNewPacket();
+                void ccHandle();
+                boolean isPacketsSender();
+                
+                          
+                //REPORTS TO THE SERVER
+                void reportAccelEvent();
+                void reportRSSI();
+                void reportLowBatt();
+                void sendRSSI(byte rawRSSI,byte nearNodeId);    
+                
+};
+
+
+#endif // CCSENSORNODE_H

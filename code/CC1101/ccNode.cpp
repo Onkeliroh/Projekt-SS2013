@@ -47,7 +47,7 @@ void CCNODE::ccSendPacket(void)
     }
     else
     {
-        Serial.println("ERROR! - Failed to send packet.");
+        //Serial.println("ERROR! - Failed to send packet.");  
     }  
  
 }

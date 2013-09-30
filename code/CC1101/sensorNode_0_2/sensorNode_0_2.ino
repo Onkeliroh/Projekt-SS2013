@@ -27,6 +27,7 @@ boolean _packetAvailable = false;
 
 boolean _batteryIsLow = false;
 
+
 //////////////////////
 //--- INTERRUPTS ---//
 //////////////////////
@@ -71,28 +72,34 @@ void loop()
 //        _sensorNode.reportLowBatt(); 
 //        disableLowBattInterrupt();         
 //    }
-    
+        
     if(_packetAvailable)
     {
         disableRFChipInterrupt();
         
         if(_sensorNode.ccGetNewPacket())
         {
-            //_sensorNode.ccPrintPacket();
+            _sensorNode.ccPrintPacket();  
             _sensorNode.ccHandle();  
         }
         else
         {
             if(!_sensorNode.isPacketsSender())
-                _sensorNode.reportRSSI();          
+            {
+                _sensorNode.reportRSSI();
+//                 _sensorNode.ccPrintPacket();  
+            }          
         }
         
         _packetAvailable = false;   
         enableRFChipInterrupt();  
     }
       
+      
     if(_accel.wasShaken())
+    {
         _sensorNode.reportAccelEvent();  
-
+    }
+    
 }
 

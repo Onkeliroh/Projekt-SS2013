@@ -5,22 +5,26 @@
 #include "ccPacketHandler.h"
 #include "ccNode.h"
 
-#define SERVERDEBUG 1
-#undef SERVERDEBUG  // Comment this out to run the library in debug mode (verbose messages)
-
-#define BYPASS_JAVASERVER 1
-#undef BYPASS_JAVASERVER //Comment this out when not interacting with Javaserver
-
 #define BUFFERLENGTH 4
 
+//From Java Server to Panstamp
 #define RECEIVERID  buffer[0]
 #define METAKEY     buffer[1]
 #define COLOR1      buffer[2]
 #define COLOR2      buffer[3] 
 
+//From Panstamp to Java Server
+#define SENDERID    0
+#define KEY         1
+#define DUMMY       2
+#define NEARNODEID  2
+#define CHECKSUM    3 
+
 #define RSSI_OFFSET 74 
 
 #define BUFFERHASH 4 
+
+#define NULL 0
 
 
 //According to the Design Note DN505 http://www.ti.com/lit/an/swra114d/swra114d.pdf
@@ -40,18 +44,15 @@ class CCSERVER: public CCNODE
                 void showRSSI();
                 void lowBatteryAlert(void);
 
-                void saveDataInBuffer();
                 void setBuffer();
                 void setNearNodeBuffer();
                 void sendBufferToJavaServer();
                 boolean newJavaCommand();
                 void getJavaCommand();
                 void setNewCommand();
-                void ccSendCommand();
-
-                void TestBuffer1();
-                void TestBuffer2();
-               
+                void ccSendCommand(); 
+                byte getBufferChecksum();
+         
                 byte buffer[BUFFERLENGTH];                  
 };
 

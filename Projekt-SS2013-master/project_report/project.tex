@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb} % set symbols i.e. /mathbb{N}
+\usepackage{bm}
+\usepackage{array}
+\usepackage[normalem]{ulem} % underlining
+\usepackage{graphicx}
+\usepackage{float,rotating}
+\usepackage[hang,small,sc]{caption}
+\usepackage{subcaption}
+\usepackage[final]{pdfpages}
+\usepackage{color}
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}          %links to chapters
+\usepackage{breakurl}
+\usepackage{biblatex}
+
+\bibliography{references.bib}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+ 
+\lstset{
+  language=Octave,                % the language of the code
+  basicstyle=\footnotesize\ttfamily,           % the size of the fonts that are used for the code
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=2,                   % the step between two line-numbers. If it's 1, each line 
+                                  % will be numbered
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{mauve},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add LaTeX within your code
+  morekeywords={*,...},               % if you want to add more keywords to the set
+  columns=fullflexible
+}
+
+\parindent=0pt
+\begin{document}
+
+\author{}
+\title{Kick and Flickable: Communication protocol}
+\date{Summer 2013}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{General}
+\_ serverAddress = 0;
+clients[] = {1, 2, 3}
+
+1 := LED-strip, 2 := Wheel, 3 := Accel
+\\
+
+Administration keys:
+
+27 Wheel: "turn\_left" event
+
+28 Wheel: "turn\_right" event
+
+31 Accel: "shake"
+
+45 LED-strip: "move forward"
+
+46 LED-strip: "move backward"
+
+47 LED-strip: "change color"
+
+200 acknowledge packet received
+
+255 test packet received
+
+default unknown adminKey
+\\
+
+\_ccPacket.data[0] = receiver;
+
+\_ccPacket.data[1] = sender;
+ 
+\_ccPacket.data[2] = admin \_ key;
+
+\_ccPacket.data[3] = packet number; %This one has not been used yet
+
+\_ccPacket.data[4] = rawRSSI;
+
+\section{Voltage controller}
+
+
+
+
+\section{Server}
+
+
+\section{Accelerometer}
+
+\section{Ledstrip} 
+\end{document}
+
+item What is meant by classification?
+We build classes and put a  label into these classes.
+
+\item What features can be used for the purpose?
+Color values (RGB) (easy task), position of the image, or SIFT descriptors (high dimension descriptor)
+
+\item Which data reduction technique did we present in the course?
+?????
+
+
+\item What are the basic ideas behind the following classifiers
+
+	\begin{enumerate}
+    		\item k-nearest neighbor,
+    		 You pick as a class the nearest feature and you group all features into k different classes.
+    		 It allows any shape. Is very fast but really sensitive to noise.
+    		
+    		\item boosting,
+    		We have a red and a blue class and we want to find the border between these two classes.
+    		This is done by combining different weak classifiers to obtain a complex classifier. 
+    		
+    		
+    		\item Bayesian decision theory and
+    		Probabilities
+    		We describe similarities with percentages.
+    		
+    		\item a support vector machine? 
+          Here we also have weak classifiers. 
+          Simple separation in a high dimensional space    		
+    		
+    		  		
+	\end{enumerate}
+\end{enumerate} 
+ 
+% TASK: 
+
+% What does segmentation through watershed transformation mean? Give a short theoretical explanation and segment the given picture \emph{berkeley.jpg} via this method! Please describe your steps and prove your results by providing the segmented images.
+
