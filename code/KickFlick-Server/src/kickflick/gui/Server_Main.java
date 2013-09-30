@@ -285,7 +285,6 @@ public class Server_Main {
                 DeviceTable.removeAll();
 
 
-
                 int i = 0;
                 for ( device d : list)
                 {

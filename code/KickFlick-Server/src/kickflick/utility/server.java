@@ -16,7 +16,7 @@ import kickflick.device.device;
 public class server extends Timer implements Serializable{
 
     private final int OUT_OF_RANGE = 120000;
-    private final int CHECK_STATE_TIME = 60000;
+    private final int CHECK_STATE_TIME = 30000; //0.5 minutes
 
 
     private kickflick.utility.serial_lib serial_com;

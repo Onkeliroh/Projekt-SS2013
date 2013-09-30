@@ -61,7 +61,7 @@ class parser implements SerialPortEventListener {
 			}
 
             Timestamp stamp = new Timestamp(new Date().getTime());
-            if ( this.Server_.get_device(index).get_timestamp().getTime() - stamp.getTime() >= -STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
+            if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
             {
                 switch (arg[1])
                 {
