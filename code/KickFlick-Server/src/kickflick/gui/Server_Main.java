@@ -127,8 +127,6 @@ public class Server_Main {
 				} catch (ClassNotFoundException e2) {
                     e2.printStackTrace();
                 }
-
-
 			}
 		});
 		mntmLoad.setText("Load");
@@ -153,6 +151,7 @@ public class Server_Main {
         mntmExit.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 close_server();
+                shlKickflickServer.close();
             }
         });
 

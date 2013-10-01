@@ -181,7 +181,7 @@ public class server extends Timer implements Serializable{
                 for (int i = 0 ; i < Server.devices.size() ; ++i)
                 {
                     if(stamp.getTime() - Server.devices.get(i).get_timestamp().getTime() >= CHECK_STATE_TIME)
-                        if (Server.devices.get(i).get_Personality().get_State() != 0) //TODO make global
+                        if (Server.devices.get(i).get_Personality().get_State() > 0)
                         {
                             System.out.println("Server Timer: set device '"+ Server.devices.get(i).get_Personality().get_Name() + "\t Id: " + i +"' to default state.");
                             Server.devices.get(i).get_Personality().set_State((short)0);
