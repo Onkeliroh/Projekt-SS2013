@@ -34,7 +34,7 @@ boolean _batteryIsLow = false;
 // Handle interrupt from CC1101 (INT0)
 void RFChipInterrupt()
 {
-    _packetAvailable = true;            // set the flag thar a package is available
+    _packetAvailable = true;    // set the flag that a package is available
    
 }
 
@@ -63,6 +63,7 @@ void setup()
 /////////////////////
 
 // The loop method gets called on and on after the start of the system.
+
 void loop()
 {
   
@@ -76,15 +77,18 @@ void loop()
     {
         disableRFChipInterrupt();
         
-        if(_sensorNode.ccGetNewPacket())
-        {
-            //_sensorNode.ccPrintPacket();
+        
+        if(_sensorNode.ccGetNewPacket())        
+        {    
             _sensorNode.ccHandle();  
         }
         else
         {
             if(!_sensorNode.isPacketsSender())
-                _sensorNode.reportRSSI();          
+            {
+              _sensorNode.reportRSSI();      
+              
+            }   
         }
         
         _packetAvailable = false;   

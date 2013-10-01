@@ -34,16 +34,13 @@ class LEDS
                 virtual void setLedPattern(byte keyPattern, byte firstColor, byte secondColor) = 0;
                       
                 void ledStripInit();
-                void caterpillarChangeColor();
-                void caterpillarFw(); 
-		void caterpillarBw();
                 void setPatternStripes(uint16_t color1, uint16_t color2);
 		unsigned int randomColor();
 		void colorWipe(uint16_t c);
 		void flipRainbow();
 		void rainbow();
 		unsigned int Wheel(byte WheelPos);		
-                unsigned int findColor(byte colorIndex);
+                uint16_t findColor(byte colorIndex);
                 unsigned int Color(byte r, byte g, byte b);
           
 };

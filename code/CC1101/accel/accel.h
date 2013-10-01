@@ -1,25 +1,25 @@
-#ifndef CCACCEL_H
+#ifndef ACCEL_H
 
-#define CCACCEL_H
+#define ACCEL_H
 
 #include "Arduino.h"
 
 #define ANALOGPIN_0 0
 #define ANALOGPIN_1 1
 #define ANALOGPIN_2 2
-#define THRESHOLD 100  //before: 200
+#define THRESHOLD  10
 
+#define HIGHVALUE 600
 
-class CCACCEL
+class ACCEL
 {
 
 	public:
                 ///constructor
-                CCACCEL();
+                ACCEL();
                 ///destructor
-                ~CCACCEL();
+                ~ACCEL();
         	
-                void init();
                 void update();
                 void setDelta();                
                 int  maxDelta();
@@ -36,6 +36,5 @@ class CCACCEL
                                        
 };
 
-extern CCACCEL ccAccel;
 
-#endif // CCACCEL_H
+#endif // ACCEL_H

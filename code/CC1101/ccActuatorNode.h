@@ -5,6 +5,7 @@
 #include "ccNode.h"
 
 #define MAXKEYPATTERN 25
+#define TENSECONDS 10000000   //10000000 microseconds
 
 class CCACTUATORNODE: public CCNODE
 {

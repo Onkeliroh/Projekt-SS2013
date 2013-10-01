@@ -127,7 +127,7 @@ LPD6803::LPD6803(uint16_t n, uint8_t dpin, uint8_t cpin) {
 
   SendMode = START;
   BitCount = LedIndex = BlankCounter = 0;
-  cpumax = 50;
+  cpumax = 90;  //50
 }
 
 //---

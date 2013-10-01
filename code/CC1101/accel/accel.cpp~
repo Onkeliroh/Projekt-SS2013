@@ -1,31 +1,31 @@
-#include "ccAccel.h"
-
+#include "accel.h"
 
 //CONSTRUCTOR//
 
-CCACCEL::CCACCEL()
-
+ACCEL::ACCEL()
 {
     _X = analogRead(ANALOGPIN_0);
     _Y = analogRead(ANALOGPIN_1);
     _Z = analogRead(ANALOGPIN_2);
 
-    _deltaX = 0;
-    _deltaY = 0;
-    _deltaZ = 0;
+    _deltaX = _X;
+    _deltaY = _Y;
+    _deltaZ = _Z;    
          
 }
 
 
 //DESTRUCTOR//
 
-CCACCEL::~CCACCEL()
+ACCEL::~ACCEL()
 {
 
-
+    
+                            
 }
 
-void CCACCEL::update()
+
+void ACCEL::update()
 {
 
     _X = analogRead(ANALOGPIN_0);
@@ -34,43 +34,46 @@ void CCACCEL::update()
 
 }
 
-void CCACCEL::setDelta()
+void ACCEL::setDelta()
 
 {
     int prevX = _X;
     int prevY = _Y;
     int prevZ = _Z;
-
+        
     update(); 
  
-    _deltaX = _X - _prevX;
-    _deltaY = _Y - _prevY;
-    _deltaZ = _Z - _prevZ;
- 
+    _deltaX = _X - prevX;  
+    _deltaX = abs(_deltaX);
+    _deltaY = _Y - prevY;  
+    _deltaY = abs(_deltaY);
+    _deltaZ = _Z - prevZ;
+    _deltaZ = abs(_deltaZ);
 }
 
-int CCACCEL::maxDelta()
+int ACCEL::maxDelta()
 {
     return max(max(_deltaX, _deltaY), max(_deltaY, _deltaZ));
 }
 
-int CCACCEL::minDelta()
+int ACCEL::minDelta()
 {
     return min(min(_deltaX, _deltaY), min(_deltaY, _deltaZ));
 }
 
-boolean CCACCEL::wasShaken()
+boolean ACCEL::wasShaken()
 {
    boolean wasShaken = false;   
- 
+
    setDelta();
   
-   if (maxDelta() > THRESHOLD) //|| minDelta() < (_threshold * (-1)))
+   if (minDelta() > THRESHOLD) 
+   {
        wasShaken = true;
+       //Serial.println("ESTOY AQUI");
+   }
 
    return wasShaken;     
 }
-
-extern CCACCEL ccAccel = CCACCEL();
 
 

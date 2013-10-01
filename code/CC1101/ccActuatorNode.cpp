@@ -30,12 +30,11 @@ void CCACTUATORNODE::setup()
 
 {
     
-    Serial.begin(BAUDRATE); 
+    //Serial.begin(BAUDRATE); 
 
     ledBlinkSetup();
   
     rfChipInit();
-    
 
 }
 
@@ -52,12 +51,14 @@ boolean CCACTUATORNODE::ccGetNewPacket()
    
     if(cc11 > 0) // some data was received      
     {
-        if (ccPacket.crc_ok && ccPacket.length > 1) // the whole ccPacket was properly received
+       
+       if (ccPacket.crc_ok && ccPacket.length > 1) // the whole ccPacket was properly received
         {  
             if(ccPacket.RECEIVER_ID == _id) 
             {                 
                 validPacket = true; 
                 _ccPacketHandler.setPacket(ccPacket);
+                 _ccPacketHandler.printPacket();     
             }   
                  
         }
@@ -106,16 +107,13 @@ void CCACTUATORNODE::ccHandle()
       
     switch (key)
     {
-       case ACKNOWLEDGE_REQUEST: 
+       case ACKNOWLEDGE: 
             break;
-        case ACKNOWLEDGE_RESPONSE:
-            _clear = true;
-            break;
-        case TEST: 
+       case TEST: 
             //flipRainbow();
             //ccAcknowledge();
             break;
-        default: // unknown packet received
+       default: // unknown packet received
             Serial.print("ERROR - unknown packet received, key: ");
             Serial.println(key);
             break; 
