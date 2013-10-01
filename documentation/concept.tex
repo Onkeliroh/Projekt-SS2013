@@ -22,9 +22,16 @@ So by using this technique the following rules shown in this table can be implem
 When the servers got from the device panstamp the data with which other device it is confronted, the server looks up in the data of the device_config_dialogue.java file and returns the matching pattern. For this use it is necessary to define which personality is more dominant than another.
 The table below shows how the different personalities will interact to each other.
 % INSERT DEVICE -DEVICE TABLE
-For sure there is no interaction when "Paul" gets in touch with another "Paul" (because there should only be one Paul) but by using the servers settings it is quite easy to do so. There won't be any interaction between the same personalities.       
- 
- 
+For sure there is no interaction when "Paul" gets in touch with another "Paul" (because there should only be one Paul) but by using the servers settings it is quite easy to do so. There won't be any interaction between the same personalities.
 
+So when the server has received the data of its state and his neighbourhood of the sending device it will send a new pattern for the LEDs chain actuator when the situation of the sending device has changed.
+When the device hadn't send its data packet for two minutes a warning will pop up in the graphical interface. Apparently this will happen when the device is out range of the sending area of the panstamp antennas (approximately ~50 metres).
+This very functionality is illustrated in the following graphic.
+% INSERT GRAPHICAL PICTURE OF FUNCTIONALITY OF THE SERVER-CLIENT-SYSTEM       
+ 
+% used technologies
+One of the projects constrains in the beginning was to build something based on the Arduino technology, because there is a lot of open - source code in the internet and it is easy to learn.
+Another constraint was to write the servers code in Java. Because the servers environment of this project should be similar to other ancient projects at this chair.
+Later, when the work began it was necessary to find a hardware module for the devices which is sending and receiving the data packages to and from the server. Some experiments with XBees indicated that the commuting area is pretty to small to have a good functionality of the system. (In fact the server lost signal already when the Device was just approximately five metres apart.) So the work with the panstamp began.   
  
 
