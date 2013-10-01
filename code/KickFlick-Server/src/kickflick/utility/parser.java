@@ -1,6 +1,7 @@
 package kickflick.utility;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -12,7 +13,7 @@ import kickflick.device.*;
 class parser implements SerialPortEventListener {
 	private final server Server_;
 
-    private final int STATE_CHANGE_DELAY = 50000;
+    private final int STATE_CHANGE_DELAY = 15000;
 	
 	public parser(server Serv)
 	{
@@ -22,7 +23,8 @@ class parser implements SerialPortEventListener {
 	
 	void parse(byte[] arg)
 	{
-		System.out.print("Parser received message: ");
+        Timestamp stamp = new Timestamp(new Date().getTime());
+		System.out.print( new SimpleDateFormat("HH:mm:ss").format(stamp)+" | Parser received message: ");
         System.out.println(Arrays.toString(arg));
 
         byte[] msg = new byte[4];
@@ -60,40 +62,39 @@ class parser implements SerialPortEventListener {
                 this.Server_.get_devices().add(index, tmp);
 			}
 
-            Timestamp stamp = new Timestamp(new Date().getTime());
-            if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
+            switch (arg[1])
             {
-                switch (arg[1])
+                case system_keys.BATTERY_LOW:
                 {
-                    case system_keys.BATTERY_LOW:
+                    if ( !this.Server_.get_device(index).is_battery_low() )
+                        this.Server_.get_device(index).toggle_battery_low();
+                    break;
+                }
+                case system_keys.STILL_ALIVE:
+                {
+                    this.Server_.get_device(index).set_new_timestamp_last_heard_of();
+                    this.Server_.send_msg(new byte[]{arg[0],system_keys.MESSAGE_RECEIVED,0,0});
+                    break;
+                }
+                case system_keys.FOUND_NEIGHBOR:
+                {
+                    int neighbor_id = find_device_sensor_node(arg[2]);
+                    if (neighbor_id != -1)
                     {
-                        if ( !this.Server_.get_device(index).is_battery_low() )
-                            this.Server_.get_device(index).toggle_battery_low();
-                        break;
-                    }
-                    case system_keys.STILL_ALIVE:
-                    {
-                        this.Server_.get_device(index).set_new_timestamp_last_heard_of();
-                        this.Server_.send_msg(new byte[]{arg[0],system_keys.MESSAGE_RECEIVED,0,0});
-                        break;
-                    }
-                    case system_keys.FOUND_NEIGHBOR:
-                    {
-                        int neighbor_id = find_device_sensor_node(arg[2]);
-                        if (neighbor_id != -1)
-                        {
-                            this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(index).get_Personality().get_Name());
+                        this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(index).get_Personality().get_Name());
 
-                            this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(neighbor_id).get_Personality().get_Name());
+                        this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(neighbor_id).get_Personality().get_Name());
 
-                            System.out.println("Found  Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
-                        }
-                        else
-                            System.err.println("Found NO Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
-
-                        break;
+                        System.out.println("Found  Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
                     }
-                    default:
+                    else
+                        System.err.println("Found NO Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
+
+                    break;
+                }
+                default:
+                {
+                    if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
                     {
                         //send device information
                         for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())

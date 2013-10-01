@@ -35,7 +35,8 @@ public class Server_Main {
 	private server Server;
 	private Combo combo_port;
 
-    final Display display = new Display();
+    final private Display display = new Display();
+    final private Shell shlKickflickServer = new Shell( display );
 
 	private Runnable timer_;
     private final int time = 1500; //TODO make configurable
@@ -46,7 +47,6 @@ public class Server_Main {
 	 */
 	public void open() {
 		//display = Display.getDefault();
-		final Shell shlKickflickServer = new Shell( display );
 		shlKickflickServer.setMinimumSize(new Point(1, 23));
 		shlKickflickServer.setSize(575, 354);
 		shlKickflickServer.setLocation(750, 250);
@@ -298,12 +298,12 @@ public class Server_Main {
                             d.get_battery_state()
                     });
                     if( d.is_battery_low() ) {
-                        MessageBox alert = new MessageBox( Display.getCurrent().getActiveShell(), SWT.RESIZE | SWT.ICON_WARNING | SWT.OK );
+                        MessageBox alert = new MessageBox( shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK );
                         alert.setMessage("Battery low on device "+d.get_Personality().get_Name());
                         alert.open();
                     }
                     if( d.get_Personality().get_State() == -1 ) {
-                        MessageBox alert = new MessageBox( Display.getCurrent().getActiveShell(), SWT.RESIZE | SWT.ICON_WARNING | SWT.OK );
+                        MessageBox alert = new MessageBox( shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK );
                         alert.setMessage("Didn't receive signal from "+d.get_Personality().get_Name()+" for 2 minutes" );
                         alert.open();
                     }
