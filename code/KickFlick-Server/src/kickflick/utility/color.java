@@ -1,10 +1,9 @@
 package kickflick.utility;
 
-import java.util.Enumeration;
-
 // Color Enumeration
 // compare with Leds.cpp for more color values or to change them
-public enum color {
+public enum color
+{
     WHITE("White", (byte) 0),
     RED_BRIGHT("Red (bright)", (byte) 1),
     RED("Red", (byte) 2),
@@ -20,21 +19,22 @@ public enum color {
     YELLOW_DIM("Yellow (dim)", (byte) 12),
     LILA("Lila", (byte) 13),
     ORANGE("Orange", (byte) 14),
-    TURQUOISE("Turquoise", (byte)15),
-    BLACK("Black",(byte)16);
+    TURQUOISE("Turquoise", (byte) 15),
+    BLACK("Black", (byte) 16);
 
     private final String colorName;
     private final byte color_key;
 
-    color (String name, byte b)
-    {
+    color(String name, byte b) {
         this.colorName = name;
         this.color_key = b;
     }
 
-    public String get_name()
-        {return colorName;}
+    public String get_name() {
+        return colorName;
+    }
 
-    public byte get_key()
-        {return color_key;}
+    public byte get_key() {
+        return color_key;
+    }
 }

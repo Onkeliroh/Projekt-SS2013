@@ -14,13 +14,13 @@ class parser implements SerialPortEventListener {
 	private final server Server_;
 
     private final int STATE_CHANGE_DELAY = 15000;
-	
+
 	public parser(server Serv)
 	{
 		System.out.println("Create Parser");
 		this.Server_=Serv;
 	}
-	
+
 	void parse(byte[] arg)
 	{
         Timestamp stamp = new Timestamp(new Date().getTime());
@@ -79,14 +79,19 @@ class parser implements SerialPortEventListener {
                 case system_keys.FOUND_NEIGHBOR:
                 {
                     int neighbor_id = find_device_sensor_node(arg[2]);
-                    if (neighbor_id != -1)
-                    {
-                        this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(index).get_Personality().get_Name());
+                    if ( neighbor_id != -1 )
+                        if (!this.Server_.get_device(index).has_neighbor())
+                        {
+                            this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(index).get_Personality().get_Name());
+                            this.Server_.get_device(index).set_neighbor(this.Server_.get_device(neighbor_id));
 
-                        this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(neighbor_id).get_Personality().get_Name());
+                            this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(neighbor_id).get_Personality().get_Name());
+                            this.Server_.get_device(neighbor_id).set_neighbor(this.Server_.get_device(index));
 
-                        System.out.println("Found  Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
-                    }
+                            System.out.println("Found  Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
+                        }
+                        else
+                            System.out.println("Device "+this.Server_.get_device(index).get_Personality().get_Name() + " allready got a neighbor");
                     else
                         System.err.println("Found NO Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());
 
@@ -94,21 +99,25 @@ class parser implements SerialPortEventListener {
                 }
                 default:
                 {
-                    if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
+                    //only changes state if there is no known neihbor
+                    if ( !this.Server_.get_device(index).has_neighbor())
                     {
-                        //send device information
-                        for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
+                        if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
                         {
-                            keys k = (keys) entry.getKey();
-                            if (k.get_key() == arg[1] && (Boolean) entry.getValue())
+                            //send device information
+                            for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
                             {
-                                this.Server_.get_device(index).get_Personality().inc_state();
+                                keys k = (keys) entry.getKey();
+                                if (k.get_key() == arg[1] && (Boolean) entry.getValue())
+                                {
+                                    this.Server_.get_device(index).get_Personality().inc_state();
 
-                                this.Server_.send_device(index);
+                                    this.Server_.send_device(index);
 
-                                this.Server_.get_device(index).set_new_timestamp();
+                                    this.Server_.get_device(index).set_new_timestamp();
 
-                                break;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -120,7 +129,7 @@ class parser implements SerialPortEventListener {
 			System.err.println("Parser received corrupt message!");
 		}
 	}
-	
+
 	int find_device_sensor_node(byte address)
 	{
 		for ( int i = 0; i < this.Server_.get_devices().size() ; ++i)
