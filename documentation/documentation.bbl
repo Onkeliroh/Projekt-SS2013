@@ -15,4 +15,9 @@
 \newblock {\em panStamp Website}.
 \newblock \url{http://www.panstamp.com/}.
 
+\bibitem{rxtx}
+{\sc Trent Jarvi}.
+\newblock {\em RxTx Library Wiki}.
+\newblock \url{http://rxtx.qbang.org/wiki/index.php/Main_Page}.
+
 \end{thebibliography}
