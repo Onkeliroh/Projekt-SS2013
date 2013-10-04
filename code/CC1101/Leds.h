@@ -16,11 +16,19 @@
 #define RAINBOW      2
 #define LEDSON       3
 #define LEDSOFF      4
+#define STRIPES      5
+#define ONESTRIPE    6
 
+//STATES
+#define ZERO         0
+#define ONE          1
+#define TWO          2
+#define THREE        3
+#define FOUR         4
 
 
 //COLORKEYS
-#define BLACK    0
+#define BLACK        0
 
 
 
@@ -35,6 +43,8 @@ class LEDS
                       
                 void ledStripInit();
                 void setPatternStripes(uint16_t color1, uint16_t color2);
+                void setColors(byte redComponent, byte blueComponent, byte greenComponent);
+                void setSectionColor(byte section[], int sectionLength, uint16_t sectionColor);
 		unsigned int randomColor();
 		void colorWipe(uint16_t c);
 		void flipRainbow();

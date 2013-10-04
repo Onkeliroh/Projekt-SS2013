@@ -217,6 +217,13 @@ void CCSERVER::ccSendCommand()
     ccSendPacket();
 }
 
+void CCSERVER::sendColorCommand(byte red1, byte blue1, byte green1)
+{
+   setTestColorCommand(red1, blue1, green1);
+   ccSendPacket();
+}
+
+
 
 void CCSERVER::setNewCommand()
 {
@@ -226,7 +233,21 @@ void CCSERVER::setNewCommand()
     //Serial.write(COLOR2);       
  
     _ccPacketHandler.buildPatternCommand(RECEIVERID, METAKEY, COLOR1, COLOR2); 
-}              
+}
+
+void CCSERVER::setTestColorCommand(byte COLORR, byte COLORB, byte COLORG)
+{
+    //Serial.write(RECEIVERID);   
+    //Serial.write(METAKEY);      
+    //Serial.write(COLOR1);       
+    //Serial.write(COLOR2);       
+ 
+    _ccPacketHandler.buildRGBCommand(COLORR, COLORB, COLORG); 
+}
+            
+
+
+ 
      
 byte CCSERVER::getBufferChecksum()
 {

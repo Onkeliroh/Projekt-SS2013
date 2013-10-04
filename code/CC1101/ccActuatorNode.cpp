@@ -51,6 +51,8 @@ boolean CCACTUATORNODE::ccGetNewPacket()
    
     if(cc11 > 0) // some data was received      
     {
+
+       
        
        if (ccPacket.crc_ok && ccPacket.length > 1) // the whole ccPacket was properly received
         {  
@@ -81,7 +83,6 @@ boolean CCACTUATORNODE::keyforLeds()
     return keyForLeds;
 }
 
-
 byte CCACTUATORNODE::getKey()
 {
     return _ccPacketHandler.getAdminKey();
@@ -98,6 +99,27 @@ byte CCACTUATORNODE::getSecondColor()
 {
     return _ccPacketHandler.getSecondColor();
 }
+
+byte CCACTUATORNODE::getRed()
+
+{
+    return _ccPacketHandler.getRed();
+}
+
+byte CCACTUATORNODE::getBlue()
+
+{
+    return _ccPacketHandler.getBlue();
+}
+
+byte CCACTUATORNODE::getGreen()
+
+{
+    return _ccPacketHandler.getGreen();
+}
+
+
+
 
 
 void CCACTUATORNODE::ccHandle()

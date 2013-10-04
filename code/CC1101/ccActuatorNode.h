@@ -20,6 +20,9 @@ class CCACTUATORNODE: public CCNODE
                 byte getKey();
                 byte getFirstColor();
                 byte getSecondColor();
+		byte getRed();
+		byte getBlue();
+		byte getGreen();
                 void ccHandle();  
                          
 };
