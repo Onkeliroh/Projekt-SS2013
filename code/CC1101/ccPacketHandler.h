@@ -22,6 +22,13 @@
 #define COLOR1          data[3]
 #define COLOR2          data[4]
 
+#define RED             data[2]
+#define BLUE            data[3]
+#define GREEN           data[4]
+
+
+
+
 #define PACKNUM        data[2]
 
 
@@ -90,6 +97,8 @@ class ccPacketHandler
  
         void buildPatternCommand(byte receiver, byte PatternKey, byte colorKey1, byte colorKey2);
 
+        void buildRGBCommand(byte Red01, byte Blue01, byte Green01);
+
         /// setters
 
         void setHash(byte ccHash);
@@ -123,8 +132,14 @@ class ccPacketHandler
         void setFirstColor(byte firstColor);
 
         void setSecondColor(byte secondColor);
-        
-        void setPackNum(byte packNum);
+
+	void setRed(byte colorRed);
+
+	void setBlue(byte colorBlue);
+
+	void setGreen(byte colorGreen);
+
+	void setPackNum(byte packNum);
 
         void setDetectedRSSI(byte rawRSSI);        
 
@@ -146,6 +161,12 @@ class ccPacketHandler
         byte getFirstColor();
 
         byte getSecondColor();
+
+	byte getRed();
+
+	byte getBlue();
+
+	byte getGreen();
 
         byte getPackNum();
       

@@ -167,6 +167,24 @@ void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte c
 
 }
 
+void ccPacketHandler::buildRGBCommand(byte Red01, byte Blue01, byte Green01)
+{
+    clearPacket(); /// clear the packet
+
+    setReceiver(3);
+
+    setSender(SERVER_01); 
+  
+    setRed(Red01);
+
+    setBlue(Blue01);
+ 
+    setGreen(Green01);
+     
+    setBuildCounter(6); /// set build counter to next free byte's position    
+
+}
+
 
 
 boolean ccPacketHandler::hashMatches()
@@ -325,7 +343,29 @@ void ccPacketHandler::setSecondColor(byte secondColor)
 
 }
 
+void ccPacketHandler::setRed(byte colorRed)
 
+{
+
+    _ccPacket.RED = colorRed; 
+
+}
+
+void ccPacketHandler::setBlue(byte colorBlue)
+
+{
+
+    _ccPacket.BLUE = colorBlue; 
+
+}
+
+void ccPacketHandler::setGreen(byte colorGreen)
+
+{
+
+    _ccPacket.GREEN = colorGreen; 
+
+}
 
 void ccPacketHandler::setPackNum(byte packNum)
 
@@ -421,6 +461,29 @@ byte ccPacketHandler::getSecondColor()
 
 }
 
+byte ccPacketHandler::getRed()
+
+{
+
+    return _ccPacket.RED;  
+
+}
+
+byte ccPacketHandler::getBlue()
+
+{
+
+    return _ccPacket.BLUE;  
+
+}
+
+byte ccPacketHandler::getGreen()
+
+{
+
+    return _ccPacket.GREEN;  
+
+}
 
 
 byte ccPacketHandler::getPackNum()

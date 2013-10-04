@@ -55,6 +55,28 @@ void LEDS::setPatternStripes(uint16_t color1, uint16_t color2)
  
 }
 
+void LEDS::setColors(byte redComponent, byte blueComponent, byte greenComponent)
+{ 
+  int i = 0;
+
+  while(i < _ledStrip.numPixels())
+  {
+      _ledStrip.setPixelColor(i, Color(redComponent,blueComponent, greenComponent));  
+      ++i;  
+      _ledStrip.show();      
+   }
+ }
+
+void LEDS::setSectionColor(byte section[], int sectionLength, uint16_t sectionColor)
+{
+    for(int i=0; i< sectionLength; i++)
+    {
+        _ledStrip.setPixelColor(section[i], sectionColor);  
+        _ledStrip.show(); 
+    }
+}
+
+
 
 unsigned int LEDS::randomColor()
 {
