@@ -78,14 +78,12 @@ class parser implements SerialPortEventListener {
                 }
                 case system_keys.FOUND_NEIGHBOR:
                 {
-                    int neighbor_id = find_device_sensor_node(arg[2]);
+                    int neighbor_id = find_device_sensor_node(arg[2]);  //TODO create new device if not found
                     if ( neighbor_id != -1 )
                         if (!this.Server_.get_device(index).has_neighbor())
                         {
-                            this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(index).get_Personality().get_Name());
+                            this.Server_.send_neighbor(this.Server_.get_device(index), this.Server_.get_device(neighbor_id));
                             this.Server_.get_device(index).set_neighbor(this.Server_.get_device(neighbor_id));
-
-                            this.Server_.send_neighbor(this.Server_.get_device(index),this.Server_.get_device(neighbor_id).get_Personality().get_Name());
                             this.Server_.get_device(neighbor_id).set_neighbor(this.Server_.get_device(index));
 
                             System.out.println("Found  Neighbor for: " + this.Server_.get_device(index).get_Personality().get_Name());

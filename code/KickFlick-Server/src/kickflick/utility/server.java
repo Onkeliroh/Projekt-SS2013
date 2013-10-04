@@ -2,6 +2,10 @@ package kickflick.utility;
 
 import kickflick.device.device;
 import kickflick.gui.Server_Main;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 
 import java.io.*;
 import java.sql.Timestamp;
@@ -138,16 +142,21 @@ public class server extends Timer implements Serializable
         this.send_msg(msg);
     }
 
-    public void send_neighbor(device d, String name) {
+    public void send_neighbor(device d, device neighbor) {
         //takes the neighbor values and puts them in to a byte array, which is to be send
         byte[] msg = new byte[4];
-        byte[] neighbor = d.get_Personality().get_neighbor(name);
+        byte[] neighbor_pers = d.get_Personality().get_neighbor(neighbor.get_Personality().get_Name());
         msg[0] = d.get_actuator_node();
-        msg[1] = neighbor[0];
-        msg[2] = neighbor[1];
-        msg[3] = neighbor[2];
+        msg[1] = neighbor_pers[0];
+        msg[2] = neighbor_pers[1];
+        msg[3] = neighbor_pers[2];
 
         this.send_msg(msg);
+
+        msg[0] = neighbor.get_actuator_node();
+
+        this.send_msg(msg);
+
     }
 
 

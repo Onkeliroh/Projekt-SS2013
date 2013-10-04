@@ -20,7 +20,7 @@ public class Server_Main
     private Combo combo_port;
 
     final private Display display = new Display();
-    final private Shell shlKickflickServer = new Shell(display);
+    final protected Shell shlKickflickServer = new Shell(display);
 
     private Runnable timer_;
     private final int time = 1500; //TODO make configurable
@@ -161,34 +161,26 @@ public class Server_Main
 
 
         TableColumn tblclmnNewColumn = new TableColumn(DeviceTable, SWT.NONE);
-        tblclmnNewColumn.setWidth(248);
+        tblclmnNewColumn.setWidth(100);
         tblclmnNewColumn.setText("Personality");
 
         TableColumn tblclmnNewColumn_1 = new TableColumn(DeviceTable, SWT.CENTER);
         tblclmnNewColumn_1.setWidth(100);
-        tblclmnNewColumn_1.setText("State");
+        tblclmnNewColumn_1.setText("Neighbor");
 
         TableColumn tblclmnNewColumn_2 = new TableColumn(DeviceTable, SWT.CENTER);
         tblclmnNewColumn_2.setWidth(100);
-        tblclmnNewColumn_2.setText("last seen");
+        tblclmnNewColumn_2.setText("State");
 
         TableColumn tblclmnNewColumn_3 = new TableColumn(DeviceTable, SWT.CENTER);
         tblclmnNewColumn_3.setWidth(100);
-        tblclmnNewColumn_3.setText("Battery");
+        tblclmnNewColumn_3.setText("last seen");
 
-        DeviceTable.pack();
+        TableColumn tblclmnNewColumn_4 = new TableColumn(DeviceTable, SWT.CENTER);
+        tblclmnNewColumn_4.setWidth(100);
+        tblclmnNewColumn_4.setText("Battery");
 
-        if (this.Server.get_devices().size() > 0)
-        {
-            for (int i = 0; i < this.Server.get_devices().size(); ++i)
-            {
-                TableItem tableItem = new TableItem(DeviceTable, SWT.NONE, i);
-                tableItem.setText(new String[]{
-                        this.Server.get_device(0).get_Personality().get_Name(),
-                        this.Server.get_device(0).get_Personality().get_state_name()
-                });
-            }
-        }
+//        DeviceTable.pack();
 
         Composite composite = new Composite(grpDevices, SWT.NONE);
         composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
@@ -284,26 +276,45 @@ public class Server_Main
 
 
                 int i = 0;
-                for (device d : list)
+                for (final device d : list)
                 {
+                    String neighbor_name = "none";
+                    if ( d.has_neighbor() )
+                        neighbor_name = d.get_neightbor().get_Personality().get_Name();
+
                     TableItem tableItem = new TableItem(DeviceTable, SWT.NONE, i);   //TODO evtl. tabelle vorher löschen
                     tableItem.setText(new String[]{
                             d.get_Personality().get_Name(),
+                            neighbor_name,
                             d.get_Personality().get_state_name(),
                             new SimpleDateFormat("HH:mm:ss").format(d.get_timestamp_last_heard_of()),
                             d.get_battery_state()
                     });
                     if (d.is_battery_low())
                     {
-                        MessageBox alert = new MessageBox(shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK);
-                        alert.setMessage("Battery low on device " + d.get_Personality().get_Name());
-                        alert.open();
+                        Runnable dialog = new Runnable()
+                        {
+                            public void run() {
+                                MessageBox alert = new MessageBox(shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK);
+                                alert.setMessage("Battery low on device " + d.get_Personality().get_Name());
+                                alert.open();
+                            }
+                        };
+
+                        Display.getCurrent().asyncExec(dialog);
                     }
                     if (d.get_Personality().get_State() == -1)
                     {
-                        MessageBox alert = new MessageBox(shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK);
-                        alert.setMessage("Didn't receive signal from " + d.get_Personality().get_Name() + " for 2 minutes");
-                        alert.open();
+                        Runnable dialog = new Runnable()
+                        {
+                            public void run() {
+                                MessageBox alert = new MessageBox(shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK);
+                                alert.setMessage("Didn't receive signal for " + d.get_Personality().get_Name() + " for 2 minutes");
+                                alert.open();
+                            }
+                        };
+
+                        Display.getCurrent().asyncExec(dialog);
                     }
                     ++i;
                 }

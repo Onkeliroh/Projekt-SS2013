@@ -6,7 +6,9 @@ public enum pattern
     FADE("Fade", (byte) 1),
     RAINBOW("Rainbow", (byte) 2),
     ON("On", (byte) 3),
-    OFF("Off", (byte) 4);
+    OFF("Off", (byte) 4),
+    STRIPE_MOVE("moving Stripe", (byte) 5),
+    STRIPES("Stripes", (byte) 6);
 
     private final String name;
     private final byte key;
