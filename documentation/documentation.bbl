@@ -1,0 +1,49 @@
+\begin{thebibliography}{1}
+
+\bibitem{open_jdk}
+{\sc Arch Linux}.
+\newblock {\em JRE7-Openjdk Arch Linux official repository entry}.
+\newblock \url{https://www.archlinux.org/packages/?name=jdk7-openjdk}.
+
+\bibitem{xbee}
+{\sc Digi International Inc.}
+\newblock {\em XBee Product Page}.
+\newblock \url{http://www.digi.com/products/xbee/}.
+
+\bibitem{swt}
+{\sc Eclipse Foundation}.
+\newblock {\em SWT Homepage}, 2013.
+\newblock \url{http://www.eclipse.org/swt/}.
+
+\bibitem{lady_ada_arduino_tutorial}
+{\sc ladyada}.
+\newblock {\em Lady Ada Arduino Tutorial}, April 27, 2012 11:17.
+\newblock \url{http://www.ladyada.net/learn/arduino/}.
+
+\bibitem{java}
+{\sc ORACLE}.
+\newblock {\em Java Homepage}.
+\newblock \url{https://www.java.com/en/}.
+
+\bibitem{panstamp}
+{\sc panStamp S.L.U}.
+\newblock {\em panStamp Website}.
+\newblock \url{http://www.panstamp.com/}.
+
+\bibitem{eclipse}
+{\sc the Eclipse Foundation}.
+\newblock {\em Eclipse Homepage}, 2013.
+\newblock \url{http://eclipse.org//}.
+
+\bibitem{rxtx}
+{\sc Trent Jarvi}.
+\newblock {\em RxTx Library Wiki}.
+\newblock \url{http://rxtx.qbang.org/wiki/index.php/Main_Page}.
+
+\bibitem{ide}
+{\sc Wikimedia Foundation}.
+\newblock {\em IDE Wikipedia Entry}.
+\newblock
+  \url{https://en.wikipedia.org/wiki/Integrated_Development_Environment}.
+
+\end{thebibliography}

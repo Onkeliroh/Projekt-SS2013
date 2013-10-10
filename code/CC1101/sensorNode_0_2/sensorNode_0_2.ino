@@ -68,6 +68,13 @@ void setup()
 void loop()
 {
   
+   
+//    if(_batteryIsLow)
+//    {
+//        _sensorNode.reportLowBatt(); 
+//        disableLowBattInterrupt();         
+//    }
+    
     if(_packetAvailable)
     {
         disableRFChipInterrupt();
@@ -82,7 +89,7 @@ void loop()
             if(!_sensorNode.isPacketsSender())
             {
                 _sensorNode.reportRSSI();
-//                 _sensorNode.ccPrintPacket();  
+//                _sensorNode.ccPrintPacket();  
             }          
         }
         
@@ -96,12 +103,7 @@ void loop()
         _sensorNode.reportAccelEvent();  
     }
     
-    
-    if(_batteryIsLow)
-    {
-        _sensorNode.reportLowBatt(); 
-        disableLowBattInterrupt();         
-    }
+   
     
 }
 

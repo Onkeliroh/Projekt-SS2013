@@ -55,6 +55,28 @@ void LEDS::setPatternStripes(uint16_t color1, uint16_t color2)
  
 }
 
+void LEDS::setColors(byte redComponent, byte blueComponent, byte greenComponent)
+{ 
+  int i = 0;
+
+  while(i < _ledStrip.numPixels())
+  {
+      _ledStrip.setPixelColor(i, Color(redComponent,blueComponent, greenComponent));  
+      ++i;  
+      _ledStrip.show();      
+   }
+ }
+
+void LEDS::setSectionColor(byte section[], int sectionLength, uint16_t sectionColor)
+{
+    for(int i=0; i< sectionLength; i++)
+    {
+        _ledStrip.setPixelColor(section[i], sectionColor);  
+        _ledStrip.show(); 
+    }
+}
+
+
 
 unsigned int LEDS::randomColor()
 {
@@ -127,77 +149,59 @@ uint16_t LEDS::findColor(byte colorIndex)
     switch(colorIndex)
     {
         case 0: //!
-            pickedColor = Color(0, 0, 31); //green
+            pickedColor = Color(31, 31, 31); //white
             break; 
         case 1:  //"
-            pickedColor = Color(0, 15, 31); //lemon green
+            pickedColor = Color(0, 31, 0); //red (bright)
             break; 
         case 2:  //#
-            pickedColor = Color(0, 8, 0); //red
-            break;
-        case 3:  //$
             pickedColor = Color(0, 15, 0); //red
             break;
+        case 3:  //$
+            pickedColor = Color(0, 7, 0); //red (dim)
+            break;
         case 4:  //%
-            pickedColor = Color(0, 31, 0); //red
+            pickedColor = Color(0, 0, 31); //green (bright)
             break;
         case 5:  //&
-            pickedColor = Color(31, 0, 31); //ligth blue
+            pickedColor = Color(0, 0, 15); //green
             break;
         case 6:  //'
-            pickedColor = Color(15, 0, 31);  //blue
+            pickedColor = Color(0, 0, 7);  //green (dim)
             break;
         case 7:  //(
-            pickedColor = Color(15, 0, 15); //blue
+            pickedColor = Color(31, 0, 0); //blue (bright)
             break;
         case 8:  //)
-            pickedColor = Color(0, 31, 31); //yellow
+            pickedColor = Color(15, 0, 0); //blue
             break;
         case 9:  //*
-            pickedColor = Color(0, 15, 15); //yellow
+            pickedColor = Color(7, 0, 0); //blue (dim)
             break; 
         case 10: // +
-            pickedColor = Color(5, 5, 31);  //turquoise
+            pickedColor = Color(0, 31, 31);  //yellow (bright)
             break; 
         case 11: // ,
-            pickedColor = Color(10, 10, 31); //yellow or lemon green
+            pickedColor = Color(0, 15, 15); //yellow
             break; 
         case 12: // -
-            pickedColor = Color(15, 15, 31); //blue 
+            pickedColor = Color(0, 7, 7); //yellow (dim)
             break;
         case 13: // .
-            pickedColor = Color(20, 20, 31); //
+            pickedColor = Color(31, 31, 0); //violet
             break;
         case 14: // /
-            pickedColor = Color(25, 25, 31);
+            pickedColor = Color(0, 31, 10); //orange
             break;
         case 15: // 0
-            pickedColor = Color(5, 5, 0);
+            pickedColor = Color(27, 0, 31); //turquoise
             break;
         case 16: // 1
-            pickedColor = Color(10, 10, 0);
+            pickedColor = Color(0, 0, 0); //black
             break;
         case 17:  //2
             pickedColor = Color(15, 15, 0);
             break;
-        case 18:  //3
-            pickedColor = Color(20, 20, 0);
-            break;
-        case 19:  //4
-            pickedColor = Color(25, 25, 0);
-            break; 
-        case 20:  //5
-            pickedColor = Color(5, 15, 30);
-            break; 
-        case 21:  //6
-            pickedColor = Color(30, 15, 5);
-            break;
-        case 22:  //7
-            pickedColor = Color(0, 20, 5);
-            break;
-        case 23:  //8
-            pickedColor = Color(31, 31, 31);
-            break; //9       
       }
   return pickedColor;
 }

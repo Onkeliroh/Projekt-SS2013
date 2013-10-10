@@ -1,0 +1,13 @@
+\section{Development}
+The creative process of finding an idea how to create something ''kickflickable'' began with a small introduction to arduino. Mainly we were thought the workflow and usage of an arduino, and therefor of an microcontroller in general, by the lady ada tutorial. \cite{lady_ada_arduino_tutorial}
+We learned how to use basic components like LEDs and tilt-sensores. Very early we recognized, that sensores for position measurement were needed to recognize the position of the future device. But we also experimented with a skate-wheel to for example wether it turns one way or the other. To make sure that the finished prototypes and the concept are expandebel in terms of new sensors and/or actuators.
+After we found the right sensors we needed to find a way to communicate with the devices. We experimented with panStamps \cite{panstamp} and XBee\cite{xbee}-shields. In the end we settled with the panStamps because of their larger range results and the fact of them combining a arduino with a wireless module to one device instead of additionally getting one more interface to work on.
+
+Form this point on, we had an idea of how to realise the position detection and communication parts. We still needed to create some sort of feedback for the user to realize. 
+At first we wanted to give feedback via audio, vibration and light, but because of limitations in time and processing power of the ATmega %cite genauer bautyp
+ chip we decided to keep the most obvious of the three feedback ideas and settled with the light.
+
+The finished prototypes now run on two panStamps with a ATmega<bla> each. On panStamps controlls the sensors and the other is meant to create the feedback. 
+A RGB LED Chain was selected to create light patterns, because of the convenient usage and the brightness of the LEDs. 
+
+% vim: spell spelllang=en_gb 

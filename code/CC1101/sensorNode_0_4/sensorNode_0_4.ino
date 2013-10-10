@@ -9,8 +9,8 @@
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()    detachInterrupt(0);
 
-#define enableaLowBattInterrupt()     analogComparator.enableInterrupt(lowBattInterrupt, FALLING);
-#define disableLowBattInterrupt()     analogComparator.disableInterrupt();
+//#define enableaLowBattInterrupt()     analogComparator.enableInterrupt(lowBattInterrupt, FALLING);
+//#define disableLowBattInterrupt()     analogComparator.disableInterrupt();
 
 /////////////////////
 //--- INSTANCES ---//
