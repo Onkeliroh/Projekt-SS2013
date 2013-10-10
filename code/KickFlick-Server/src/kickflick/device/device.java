@@ -11,7 +11,7 @@ import java.util.Map;
 public class device implements Serializable
 {
 
-    private final long NEIGHBOR_MOVED_AWAY = 15000; //when after 0.5 minutes no responce from neighbor, the device is declared single and without neighbor
+    private final long NEIGHBOR_MOVED_AWAY = 30000; //when after 0.5 minutes no responce from neighbor, the device is declared single and without neighbor
 
     private personality Personality_;
 
