@@ -2,14 +2,14 @@
 
 \subsection{Basic Concept}
 The basic concept for this project was to create an interface, which is modular and mainly mobile. Like already explained we wanted to create a interface that has more degrees of freedom in terms of the usage than a installation which is bound to a place and therefor mobile. Due to the fact that we decided to use a more powerful server to manage all devices, we reached a certain degree of bounding to a place, while still being mobile. 
-So a server - client - structure is a very broad system and maybe to powerful for the target of this project. But in fact we needed a system that is highly extendable to add new features use it in another project.
+So a server - client - structure is a very broad system and maybe to powerful for the target of this project. But in fact we needed a system that is highly expandable to add new features use it in another project.
 First idea was to build several independent hardware devices which communicate between each other. But the usage of a server - client based system has plenty more advantages than to build a simple hardware - communication - system:
-It is easier to implement new functionalities or to use this environement for later projects. Furthermore an administrator can change the device defaults pretty easy using the Graphical Interface.   
+It is easier to implement new functionalities or to use this environment for later projects. Furthermore an administrator can change the device defaults pretty easy using the Graphical Interface.   
 \subsection{Hardware Concept}
 %hardware, advantages of microcontrollers, engery problems, wireless stuff
 
 \subsection{Software Concept} 
-To achive the degree of mobility, the server only needs a connected panstamp to work properly. It is also possible to put the server software on a more powerful microcontroller like a raspberry pi or some similar controller.
+To achieve the degree of mobility, the server only needs a connected panstamp to work properly. It is also possible to put the server software on a more powerful microcontroller like a raspberry pi or some similar controller.
 The modularity is given through a number of easy configurable files. Changing behavior, appearance or the defined actions is pretty easy to do.
 
 The system contains the different hardware devices and the server. The communication is enabled by using panstamps. When one of the devices gets activated by e.g. kicking it, the accelerometer sensor will trigger an input sending it to the panstamp. There a packet will be created which contains the ID of the device, the intensity of the kinetic input and a checksum bit at the end.
@@ -19,7 +19,7 @@ The idea was to create typical characters for the devices. Below you can see the
 The next table indicates the behaviour of the personalities to each other. For the functionality of this feature another state "played by" is used. By using the accelerometer sensor it is possible to find the neighbour, see here in the hardware part for more.
 % CHECK OUT HARDWARE COMPONENTS FOR HOW TO FIND NEIGHBOURS
 So by using this technique the following rules shown in this table can be implemented.
-When the servers got from the device panstamp the data with which other device it is confronted, the server looks up in the data of the device_config_dialogue.java file and returns the matching pattern. For this use it is necessary to define which personality is more dominant than another.
+When the servers got from the device panstamp the data with which other device it is confronted, the server looks up in the data of the presetpersonalities.java file and returns the matching pattern. For this use it is necessary to define which personality is more dominant than another.
 The table below shows how the different personalities will interact to each other.
 % INSERT DEVICE -DEVICE TABLE
 For sure there is no interaction when "Paul" gets in touch with another "Paul" (because there should only be one Paul) but by using the servers settings it is quite easy to do so. There won't be any interaction between the same personalities.
