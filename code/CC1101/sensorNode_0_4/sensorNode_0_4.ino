@@ -53,7 +53,7 @@ void lowBattInterrupt(void)
 void setup()
 {
     _sensorNode.setup();
-    enableaLowBattInterrupt();
+//    enableaLowBattInterrupt();
     enableRFChipInterrupt(); 
 }
 

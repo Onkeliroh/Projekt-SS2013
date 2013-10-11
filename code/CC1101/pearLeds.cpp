@@ -1,7 +1,5 @@
 #include "pearLeds.h"
 
-uint16_t Color1 = 0;
-uint16_t Color2 = 0;
 byte stripeState = 0;
 
 typedef struct
@@ -65,7 +63,10 @@ REARLEDS _rearLeds =
 PEARLEDS::PEARLEDS()
 
 {
-
+    Color1 = ZERO; 
+    Color2 = ZERO;
+    Pattern = 0;
+    patternState = 0;
 
 }
 
@@ -79,107 +80,138 @@ PEARLEDS::~PEARLEDS()
 }
 
 
-void PEARLEDS::setLedPattern(byte keyPattern, byte ColorKey1, byte ColorKey2)
+void PEARLEDS::updateLedPattern()
 {
 
-    switch (keyPattern)
+    switch (Pattern)
     {        
         case BLINK:
-            Color1 = findColor(ColorKey1);
-            Color2 = findColor(ColorKey2);
-            setPatternStripes(Color1,Color2);                    
+            blinkLeds();                
             break;
-        case FADE:            
+        case FADE: 
+            fade();           
             break;
         case RAINBOW:
             rainbow();
             break;
         case LEDSON:
-            Color1 = findColor(ColorKey1);
-            Color2 = findColor(ColorKey2);
-            setPatternStripes(Color1,Color2);                  
+            setOneColorForAll(Color1);                 
             break; 
         case LEDSOFF:
-            colorWipe(BLACK);                 
-            break;           
-        default: // unknown packet received
-            Serial.print("ERROR");
+            setOneColorForAll(BLACK);
+        case ONESTRIPE:
+            setOneStripe();     
+            break;
+        case STRIPES:
+            setStripes();     
+            break;             
+        default:            
             break; 
     }
 }
 
-void PEARLEDS::setStripes(uint16_t color)
+void PEARLEDS::blinkLeds()
 {
-    switch(stripeState)
+     switch(patternState)
     {
         case ZERO:
-            setColors(BLACK, BLACK, BLACK);
-            setSectionColor(_frontLeds.section1, sizeof(_frontLeds.section1), color);
-	    setSectionColor(_frontLeds.section2, sizeof(_frontLeds.section2), color);
-	    setSectionColor(_frontLeds.section5, sizeof(_frontLeds.section5), color);
-	    setSectionColor(_frontLeds.section6, sizeof(_frontLeds.section6), color);
-	    setSectionColor(_frontLeds.section7, sizeof(_frontLeds.section7), color);	    
-	    setSectionColor(_rearLeds.section1, sizeof(_rearLeds.section1), color);
-	    setSectionColor(_rearLeds.section2, sizeof(_rearLeds.section2), color);
-	    setSectionColor(_rearLeds.section5, sizeof(_rearLeds.section5), color);
-	    setSectionColor(_rearLeds.section6, sizeof(_rearLeds.section6), color);
-	    setSectionColor(_rearLeds.section7, sizeof(_rearLeds.section7), color);
-	    ++stripeState;
-            break;
-       	case ONE:
-            setColors(BLACK, BLACK, BLACK);
-	    setSectionColor(_frontLeds.section3, sizeof(_frontLeds.section3), color);
-	    setSectionColor(_frontLeds.section4, sizeof(_frontLeds.section4), color);
-	    setSectionColor(_frontLeds.section8, sizeof(_frontLeds.section8), color);
-	    setSectionColor(_frontLeds.section9, sizeof(_frontLeds.section9), color);
-	    setSectionColor(_rearLeds.section3, sizeof(_rearLeds.section3), color);
-	    setSectionColor(_rearLeds.section4, sizeof(_rearLeds.section4), color);
-	    setSectionColor(_rearLeds.section8, sizeof(_rearLeds.section8), color);
-	    setSectionColor(_rearLeds.section9, sizeof(_rearLeds.section9), color);
-	    stripeState = ZERO;
-            break;
+	    setOneColorForAll(Color1);
+	    ++patternState;
+            break;       
+        case ONE:
+            setOneColorForAll(BLACK);
+            ++patternState;
+            break;   
+        case TWO:
+            setOneColorForAll(Color2);
+            ++patternState; 
+            break;       
+        case THREE:
+	    setOneColorForAll(BLACK);       
+            patternState = ZERO;  
+            break; 
+     }
+}
+
+void PEARLEDS::fade()
+{
+   
+   
+}
+
+
+void PEARLEDS::setStripes()
+{
+    
+   if(patternState > 0) 
+   {
+	    setOneColorForAll(Color1);
+	    setSectionColor(_frontLeds.section3, sizeof(_frontLeds.section3), Color2);
+	    setSectionColor(_frontLeds.section4, sizeof(_frontLeds.section4), Color2);
+	    setSectionColor(_frontLeds.section8, sizeof(_frontLeds.section8), Color2);
+	    setSectionColor(_frontLeds.section9, sizeof(_frontLeds.section9), Color2);
+	    setSectionColor(_rearLeds.section3, sizeof(_rearLeds.section3), Color2);
+	    setSectionColor(_rearLeds.section4, sizeof(_rearLeds.section4), Color2);
+	    setSectionColor(_rearLeds.section8, sizeof(_rearLeds.section8), Color2);
+	    setSectionColor(_rearLeds.section9, sizeof(_rearLeds.section9), Color2);
+	    patternState = ZERO;
+    }
+    else 
+    {  
+            setOneColorForAll(Color1);
+            setSectionColor(_frontLeds.section1, sizeof(_frontLeds.section1), Color2);
+	    setSectionColor(_frontLeds.section2, sizeof(_frontLeds.section2), Color2);
+	    setSectionColor(_frontLeds.section5, sizeof(_frontLeds.section5), Color2);
+	    setSectionColor(_frontLeds.section6, sizeof(_frontLeds.section6), Color2);
+	    setSectionColor(_frontLeds.section7, sizeof(_frontLeds.section7), Color2);	    
+	    setSectionColor(_rearLeds.section1, sizeof(_rearLeds.section1), Color2);
+	    setSectionColor(_rearLeds.section2, sizeof(_rearLeds.section2), Color2);
+	    setSectionColor(_rearLeds.section5, sizeof(_rearLeds.section5), Color2);
+	    setSectionColor(_rearLeds.section6, sizeof(_rearLeds.section6), Color2);
+	    setSectionColor(_rearLeds.section7, sizeof(_rearLeds.section7), Color2);
+	    ++patternState;        
     }  
 }
 
 
 
-void PEARLEDS::setOneStripe(uint16_t color)
+void PEARLEDS::setOneStripe()
 {
-    switch(stripeState)
+    switch(patternState)
     {
         case ZERO:
-	    setColors(BLACK, BLACK, BLACK);
-	    setSectionColor(_frontLeds.section1, sizeof(_frontLeds.section1), color);
-	    setSectionColor(_rearLeds.section1, sizeof(_rearLeds.section1), color);
-            setSectionColor(_frontLeds.section2, sizeof(_frontLeds.section2), color);
-	    setSectionColor(_rearLeds.section2, sizeof(_rearLeds.section2), color);
-            ++stripeState;
+	    setOneColorForAll(Color1);
+	    setSectionColor(_frontLeds.section1, sizeof(_frontLeds.section1), Color2);
+	    setSectionColor(_rearLeds.section1, sizeof(_rearLeds.section1), Color2);
+            setSectionColor(_frontLeds.section2, sizeof(_frontLeds.section2), Color2);
+	    setSectionColor(_rearLeds.section2, sizeof(_rearLeds.section2), Color2);
+            ++patternState;
             break;       
        case ONE:
-            setColors(BLACK, BLACK, BLACK);
-            setSectionColor(_frontLeds.section3, sizeof(_frontLeds.section3), color);
-	    setSectionColor(_rearLeds.section3, sizeof(_rearLeds.section3), color);
-            setSectionColor(_frontLeds.section4, sizeof(_frontLeds.section4), color);
-	    setSectionColor(_rearLeds.section4, sizeof(_rearLeds.section4), color);
-            ++stripeState;
+            setOneColorForAll(Color1);
+            setSectionColor(_frontLeds.section3, sizeof(_frontLeds.section3), Color2);
+	    setSectionColor(_rearLeds.section3, sizeof(_rearLeds.section3), Color2);
+            setSectionColor(_frontLeds.section4, sizeof(_frontLeds.section4), Color2);
+	    setSectionColor(_rearLeds.section4, sizeof(_rearLeds.section4), Color2);
+            ++patternState;
             break;   
         case TWO:
-            setColors(BLACK, BLACK, BLACK);
-            setSectionColor(_frontLeds.section5, sizeof(_frontLeds.section5), color);
-	    setSectionColor(_rearLeds.section5, sizeof(_rearLeds.section5), color);
-            setSectionColor(_frontLeds.section6, sizeof(_frontLeds.section6), color);
-	    setSectionColor(_rearLeds.section6, sizeof(_rearLeds.section6), color);
-            setSectionColor(_frontLeds.section7, sizeof(_frontLeds.section7), color);
-	    setSectionColor(_rearLeds.section7, sizeof(_rearLeds.section7), color);
-            ++stripeState; 
+            setOneColorForAll(Color1);
+            setSectionColor(_frontLeds.section5, sizeof(_frontLeds.section5), Color2);
+	    setSectionColor(_rearLeds.section5, sizeof(_rearLeds.section5), Color2);
+            setSectionColor(_frontLeds.section6, sizeof(_frontLeds.section6), Color2);
+	    setSectionColor(_rearLeds.section6, sizeof(_rearLeds.section6), Color2);
+            setSectionColor(_frontLeds.section7, sizeof(_frontLeds.section7), Color2);
+	    setSectionColor(_rearLeds.section7, sizeof(_rearLeds.section7), Color2);
+            ++patternState; 
             break;       
         case THREE:
-	    setColors(BLACK, BLACK, BLACK);            
-            setSectionColor(_frontLeds.section8, sizeof(_frontLeds.section8), color);
-	    setSectionColor(_rearLeds.section8, sizeof(_rearLeds.section8), color);
-            setSectionColor(_frontLeds.section9, sizeof(_frontLeds.section9), color);
-	    setSectionColor(_rearLeds.section9, sizeof(_rearLeds.section9), color);
-            stripeState = ZERO;  
+	    setOneColorForAll(Color1);           
+            setSectionColor(_frontLeds.section8, sizeof(_frontLeds.section8), Color2);
+	    setSectionColor(_rearLeds.section8, sizeof(_rearLeds.section8), Color2);
+            setSectionColor(_frontLeds.section9, sizeof(_frontLeds.section9), Color2);
+	    setSectionColor(_rearLeds.section9, sizeof(_rearLeds.section9), Color2);
+            patternState = ZERO;  
             break; 
      }
 }

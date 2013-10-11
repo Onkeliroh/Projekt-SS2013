@@ -14,9 +14,11 @@ class PEARLEDS : public LEDS
 	public:
                 PEARLEDS();
                 ~PEARLEDS(void);
-                void setLedPattern(byte keyPattern, byte ColorKey1, byte ColorKey2);  
-                void setStripes(uint16_t color);      
-                void setOneStripe(uint16_t color);
+                void updateLedPattern();  
+                void blinkLeds();
+                void setStripes();
+                void setOneStripe();
+                void fade();
              
 };
 

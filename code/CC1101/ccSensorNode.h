@@ -24,7 +24,8 @@ class CCSENSORNODE: public CCNODE
                 void reportAccelEvent();
                 void reportRSSI();
                 void reportLowBatt();
-                void sendRSSI(byte rawRSSI,byte nearNodeId);    
+                void sendRSSI(byte rawRSSI,byte nearNodeId);  
+                void sendInRangePacket();
                 
 };
 

@@ -86,11 +86,13 @@ void CCSERVER::ccHandle(void)
             sendBufferToJavaServer();
             cleanBuffer();
             break;
-        case NEAR_NODE_EVENT:            
-            //showRSSI();  //For debugging purposes
-            setNearNodeBuffer();      
+        case KICK_EVENT:
+            setBuffer();
             sendBufferToJavaServer();
-            cleanBuffer();      
+            cleanBuffer();
+            break;
+        case NEAR_NODE_EVENT:            
+            checkRSSI();  
             break;    
         case ACKNOWLEDGE:
             setBuffer();         
@@ -124,17 +126,23 @@ int CCSERVER::ccRSSI(byte rawRSSI)
 }
 
 
-void CCSERVER::showRSSI()
+void CCSERVER::checkRSSI()
 {
 
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
     byte rssi_dBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
     byte emisorID = ccPacket.NEAR_NODE_ID;
   
-    //Serial.print("Detected RSSI " );
-    //Serial.print(rssi_dBm);
-    //Serial.print(" from device Nr: \t");
-    //Serial.println(emisorID);    
+    if(rssi_dBm > 212)   
+    {
+        setNearNodeBuffer();      
+        sendBufferToJavaServer();
+        cleanBuffer();           
+
+        //Serial.print("Detected Near Node Nr " );
+        //Serial.println(emisorID);
+    }
+     
 }
 
 
@@ -171,7 +179,7 @@ void CCSERVER::setNearNodeBuffer()
     buffer[KEY] = ccPacket.ADMINKEY;
     buffer[NEARNODEID] = ccPacket.NEAR_NODE_ID;
     buffer[CHECKSUM] = getBufferChecksum(); 
-     
+         
 }
 
 
@@ -180,6 +188,7 @@ void CCSERVER::sendBufferToJavaServer()
     for(int i=0; i<BUFFERLENGTH; i++)
     {
         Serial.write(buffer[i]); 
+        //Serial.println(buffer[i]); 
                                    
     }       
     delay(1);      //Let's see if this is necessary 29-09       

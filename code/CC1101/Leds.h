@@ -16,8 +16,9 @@
 #define RAINBOW      2
 #define LEDSON       3
 #define LEDSOFF      4
-#define STRIPES      5
-#define ONESTRIPE    6
+#define ONESTRIPE    5
+#define STRIPES      6
+
 
 //STATES
 #define ZERO         0
@@ -39,11 +40,15 @@ class LEDS
                 ~LEDS();
             
                 void setup();
-                virtual void setLedPattern(byte keyPattern, byte firstColor, byte secondColor) = 0;
+		void setFirstColor(byte firstColorKey);
+		void setSecondColor(byte secondColorKey);
+		void setPattern(byte patternKey);
+		void setPatternState(byte state);
+		
+                virtual void updateLedPattern() = 0;
                       
                 void ledStripInit();
-                void setPatternStripes(uint16_t color1, uint16_t color2);
-                void setColors(byte redComponent, byte blueComponent, byte greenComponent);
+                void setOneColorForAll(uint16_t color1);
                 void setSectionColor(byte section[], int sectionLength, uint16_t sectionColor);
 		unsigned int randomColor();
 		void colorWipe(uint16_t c);
@@ -52,6 +57,14 @@ class LEDS
 		unsigned int Wheel(byte WheelPos);		
                 uint16_t findColor(byte colorIndex);
                 unsigned int Color(byte r, byte g, byte b);
+
+        protected:
+
+                uint16_t Color1; 
+                uint16_t Color2;
+                byte Pattern;
+                byte patternState;
+                byte fadeState;
           
 };
 

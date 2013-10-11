@@ -12,8 +12,9 @@ accel	KEYWORD1
 
 init	KEYWORD2
 update	KEYWORD2
-setDelta	KEYWORD2
+setAccelDelta	KEYWORD2
 wasShaken	KEYWORD2
+wasKicked	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
