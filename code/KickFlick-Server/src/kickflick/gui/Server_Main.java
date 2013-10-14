@@ -160,6 +160,12 @@ public class Server_Main
         DeviceTable.setHeaderVisible(true);
 
 
+        DeviceTable.addMouseListener(new MouseAdapter() {
+            public void mouseDown(MouseEvent e) {
+                openConfigWindow();
+            }
+        });
+
         TableColumn tblclmnNewColumn = new TableColumn(DeviceTable, SWT.NONE);
         tblclmnNewColumn.setWidth(100);
         tblclmnNewColumn.setText("Personality");
@@ -217,16 +223,7 @@ public class Server_Main
 
                 if (DeviceTable.getSelectionIndex() >= 0)
                 {
-                    int index = DeviceTable.getSelectionIndex();
-                    Device_Config_Dialog tmp = new Device_Config_Dialog(
-                            shlKickflickServer,
-                            SWT.APPLICATION_MODAL,
-                            Server.get_device(index),
-                            Server.get_PersonalitiesCount()
-                    );
-                    device tmp_dev = (device) tmp.open();
-                    Server.set_device(index, tmp_dev);
-                    Server.send_device(index);
+                    openConfigWindow();
                 }
             }
         });
@@ -290,6 +287,7 @@ public class Server_Main
                             new SimpleDateFormat("HH:mm:ss").format(d.get_timestamp_last_heard_of()),
                             d.get_battery_state()
                     });
+
                     if (d.is_battery_low())
                     {
                         Runnable dialog = new Runnable()
@@ -330,6 +328,20 @@ public class Server_Main
         };
     }
 
+    void openConfigWindow() {
+        int index = DeviceTable.getSelectionIndex();
+        Device_Config_Dialog tmp = new Device_Config_Dialog(
+                shlKickflickServer,
+                SWT.APPLICATION_MODAL,
+                Server.get_device(index),
+                Server.get_PersonalitiesCount()
+        );
+        device tmp_dev = (device) tmp.open();
+        Server.set_device(index, tmp_dev);
+        Server.send_device(index);
+    }
+
+
     public Combo getCombo_port() {
         return combo_port;
     }
@@ -353,5 +365,7 @@ public class Server_Main
         Server.stop_timer();
     }
 }
+
+
 
 
