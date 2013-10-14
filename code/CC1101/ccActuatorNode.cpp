@@ -60,7 +60,7 @@ boolean CCACTUATORNODE::ccGetNewPacket()
             {                 
                 validPacket = true; 
                 _ccPacketHandler.setPacket(ccPacket);
-                 _ccPacketHandler.printPacket();     
+                _ccPacketHandler.printPacket();     
             }   
                  
         }

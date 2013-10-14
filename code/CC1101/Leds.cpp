@@ -3,9 +3,9 @@
 
 LPD6803 _ledStrip = LPD6803(NUMLEDS, DATAPIN, CLOCKPIN); // Set the first variable to the NUMBER of pixels. 20 = 20 pixels in a row
 
-int _pillarHead = 0;
-int _pillarLength = 4;
-unsigned int _pillarColor;
+//int _pillarHead = 0;
+//int _pillarLength = 4;
+//unsigned int _pillarColor;
 
 uint16_t color1;
 uint16_t color2;
@@ -29,6 +29,32 @@ void LEDS::setup()
 
 }
 
+
+void LEDS::setFirstColor(byte firstColorKey)
+{
+    Color1 = findColor(firstColorKey);
+
+}
+
+void LEDS::setSecondColor(byte secondColorKey)
+{
+    Color2 =  findColor(secondColorKey);
+
+}
+
+void LEDS::setPattern(byte patternKey)
+{
+    Pattern = patternKey;
+
+}
+
+void LEDS::setPatternState(byte state)
+{
+    patternState = state;
+
+}
+
+
 // Initializing the LED-strip
 void LEDS::ledStripInit()
 {
@@ -39,29 +65,13 @@ void LEDS::ledStripInit()
 }
 
 
-void LEDS::setPatternStripes(uint16_t color1, uint16_t color2)
+void LEDS::setOneColorForAll(uint16_t color1)
 { 
   int i = 0;
 
   while(i < _ledStrip.numPixels())
   {
       _ledStrip.setPixelColor(i, color1);  
-      ++i;  
-      _ledStrip.show();
-      _ledStrip.setPixelColor(i, color2);
-      ++i;   
-      _ledStrip.show();
-   }
- 
-}
-
-void LEDS::setColors(byte redComponent, byte blueComponent, byte greenComponent)
-{ 
-  int i = 0;
-
-  while(i < _ledStrip.numPixels())
-  {
-      _ledStrip.setPixelColor(i, Color(redComponent,blueComponent, greenComponent));  
       ++i;  
       _ledStrip.show();      
    }
@@ -199,9 +209,7 @@ uint16_t LEDS::findColor(byte colorIndex)
         case 16: // 1
             pickedColor = Color(0, 0, 0); //black
             break;
-        case 17:  //2
-            pickedColor = Color(15, 15, 0);
-            break;
+
       }
   return pickedColor;
 }

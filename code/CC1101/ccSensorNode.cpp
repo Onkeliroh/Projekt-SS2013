@@ -148,3 +148,11 @@ void CCSENSORNODE::sendRSSI(byte rawRSSI,byte nearNodeId)
 }
 
 
+void CCSENSORNODE::sendInRangePacket()
+
+{
+    _ccPacketHandler.buildPacket(SERVER_01, _id, INRANGE);
+    ccSendPacket();    
+}
+
+

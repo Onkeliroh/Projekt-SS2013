@@ -110,6 +110,33 @@ void ccPacketHandler::buildPacket(byte receiver, byte sender, byte adminKey)
 
 }
 
+
+void ccPacketHandler::buildAccelPacket(byte receiver, byte sender, byte adminKey, byte values[]) 
+
+{
+
+    clearPacket(); /// clear existing ccPacket
+
+    setReceiver(receiver); /// set given receiver
+
+    setSender(sender); /// set sender
+
+    setAdminKey(adminKey); /// set given administration key
+
+    _ccPacket.data[3] = values[0];
+    _ccPacket.data[4] = values[1];
+    _ccPacket.data[5] = values[2];
+    _ccPacket.data[6] = values[3];
+    _ccPacket.data[7] = values[4];
+    _ccPacket.data[8] = values[5];
+   
+    setBuildCounter(9); /// set build counter to next free byte's position
+
+}
+
+
+
+
 void ccPacketHandler::addToPacket(byte data)    //modified by Jenny
 
 {
@@ -508,14 +535,17 @@ byte ccPacketHandler::getPacketRSSI()
 void ccPacketHandler::printPacket()
 
 {
-    for (byte i = 0; i < _ccPacket.length; ++i)
-    {
-        //Serial.write(_ccPacket.data[i]);   //for debugging
-        Serial.print("|");
-        Serial.print(_ccPacket.data[i]);        
+    
+   for (byte i = 0; i < 5 ; ++i)  //for (byte i = 0; i < _ccPacket.length; ++i) original
+  {
+      //Serial.write(_ccPacket.data[i]);   //for debugging
+       Serial.print("|"); //for debugging
+        
 
-    }   
-    Serial.println();
+       Serial.print(_ccPacket.data[i]);        //for debugging
+        //Serial.print(";");
+  }   
+      Serial.println();
 }
 
 

@@ -7,7 +7,7 @@
 #include "cc1101.h"
 
 
-#define CCPACKETHANDLER_LENGTH          5  
+#define CCPACKETHANDLER_LENGTH          9   //definitive value 5//6 is just for testing the accel
 #define CCPACKETHANDLER_MAXLENGTH       61
 
 #define RECEIVER_ID     data[0] 
@@ -27,8 +27,6 @@
 #define GREEN           data[4]
 
 
-
-
 #define PACKNUM        data[2]
 
 
@@ -39,6 +37,7 @@
 #define TURN_RIGHT_EVENT       28
 
 #define SHAKE_EVENT            31
+#define KICK_EVENT             32
 
 #define NEAR_NODE_EVENT        51
 #define LOW_BATTERY            52
@@ -90,6 +89,8 @@ class ccPacketHandler
         void testPacket(byte receiver, byte sender);
 
         void buildPacket(byte receiver, byte sender, byte adminKey);
+
+        void buildAccelPacket(byte receiver, byte sender, byte adminKey, byte values[]);
 
         void addToPacket(byte data);
 
