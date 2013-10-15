@@ -3,10 +3,20 @@ The heard of the communication is the server. We used java\cite{java} as our pro
 Provided the users connected through the interface with a serial It takes most of the information broadcasted by the panStamps\cite{panstamp} and processes them.
 Provided the users connected through the interface with a serial port with the server-panStamp plugged in, the server takes the message with help of the RxTx-library\cite{rxtx} on a separate thread and passes the message, after receiving it, to the parser for processing and deciding.
 
+<<<<<<< HEAD
 \begin{figure}[ht]
 \centering
 \includegraphics[width=1\textwidth]{./graph/general.eps}
 \end{figure}
+=======
+\begin{figure*}[ht]
+	\centerline{\includegraphics[width=\textwidth]{./graph/general.png}}
+	\caption{UML Diagram of the Server Structure}
+	\label{fig:server_uml}
+\end{figure*}
+	
+
+>>>>>>> 6c366eb3c377531635cbd7cf71368e30f27965be
 
 \subsubsection{The Parser}
 The Parser takes messages in form of byte arrays with the length of four bytes. The message size was set fixed, due to a more convenient workflow and to limit the broadcasting overhead to a minimum. 
