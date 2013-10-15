@@ -128,6 +128,7 @@ public class device implements Serializable
         return this.trigger;
     }
 
+    //creates a new map woth all key values set to true, means device reacts to every known key
     private void create_trigger() {
         for (int i = 0; i < keys.values().length; ++i)
         {

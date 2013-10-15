@@ -3,6 +3,11 @@ The heard of the communication is the server. We used java\cite{java} as our pro
 Provided the users connected through the interface with a serial It takes most of the information broadcasted by the panStamps\cite{panstamp} and processes them.
 Provided the users connected through the interface with a serial port with the server-panStamp plugged in, the server takes the message with help of the RxTx-library\cite{rxtx} on a separate thread and passes the message, after receiving it, to the parser for processing and deciding.
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=1\textwidth]{./graph/general.eps}
+\end{figure}
+
 \subsubsection{The Parser}
 The Parser takes messages in form of byte arrays with the length of four bytes. The message size was set fixed, due to a more convenient workflow and to limit the broadcasting overhead to a minimum. 
 First the parser checks whether the length of the package is exactly four bytes and if the last byte, which is supposed to be a checksum summing the byte values of every other byte in the message, matches the checksum calculated by the server. If every think is correct the parser then searches for a known device in the device list of the server, if it found no match, it will create a new device with default settings. Once a device was found or created the parser begins to compare the second byte of the message for matching keys stored by the server. First all system\_keys will be compared. For example if the received message contains a ''52'' as second byte, the parser will then recognize this as the ''the battery is low'' key and will toggle the boolean value battery\_low of the device to true. 

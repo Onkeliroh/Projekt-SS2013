@@ -30,11 +30,11 @@ public class serial_lib
     private SerialPort serialPort;
 
     //the timeout value for connecting with the port
-    final static int TIMEOUT = 2000;
+    private final static int TIMEOUT = 2000;
 
     //some ascii values for for certain things
-    final static int SPACE_ASCII = 32;
-    final static int DASH_ASCII = 45;
+    private final static int SPACE_ASCII = 32;
+    private final static int DASH_ASCII = 45;
     private final static int NEW_LINE_ASCII = 124;
 
 

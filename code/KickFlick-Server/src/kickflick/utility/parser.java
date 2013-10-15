@@ -21,7 +21,7 @@ class parser implements SerialPortEventListener {
 		this.Server_=Serv;
 	}
 
-	void parse(byte[] arg)
+	public void parse(byte[] arg)
 	{
         Timestamp stamp = new Timestamp(new Date().getTime());
 		System.out.print( new SimpleDateFormat("HH:mm:ss").format(stamp)+" | Parser received message: ");
@@ -128,7 +128,7 @@ class parser implements SerialPortEventListener {
 		}
 	}
 
-	int find_device_sensor_node(byte address)
+	private int find_device_sensor_node(byte address)
 	{
 		for ( int i = 0; i < this.Server_.get_devices().size() ; ++i)
 			if ( this.Server_.get_device(i).get_sensor_node() == address)
@@ -137,7 +137,7 @@ class parser implements SerialPortEventListener {
 		return -1;
 	}
 
-    public int find_device_actuator_node(byte address)
+    private int find_device_actuator_node(byte address)
     {
         for ( int i = 0 ; i < this.Server_.get_devices().size() ; ++i )
             if ( this.Server_.get_device(i).get_actuator_node() == address)

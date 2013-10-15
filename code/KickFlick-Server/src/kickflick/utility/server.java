@@ -22,7 +22,6 @@ public class server extends Timer implements Serializable
 
 
     private kickflick.utility.serial_lib serial_com;
-    private setting_parser set_pars = new setting_parser();
     private final parser input_parser;
     private Timer timer;
     private server Server;
