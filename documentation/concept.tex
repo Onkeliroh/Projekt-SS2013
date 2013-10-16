@@ -1,14 +1,35 @@
 \section{Concept}
 
 \subsection{Basic Concept}
-The basic concept for this project was to create an interface, which is modular and mainly mobile. Like already explained we wanted to create a interface that has more degrees of freedom in terms of the usage than a installation which is bound to a place and therefor mobile. Due to the fact that we decided to use a more powerful server to manage all devices, we reached a certain degree of bounding to a place, while still being mobile. 
+
+The basic concept for this project was to create an interface, which is modular and mainly mobile. Like already explained we wanted to create a interface that has more degrees of freedom in terms of the usage than a installation which is bound to a place and therefore mobile. Due to the fact that we decided to use a more powerful server to manage all devices, we reached a certain degree of bounding to a place, while still being mobile. 
 So a server - client - structure is a very broad system and maybe to powerful for the target of this project. But in fact we needed a system that is highly expandable to add new features use it in another project.
 First idea was to build several independent hardware devices which communicate between each other. But the usage of a server - client based system has plenty more advantages than to build a simple hardware - communication - system:
 It is easier to implement new functionalities or to use this environment for later projects. Furthermore an administrator can change the device defaults pretty easy using the Graphical Interface.   
+
 \subsection{Hardware Concept}
-%hardware, advantages of microcontrollers, engery problems, wireless stuff
+Each node in the network has a panstamp: a small board whose core is the ATMEGA 328 P [{\url{http://www.atmel.com/devices/atmega328.aspx}}].
+Panstamps can communicate with other devices in a wireless way thanks to the transceiver CC1101. 
+
+
+
+Each sensor node has an accelerometer, which senses the acceleration experimented by an entity in each of the cardinal directions (x,y and z).
+On the sensor node board there is a circuit that monitors the voltage of the battery.
+ 
+The LiPo battery should not be over-discharged for this reduces its life.
+ 
+ 
+ 
+
+%schematic of the battery monitor circuit
+%overall schematic of a sensor node
+%schematic of a actuator node
+%architecture diagramm - physical layer
+%architecture diagramm - software layer
+%packets structure
 
 \subsection{Software Concept} 
+
 To achieve the degree of mobility, the server only needs a connected panstamp to work properly. It is also possible to put the server software on a more powerful microcontroller like a raspberry pi or some similar controller.
 The modularity is given through a number of easy configurable files. Changing behavior, appearance or the defined actions is pretty easy to do.
 
@@ -26,7 +47,7 @@ The table below shows how the different personalities will interact to each othe
 For sure there is no interaction when "Paul" gets in touch with another "Paul" (because there should only be one Paul) but by using the servers settings it is quite easy to do so. There won't be any interaction between the same personalities.
 
 So when the server has received the data of its state and his neighbourhood of the sending device it will send a new pattern for the LEDs chain actuator when the situation of the sending device has changed.
-When the device hadn't send its data packet for two minutes a warning will pop up in the graphical interface. Apparently this will happen when the device is out range of the sending area of the panstamp antennas (approximately ~50 metres).
+When the device hadn't send its data packet for two minutes a warning will pop up in the graphical interface. Apparently this will happen when the device is out of range of the sending area of the panstamp antennas (approximately ~50 metres).
 This very functionality is illustrated in the following graphic.
 % INSERT GRAPHICAL PICTURE OF FUNCTIONALITY OF THE SERVER-CLIENT-SYSTEM       
  

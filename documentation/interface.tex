@@ -1,18 +1,33 @@
 \subsection{Graphical User Interface}
+
+%%Insert some paper citation that indicates user interfaces should be simple and blabla
+%The User Interface provides the necessary information about the registered devices in a simple yet effective way;therefore, it is constituted by just two parts
+
+The User Interface is constituted by two parts: the Main Window and the Configuration Dialog.
+
 \subsubsection{Main Window}
-The User Interface is meant to provide the user with all necessary informations about the registered devices without showing to much information at once. Therefore the main window consists of two parts. 
-The first part is form connecting and disconnecting the server panstamp. While attempting to establish a connection, the users can select every serial port with an attached device as well as the baut-rate. Once the Java-Server is connected, the Connect-Buttons label changes it's text and turns into a Disconnect-Button. This option is accessable at all times, so that the user can disconnect/reconnect at any time. For example if one decides to change the used serial port. 
-If the server did not recocnise a device on any of the serial ports. The connect button will be unavailable. This is realized through disabling the button. To prevent the user from constantly restarting the server, we implemented a refresh button, which can be pressed at any time and if this time a device on one of the serial ports was detected it/they will be displayed in the according combobox for selection and connection.
 
+The Main Window has two sections; the first allows the connection set-up with the panstamp server while the second displays the overall state of each entity in the network (see Figure ~\ref{java-server-main}). 
 
-The second part displays a table of all the known devices, their state and a timestamp as well as their personalities name. This table updates itself with a fixed frequency, to ensure that for example every new device and/or every change in state is visible to the user. The update process was realized through a timed task provided by the swt-library. The frequency is configurable. More information in the interface architecture section. %insert link here
+To establish a connection, the user has to select the serial port, which the panstamp is attached to, and the corresponding baud-rate. Once the connection is established, the "connect" button is substituted by a "disconnect" button.The user can disconnect and connect the panstamp at any time. 
+% For example if one decides to change the used seria port. 
+If the Java server does not detect a device in any of the serial ports, the "connect" button will be unavailable (i.e. grayed out). To prevent the user from constantly restarting the server, we implemented a refresh button, which can be pressed at any time. When a device is finally detected, both options (connect and disconnect) will be available for that device.
+
+The second section shows a table with the overall state of each entity in the network.
+Among the data displayed are: the name of the entity's personality, the entity's status and a timestamp.
+%explain each possible status (standby, idle, etc)
+%explain what the timestamp is for
+The table information is updated periodically to reflect new detected entities in the network and changes in 
+the entities' status;additionally, the table's refresh rate is configurable.  
+%I'm sleepy, I'll resume this tomorrow Thursday
+%The update process was realized through a timed task provided by the swt-library. The frequency is configurable. More information in the interface architecture section. %insert link here
 
 \begin{figure}[h!]
  \centering
  \includegraphics[width= 0.5\textwidth, clip=true  ,keepaspectratio=true]{./pic/java-server-main.png}
  % java-server-main.png: 0x0 pixel, 0dpi, nanxnan cm, bb=
  \caption{Main Window}
- \label{fig:java-server-main}
+ \label{java-server-main}
 \end{figure}
 
 
@@ -42,7 +57,7 @@ The second tab shows in a checkbox the current state of the device. The state ca
  \includegraphics[width= 0.5\textwidth, clip=true  ,keepaspectratio=true]{./pic/java-server-config02.png}
  % java-server-main.png: 0x0 pixel, 0dpi, nanxnan cm, bb=
  \caption{Configuration Dialog, 2nd Tab}
- \label{fig:java-server-config01}
+ \label{fig:java-server-config02}
 \end{figure}
 
 
@@ -55,7 +70,7 @@ After the user finished the configuration and wants to write the new settings to
  \includegraphics[width= 0.5\textwidth, clip=true  ,keepaspectratio=true]{./pic/java-server-config03.png}
  % java-server-main.png: 0x0 pixel, 0dpi, nanxnan cm, bb=
  \caption{Configuration Dialog, 3rd Tab}
- \label{fig:java-server-config01}
+ \label{fig:java-server-config03}
 \end{figure}
 
 \subsubsection{Interface Archticture}
