@@ -7,20 +7,18 @@ The User Interface is constituted by two parts: the Main Window and the Configur
 
 \subsubsection{Main Window}
 
-The Main Window has two sections; the first allows the connection set-up with the panstamp server while the second displays the overall state of each entity in the network (see Figure ~\ref{java-server-main}). 
+The Main Window has two sections: the first allows the connection set-up with the panstamp server while the second displays the overall state of each entity in the network (see Figure ~\ref{java-server-main}). 
 
-To establish a connection, the user has to select the serial port, which the panstamp is attached to, and the corresponding baud-rate. Once the connection is established, the "connect" button is substituted by a "disconnect" button.The user can disconnect and connect the panstamp at any time. 
+To establish a connection, the user has to select the serial port, which the panstamp is attached to, and the corresponding baud-rate. Once the connection is set up, the "connect" button is substituted by a "disconnect" button. The user can disconnect and connect the panstamp at any time. 
 % For example if one decides to change the used seria port. 
 If the Java server does not detect a device in any of the serial ports, the "connect" button will be unavailable (i.e. grayed out). To prevent the user from constantly restarting the server, we implemented a refresh button, which can be pressed at any time. When a device is finally detected, both options (connect and disconnect) will be available for that device.
 
-The second section shows a table with the overall state of each entity in the network.
+The second section of the Main Window shows a table with the overall state of each entity in the network.
 Among the data displayed are: the name of the entity's personality, the entity's status and a timestamp.
 %explain each possible status (standby, idle, etc)
 %explain what the timestamp is for
-The table information is updated periodically to reflect new detected entities in the network and changes in 
-the entities' status;additionally, the table's refresh rate is configurable.  
-%I'm sleepy, I'll resume this tomorrow Thursday
-%The update process was realized through a timed task provided by the swt-library. The frequency is configurable. More information in the interface architecture section. %insert link here
+To reflect new detected entities in the network and changes in the entities' status, the information on the table is periodically updated; the table's refresh rate is configurable. 
+%More information in the interface architecture section. %insert link here
 
 \begin{figure}[h!]
  \centering
@@ -30,16 +28,18 @@ the entities' status;additionally, the table's refresh rate is configurable.
  \label{java-server-main}
 \end{figure}
 
-
-
-If the server got at least one device, the user can select it in the device-table and open a configuration dialog by pressing either the configuration button, on the bottom of the table, or double clicking on the selected table item. A configuration dialog will then open, were this particular device and its personality can be altered.
+If the server detects an entity in the network, the user can select it in the device-table and open a configuration dialog by either pressing the configuration button (located on the bottom of the table) or double clicking on the intended table's item. A configuration dialog will then be opened where this particular device and its personality can be altered.
 
 \subsubsection{Configuration Dialog}
-Once the user decided to configure on device, this dialog opens and provides him, on three tabs, with all the necessary informations and options to configure the device and its personality full scope. %anders formulieren%
 
-The user can decide whether he wants use a preconfigured personality for this particular device or not. A preconfigured personality will, if selected, change all settings to its own settings and thereby overwrite, temporarly, ale previous settings. No matter how the users decides, he can then begin configuring the device and personality. The configuration process can be determinated every time by pressing the operation systems colse button in one corner of the dialog window. No settings will then be written.
+The Configuration Dialog provides all the information about the selected entity's state and allows the configuration of the entity's personality. 
 
-On the first tab, labeled ''Basic'', the basic informations like the name of the personality and the addresses of both nodes are shown. Below the user finds a table with all known action keys, and whether the device will react to this particularly key or not. The reaction willingness is hereby represented by a checkbox showing a hock, if a reaction will happen and no hock when there will be no reaction to this key. The user can change every key value as he wishes.
+The user can customize a personality or select one among the predefined personalities. But if the user creates a personality and then selects a predefined one, all the changes made so far will be overridden by the predefined personality. 
+
+To cancel all changes, the user has to click the ''close'' button located on the bottom-right corner of the Dialog Window (see Figure ~\ref{fig:java-server-config01}).   
+
+In the Configuration Dialog, the configurable settings of a personality are distributed in 3 different tabs. The tab ''Basic'' (see Figure ~\ref{fig:java-server-config01}) contains the personality's name, the addresses of the two nodes that constitute the entity and a table with all the possible action keys. Only the checked keys will be enabled in the entity; that is, the entity will only react to a certain action key if the latter has a check next to it in the table. Every key can be enabled and disabled by the user. 
+
 
 \begin{figure}[h!]
  \centering
