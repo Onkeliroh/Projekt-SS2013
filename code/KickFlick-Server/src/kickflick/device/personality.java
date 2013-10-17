@@ -1,5 +1,6 @@
 package kickflick.device;
 
+import kickflick.utility.DefaultHashMap;
 import kickflick.utility.color;
 import kickflick.utility.keys;
 import kickflick.utility.pattern;
@@ -13,30 +14,47 @@ public class personality implements Serializable
     private String Name_;
     private short State_ = 0;
     public final int state_count = 4;
-//    private byte[] Color1_ = new byte[4];
-//    private byte[] Color2_ = new byte[4];
-//    private byte[] pattern_ = new byte[4];
-    private Map<keys, reaction[]> Reactions_ = new HashMap<keys, reaction[]>();
+    private reaction standby = new reaction(color.BLUE,color.BLACK,pattern.FADE);
+    private reaction current_reaction = null;
+    private Map<keys, reaction[]> Reactions_;
     private Map<String, reaction> neighbours_ = new HashMap<String, reaction>();
+
+    private String[] state_names = {"Out of Range","Standby", "First contact", "Playing", "Playing (hard)"};
 
     //Constructors
 
     // default
     public personality() {
+        create_reaction_map();
+
         this.Name_ = presetpersonalities.Paul.get_personality().Name_;
         this.State_ = presetpersonalities.Paul.get_personality().State_;
         this.Reactions_ = presetpersonalities.Paul.get_personality().Reactions_;
         this.neighbours_ = presetpersonalities.Paul.get_personality().neighbours_;
     }
 
-    public personality(String name, short state, HashMap<keys, reaction[]> tmp_reactions, HashMap<String, reaction> neighbours) {
+    public personality(String name, short state, DefaultHashMap<keys, reaction[]> tmp_reactions, HashMap<String, reaction> neighbours, reaction stand) {
+        create_reaction_map();
+
         this.Name_ = name;
         this.State_ = state;
-        this.reactions = tmp_reactions;
+        this.Reactions_ = tmp_reactions;
+        this.neighbours_ = neighbours;
+        this.standby = stand;
+    }
+
+    public personality(String name, short state, DefaultHashMap<keys, reaction[]> tmp_reactions, HashMap<String, reaction> neighbours) {
+        create_reaction_map();
+
+        this.Name_ = name;
+        this.State_ = state;
+        this.Reactions_ = tmp_reactions;
         this.neighbours_ = neighbours;
     }
 
     public personality(personality pers) {
+        create_reaction_map();
+
         this.Name_ = pers.Name_;
         this.State_ = pers.State_;
         this.Reactions_ = pers.Reactions_;
@@ -54,41 +72,9 @@ public class personality implements Serializable
             this.State_ = state;
     }
 
-    //sets the color of the current state
-    public void set_Color1(byte Color) {
-        //this.Color_.set_Color(Color.get_Color());
-        this.Color1_[this.State_] = Color;
-    }
-
-    public void set_Color2(byte Color) {
-        //this.Color_.set_Color(Color.get_Color());
-        this.Color2_[this.State_] = Color;
-    }
-
-    //sets the color of a state
-    public void set_Color1(byte Color, short state) {
-        this.Color1_[state] = Color;
-    }
-
-    //sets the color of a state
-    public void set_Color2(byte Color, short state) {
-        this.Color2_[state] = Color;
-    }
-
-    public void set_pattern(byte pattern) {
-        this.pattern_[this.State_] = pattern;
-    }
-
-    public void set_pattern(byte pattern, short state) {
-        this.pattern_[state] = pattern;
-    }
-
-    public void set_pattern(byte[] pattern) {
-        this.pattern_ = pattern;
-    }
-
-    public void set_pattern(String PersName, reaction react) {
-        this.neighbours_.put(PersName, react);
+    public void set_standby (reaction tmp)
+    {
+        this.standby = tmp;
     }
 
     //Getter
@@ -101,62 +87,87 @@ public class personality implements Serializable
         return this.State_;
     }
 
-    public byte get_Color1() {
-        return this.Color1_[this.State_];
-    }
-
-    public byte get_Color2() {
-        return this.Color2_[this.State_];
-    }
-
-    public byte get_Color1(short state) {
-        return this.Color1_[state];
-    }
-
-    public byte get_Color2(short state) {
-        return this.Color2_[state];
-    }
-
-    public byte get_pattern(short state) {
-        return this.pattern_[state];
-    }
-
-    public byte get_pattern() {
-        return this.pattern_[this.State_];
-    }
+//    public byte get_Color1() {
+//        return this.Color1_[this.State_];
+//    }
+//
+//    public byte get_Color2() {
+//        return this.Color2_[this.State_];
+//    }
+//
+//    public byte get_Color1(short state) {
+//        return this.Color1_[state];
+//    }
+//
+//    public byte get_Color2(short state) {
+//        return this.Color2_[state];
+//    }
+//
+//    public byte get_pattern(short state) {
+//        return this.pattern_[state];
+//    }
+//
+//    public byte get_pattern() {
+//        return this.pattern_[this.State_];
+//    }
 
     public String get_state_name() {
-        return this.get_state_name(this.State_);
+        return this.state_names[this.State_-1];
     }
 
     public String get_state_name(short state) {
-        switch (state)
-        {
-            case -1:
-                return "Out of Range";
-            case 0:
-                return "Standbye";
-            case 1:
-                return "First contact";
-            case 2:
-                return "Playing ";
-            case 3:
-                return "Playing (hard)";
-            default:
-                return "unknown";
-        }
+        if (check_state(state))
+            return this.state_names[state-1];
+        return "unknown";
+    }
+
+    public String[] get_state_names()
+    {
+        return this.state_names;
     }
 
     public Map<String, reaction> get_Neighbours() {
         return this.neighbours_;
     }
 
-    public byte[] get_neighbor(String str) {
+    public reaction get_reaction(keys key)
+    {
+        return get_reaction(key, this.State_);
+    }
+
+    public reaction get_reaction(keys key, int state)
+    {
+        if ( check_state(state) )
+        {
+            if (state > 0)
+            {
+                for (Map.Entry e : this.Reactions_.entrySet())
+                {
+                    if ( e.getKey().equals(key) )
+                        return ((reaction[])e.getValue())[state];
+                }
+                return this.Reactions_.get(key)[state];
+            }
+            else if (state == 0)
+            {
+                return this.standby;
+            }
+        }
+        else
+        {
+            System.err.println("Personality get_reaction of " + this.Name_ + " wrong state");
+            return null;
+        }
+    }
+
+
+
+    public reaction get_neighbor(String str) {
         for (Map.Entry e : neighbours_.entrySet())
             if (e.getKey().equals(str))
-                return (byte[]) e.getValue();
+                return (reaction) e.getValue();
         //if the string was'nt found in the map as a key, return default values
-        return new byte[]{pattern.BLINK.get_key(), color.BLUE.get_key(), color.GREEN_BRIGHT.get_key()};
+        return new reaction(color.GREEN_BRIGHT, color.BLUE, pattern.BLINK);
     }
 
     public void inc_state() {
@@ -169,15 +180,17 @@ public class personality implements Serializable
         this.set_State(--this.State_);
     }
 
-    private create_reaction_map()
+    public  boolean check_state(int state)
     {
-        int i = 0;
-        for ( keys k : keys.values())
-        {
-            reaction[] tmp_reaction = new reaction[4];
-            tmp_reaction[0] = new reaction(presetpersonalities.Paul.get_personality().)
-            this.reactions.put(k,new reaction[i]())
-        }
+        if (state < 0 || state > this.state_count)
+            return false;
+        return true;
+    }
+
+    private void create_reaction_map()
+    {
+        //ToDo set default value somehow
+        this.Reactions_ = new DefaultHashMap<keys, reaction[]>(new reaction[4]);
     }
 
 }

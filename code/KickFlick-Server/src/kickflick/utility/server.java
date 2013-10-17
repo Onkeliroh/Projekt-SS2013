@@ -1,6 +1,7 @@
 package kickflick.utility;
 
 import kickflick.device.device;
+import kickflick.device.reaction;
 import kickflick.gui.Server_Main;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -125,16 +126,27 @@ public class server extends Timer implements Serializable
         }
     }
 
-    public void send_device(int index) {
-        send_device(this.get_device(index));
-    }
+//    public void send_device(int index) {
+//        send_device(this.get_device(index));
+//    }
 
 
     //creates a byte array which will then be send to the server-panstamp
-    public void send_device(device d) {
+//    public void send_device(device d) {
+//        byte[] msg = new byte[4];
+//        msg[0] = d.get_actuator_node();
+//        msg[1] = d.get_Personality().get;
+//        msg[2] = d.get_Personality().get_Color1();
+//        msg[3] = d.get_Personality().get_Color2();
+//
+//        this.send_msg(msg);
+//    }
+
+    public void send_reaction(reaction react)
+    {
         byte[] msg = new byte[4];
         msg[0] = d.get_actuator_node();
-        msg[1] = d.get_Personality().get_pattern();
+        msg[1] = d.get_Personality().get;
         msg[2] = d.get_Personality().get_Color1();
         msg[3] = d.get_Personality().get_Color2();
 
@@ -144,11 +156,11 @@ public class server extends Timer implements Serializable
     public void send_neighbor(device d, device neighbor) {
         //takes the neighbor values and puts them in to a byte array, which is to be send
         byte[] msg = new byte[4];
-        byte[] neighbor_pers = d.get_Personality().get_neighbor(neighbor.get_Personality().get_Name());
+        reaction neighbor_pers = d.get_Personality().get_neighbor(neighbor.get_Personality().get_Name());
         msg[0] = d.get_actuator_node();
-        msg[1] = neighbor_pers[0];
-        msg[2] = neighbor_pers[1];
-        msg[3] = neighbor_pers[2];
+        msg[1] = neighbor_pers.get_pattern().get_key();
+        msg[2] = neighbor_pers.get_color1().get_key();
+        msg[3] = neighbor_pers.get_color2().get_key();
 
         this.send_msg(msg);
 
@@ -177,7 +189,7 @@ public class server extends Timer implements Serializable
                                 System.out.println("Server Timer: set device '" + Server.devices.get(i).get_Personality().get_Name() + "\t Id: " + i + "' to default state.");
                                 Server.devices.get(i).get_Personality().set_State((short) 0);
                                 Server.devices.get(i).set_new_timestamp();
-                                Server.send_device(i);
+//                                Server.send_device(i);
                             }
                     }
                     if (stamp.getTime() - Server.devices.get(i).get_timestamp_last_heard_of().getTime() >= OUT_OF_RANGE)

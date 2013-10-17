@@ -1,5 +1,6 @@
 package kickflick.device;
 
+import kickflick.utility.DefaultHashMap;
 import kickflick.utility.color;
 import kickflick.utility.keys;
 import kickflick.utility.pattern;
@@ -8,23 +9,19 @@ import java.util.HashMap;
 
 public enum presetpersonalities
 {
+    //TODO check for durrations
     Paul(new personality(
             "Paul",
             (short) 0,
 //            new byte[]{color.BLUE.get_key(), color.RED.get_key(), color.GREEN.get_key(), color.ORANGE.get_key()},    //Color 1
 //            new byte[]{color.BLUE.get_key(), color.RED.get_key(), color.GREEN.get_key(), color.ORANGE.get_key()},    //Color 2
 //            new byte[]{pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.RAINBOW.get_key()},     //Pattern
-            new HashMap<keys, reaction[]>()
-            {
-                {
-                    put(keys.kicked, new reaction[]{
+            new DefaultHashMap<keys, reaction[]>(new reaction[]{
                         new reaction(color.BLUE,color.BLUE,pattern.BLINK),
                         new reaction(color.RED,color.RED,pattern.BLINK),
                         new reaction(color.GREEN,color.GREEN,pattern.BLINK),
                         new reaction(color.ORANGE,color.ORANGE,pattern.RAINBOW)
-                    });
-                }
-            },
+                }),
             new HashMap<String, reaction>()
             {
                 {
