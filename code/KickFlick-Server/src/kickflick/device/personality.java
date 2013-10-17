@@ -1,6 +1,7 @@
 package kickflick.device;
 
 import kickflick.utility.color;
+import kickflick.utility.keys;
 import kickflick.utility.pattern;
 
 import java.io.Serializable;
@@ -12,10 +13,11 @@ public class personality implements Serializable
     private String Name_;
     private short State_ = 0;
     public final int state_count = 4;
-    private byte[] Color1_ = new byte[4];
-    private byte[] Color2_ = new byte[4];
-    private byte[] pattern_ = new byte[4];
-    private Map<String, byte[]> neighbours_ = new HashMap<String, byte[]>();
+//    private byte[] Color1_ = new byte[4];
+//    private byte[] Color2_ = new byte[4];
+//    private byte[] pattern_ = new byte[4];
+    private Map<keys, reaction[]> Reactions_ = new HashMap<keys, reaction[]>();
+    private Map<String, reaction> neighbours_ = new HashMap<String, reaction>();
 
     //Constructors
 
@@ -23,51 +25,21 @@ public class personality implements Serializable
     public personality() {
         this.Name_ = presetpersonalities.Paul.get_personality().Name_;
         this.State_ = presetpersonalities.Paul.get_personality().State_;
-        this.Color1_ = presetpersonalities.Paul.get_personality().Color1_;
-        this.Color2_ = presetpersonalities.Paul.get_personality().Color2_;
-        this.pattern_ = presetpersonalities.Paul.get_personality().pattern_;
+        this.Reactions_ = presetpersonalities.Paul.get_personality().Reactions_;
         this.neighbours_ = presetpersonalities.Paul.get_personality().neighbours_;
     }
 
-    public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp, byte[] patterns, HashMap<String, byte[]> neighbours) {
+    public personality(String name, short state, HashMap<keys, reaction[]> tmp_reactions, HashMap<String, reaction> neighbours) {
         this.Name_ = name;
         this.State_ = state;
-        this.Color1_ = color1_tmp;
-        this.Color2_ = color2_tmp;
-        this.pattern_ = patterns;
+        this.reactions = tmp_reactions;
         this.neighbours_ = neighbours;
-    }
-
-    public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp, byte[] patterns) {
-        this.Name_ = name;
-        this.State_ = state;
-        this.Color1_ = color1_tmp;
-        this.Color2_ = color2_tmp;
-        this.pattern_ = patterns;
-    }
-
-    public personality(String name, short state, byte[] color1_tmp, byte[] color2_tmp) {
-        this.Name_ = name;
-        this.State_ = state;
-        this.Color1_ = color1_tmp;
-        this.Color2_ = color2_tmp;
-    }
-
-    public personality(String name, short state) {
-        this.Name_ = name;
-        this.State_ = state;
-    }
-
-    public personality(String name) {
-        this.Name_ = name;
     }
 
     public personality(personality pers) {
         this.Name_ = pers.Name_;
         this.State_ = pers.State_;
-        this.Color1_ = pers.Color1_;
-        this.Color2_ = pers.Color2_;
-        this.pattern_ = pers.pattern_;
+        this.Reactions_ = pers.Reactions_;
     }
 
 
@@ -115,8 +87,8 @@ public class personality implements Serializable
         this.pattern_ = pattern;
     }
 
-    public void set_pattern(String PersName, byte[] PatternColor) {
-        this.neighbours_.put(PersName, PatternColor);
+    public void set_pattern(String PersName, reaction react) {
+        this.neighbours_.put(PersName, react);
     }
 
     //Getter
@@ -175,7 +147,7 @@ public class personality implements Serializable
         }
     }
 
-    public Map<String, byte[]> get_Neighbours() {
+    public Map<String, reaction> get_Neighbours() {
         return this.neighbours_;
     }
 
@@ -195,6 +167,17 @@ public class personality implements Serializable
 
     public void dec_state() {
         this.set_State(--this.State_);
+    }
+
+    private create_reaction_map()
+    {
+        int i = 0;
+        for ( keys k : keys.values())
+        {
+            reaction[] tmp_reaction = new reaction[4];
+            tmp_reaction[0] = new reaction(presetpersonalities.Paul.get_personality().)
+            this.reactions.put(k,new reaction[i]())
+        }
     }
 
 }

@@ -415,7 +415,8 @@ public class Device_Config_Dialog extends Dialog
                     if (!Device.get_Personality().get_Neighbours().containsKey(str))
                     {
                         Device.get_Personality().get_Neighbours().put(str, settings);
-                    } else //if personality allready exsistsgit
+                    }
+                    else //if personality allready exsistsgit
                     {
                         for (Map.Entry entry : Device.get_Personality().get_Neighbours().entrySet())
                             if (entry.getKey().equals(str))
