@@ -38,7 +38,7 @@ The user can customize a personality or select one among the predefined personal
 
 To cancel all changes, the user has to click the ''close'' button located on the bottom-right corner of the Dialog Window (see Figure ~\ref{fig:java-server-config01}).   
 
-In the Configuration Dialog, the configurable settings of a personality are distributed in 3 different tabs. The tab ''Basic'' (see Figure ~\ref{fig:java-server-config01}) contains the personality's name, the addresses of the two nodes that constitute the entity and a table with all the possible action keys. Only the checked keys will be enabled in the entity; that is, the entity will only react to a certain action key if the latter has a check next to it in the table. Every key can be enabled and disabled by the user. 
+In the Configuration Dialog, the personality's settings are distributed in 3 different tabs. The tab ''Basic'' (see Figure ~\ref{fig:java-server-config01}) contains the personality's name, the addresses of the two nodes that constitute the entity and a table with all the possible action keys. Only the checked keys will be enabled in the entity; that is, the entity will only react to a certain action key if the latter has a check next to it in the table. Every key can be enabled and disabled by the user. 
 
 
 \begin{figure}[h!]
@@ -49,7 +49,7 @@ In the Configuration Dialog, the configurable settings of a personality are dist
  \label{fig:java-server-config01}
 \end{figure}
 
-The second tab shows in a checkbox the current state of the device. The state can be changed by the user. Below the checkbox a table with all seperate states of the personality is shown and one can change the pattern and both colors for a particular state. 
+The ''State-Options'' tab shows in a checkbox the current state of the personality, which can be changed by the user. Below the checkbox, a table with all the personality's states is displayed. Here, the user can change the pattern and both colors of a particular state (see Figure ~\ref{fig:java-server-config02}). 
 
 
 \begin{figure}[h!]
@@ -61,10 +61,12 @@ The second tab shows in a checkbox the current state of the device. The state ca
 \end{figure}
 
 
-The third tab displays the actions performed when a neighbor is detected. The table shows every known personality, known by the server at this time. Except for the preset personalities. The preset personalities already know their reaction to the other preset personalities, even if they are yet unknown by the server.
-The user can once again configure the pattern and colors of this neighbor reaction. Those settings will then be transmitted to both devices, the one who noticed the neighbor and the neighbor.
+Finally, the third tab labelled ''Neighbor'' displays the actions to be performed when the entity detects a neighbor (see Figure ~\ref{fig:java-server-config03}). The table shows the personality of each entity that has been detected by the server. However, if an entity has a preset personality, it will not be displayed in this tab since its reaction towards a neighbour is already defined and is not configurable. 
 
-After the user finished the configuration and wants to write the new settings to the device, he will need to first press the apply button and then the save and close button to actually writhe the settings. Otherwise if just the save and close button was pressed, no changes will be written and the device remains like before the configuration process.
+In this tab, the user can set the pattern and colors that the entity and its found neighbor will display. For instance, according to the settings in Figure ~\ref{fig:java-server-config03}, if the entity ''Mama'' finds ''Tanja'', both entities will exhibit a blink pattern with white and black. On the other hand, when ''Tanja'' finds ''Mama'', the two entities will again display a blink pattern but with different colors, namely red and blue. 
+
+In order to save the changes made to the personality's settings, the user has to first press the ''apply'' and then the ''save|close'' button. Otherwise, if just the ''save|close'' button were pressed, no changes would be written and the device would keep the settings it had before the configuration process.
+
 \begin{figure}[h!]
  \centering
  \includegraphics[width= 0.5\textwidth, clip=true  ,keepaspectratio=true]{./pic/java-server-config03.png}
@@ -73,17 +75,21 @@ After the user finished the configuration and wants to write the new settings to
  \label{fig:java-server-config03}
 \end{figure}
 
-\subsubsection{Interface Archticture}
-The inferface was realised with the swt widget toolkit from eclipse. %insert cite
-The main window uses a swt timerevent to periodicly update the device table. Every eventbased action, like button clicks or selection were also realized with the build-in eventlistener structure of the swt toolkit. %insert cite again
+\subsubsection{Interface Architecture}
+The interface was created with the swt widget toolkit from eclipse. %insert cite
+To periodically update the device table, the main window uses a swt timerevent. Every event-based action, like button clicks or selection were also implemented with the built-in event-listener structure of the swt toolkit. %insert cite again
 
-When the dialog is opened, the device will be passed as a parameter in the constructor, the dialog will then create the interface and afterwards read the settings of the device. 
-The configuration will have no effect on the device at all, except the user says so. All changes will only be written when the apply button is pressed and even then a temporally device will be created to first save all settings in the instance. If the user decides not to use the new settings and wants them to ignored, he then needs to press the windows close button. The close action will pass a null pointer to the main window instance, signaling that no changes were commited.
-If, on the other hand, the user wants, after applying, to overwritte the device with the new settings he needs to close the configuration dialog by pressing the save and close button. This will pass a device instance to the main window with all settings and therefor overwrite the previous settings of the device.
+When the dialog is opened, the entity will be passed as a parameter in the constructor, the dialog will then create the interface and afterwards read the entity's settings %Daniel, what do you mean by dialog here? The Configuration Dialog?
 
-The configuration dialog widgets will be filled on the creation of the dialog with all available data, e.g. reaction key names. After the interface is build, the device settings will be set. This happens by for example setting the right selection for a combobox.
+After changing one or more settings, if the user presses the ''apply'' button, these are kept in a temporal device. Then, if the ''save|close'' button is pressed, the new settings will be stored in a device instance that will be passed to the Main Window. When the user wants to discard the changes instead, he or she has to press the ''close'' button; the close action will pass a null pointer to the Main Window instance to indicate that no changes were committed. 
 
-The neighbor and state tables are dynamicly created. This way one can decide to add more states and the number of possible neighbors is theoraticly unlimited.
+%The configuration will have no effect on the device at all, except the user says so. All changes will only be written when the apply button is pressed and even then a %temporally device will be created to first save all settings in the instance. If the user decides not to use the new settings and wants them to ignored, he then needs %to press the windows close button. The close action will pass a null pointer to the main window instance, signaling that no changes were commited.
+%If, on the other hand, the user wants, after applying, to overwritte the device with the new settings he needs to close the configuration dialog by pressing the save %and close button. This will pass a device instance to the main window with all settings and therefor overwrite the previous settings of the device.
+
+The Configuration Dialog widgets will be filled out on the creation of the dialog with all available data, e.g. reaction key names. After the interface is built, the device settings will be set. For example, this happens by setting the right selection for a combobox.
+%I don't understand this paragraph :-(
+
+The neighbor and state's tables are dynamically created; therefore, one can add more states and the number of possible neighbors is theoretically unlimited.
 
 
 % vim: spell spelllang=en_gb 
