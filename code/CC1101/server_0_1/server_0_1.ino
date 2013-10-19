@@ -51,10 +51,10 @@ void loop()
         
           if(_server.ccGetNewPacket())
           { 
-              //_server.ccHandle();
+              _server.ccHandle();
 //              _server.ledBlink(); 
 //              
-             _server.ccPrintPacket();  //For debugging
+//             _server.ccPrintPacket();  //For debugging
 //              testVariable = !testVariable;
 //              if(testVariable)
 //              {

@@ -5,6 +5,8 @@
 #include "ccNode.h"
 #include "analogComp.h"
 
+#define RSSI_OFFSET 74 
+
 
 class CCSENSORNODE: public CCNODE
 {
@@ -19,6 +21,10 @@ class CCSENSORNODE: public CCNODE
                 boolean ccGetNewPacket(void);
                 void ccHandle();
                 boolean isPacketsSender();
+                byte neighborSender();
+                int calculateTrueRSSI(byte rawRSSI);
+                void storeNeighborRSSI();
+                boolean neighborIsClose(int neighborThreshold);
                 
                 //REPORTS TO THE SERVER
                 void reportShakeEvent();
@@ -27,6 +33,9 @@ class CCSENSORNODE: public CCNODE
                 void reportLowBatt();
                 void sendRSSI(byte rawRSSI,byte nearNodeId);  
                 void sendInRangePacket();
+ 
+        private:
+                int _neighborRSSI;
                 
 };
 

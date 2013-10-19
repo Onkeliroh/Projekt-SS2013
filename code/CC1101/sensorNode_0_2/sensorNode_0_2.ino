@@ -3,8 +3,14 @@
 #include "ccSensorNode.h"
 #include "accel.h"
 
-#define SENSOR_NODE_ID 2
-#define TWIN_NODE_ID 3
+#define SENSOR_NODE_ID              2
+#define TWIN_NODE_ID                3
+
+#define KIDNEY_NEIGHBOR             4
+#define KIDNEY_RSSI_THRESHOLD     200
+
+#define EGG_NEIGHBOR                6
+#define EGG_RSSI_THRESHOLD        -50     //PEAR threshold for EGG is -55
 
 #define ACCEL_CHECK_PERIOD         22
 #define SHAKE_INTERVAL           1500 
@@ -103,10 +109,33 @@ void loop()
         {
             if(!_sensorNode.isPacketsSender())
             {
-                _sensorNode.reportRSSI();
-                
-               updateLastMssgTimestamp();
+//                _sensorNode.reportRSSI();   
+              
+              
+               _sensorNode.storeNeighborRSSI();    
+              
+               if(_sensorNode.neighborSender() == KIDNEY_NEIGHBOR) 
+               {
+                   if(_sensorNode.neighborIsClose(KIDNEY_RSSI_THRESHOLD))
+                   {
+                       _sensorNode.reportRSSI(); 
+                       updateLastMssgTimestamp();
 
+                   } 
+               }
+               else
+               {
+                   if(_sensorNode.neighborSender() == EGG_NEIGHBOR) 
+                   {
+                       if(_sensorNode.neighborIsClose(EGG_RSSI_THRESHOLD))
+                       {
+                           _sensorNode.reportRSSI(); 
+                           updateLastMssgTimestamp();
+                       } 
+                    } 
+               }
+                              
+               
             }          
         }
         

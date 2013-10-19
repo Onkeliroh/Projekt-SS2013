@@ -10,6 +10,7 @@ CCSENSORNODE::CCSENSORNODE(byte id, byte twinNode)
     _id = id;
     _twinNode = twinNode;
     _syncWord = (19,9);    
+    _neighborRSSI = 0;
               
 }
 
@@ -106,6 +107,60 @@ boolean CCSENSORNODE::isPacketsSender()
        return true;
    else
        return false;
+}
+
+byte CCSENSORNODE::neighborSender()
+
+{   
+    return _ccPacketHandler.getPacketSender();   
+}
+
+
+
+int CCSENSORNODE::calculateTrueRSSI(byte rawRSSI)
+
+{
+    int rssi_dBm;
+
+    if (rawRSSI >= 128)
+    {
+        rssi_dBm = (((int)rawRSSI - 256) / 2) - RSSI_OFFSET;
+    }
+    else
+    {
+        rssi_dBm = ((int)rawRSSI / 2) - RSSI_OFFSET;
+    }
+    
+    return rssi_dBm;  
+}
+
+void CCSENSORNODE::storeNeighborRSSI()
+{
+    CCPACKET ccPacket = _ccPacketHandler.getPacket();
+    byte rssi_dBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
+    byte emisorID = ccPacket.NEAR_NODE_ID;
+
+    byte rawRSSI =  _ccPacketHandler.getPacketRSSI();
+
+    _neighborRSSI = calculateTrueRSSI(rawRSSI);
+
+     Serial.print("NeighborRSSI " );
+     Serial.println(_neighborRSSI);
+
+}
+
+boolean CCSENSORNODE::neighborIsClose(int neighborThreshold)
+{
+
+    boolean neighborClose = false;
+
+    if(_neighborRSSI >= neighborThreshold)
+    {
+        neighborClose = true;
+    }
+    
+    return neighborClose;
+
 }
 
 void CCSENSORNODE::reportShakeEvent()
