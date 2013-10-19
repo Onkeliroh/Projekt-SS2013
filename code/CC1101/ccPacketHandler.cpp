@@ -33,15 +33,15 @@ void ccPacketHandler::clearPacket()
 
 {
 
-    for (byte i = 0; i < _ccPacket.length; ++i) /// fill packet with zeros
+    for (byte i = 0; i < _ccPacket.length; ++i) 
 
     {
 
-        _ccPacket.data[i] = 0; /// set i-th byte := 0 for each byte in the packet
+        _ccPacket.data[i] = 0; 
 
     }
 
-    setBuildCounter(0); /// build counter reset to first byte of ccPacket
+    setBuildCounter(0); 
 
 }
 
@@ -51,21 +51,21 @@ void ccPacketHandler::testPacket(byte sender)
 
 {
 
-    for (byte i = 0; i < _ccPacket.length; ++i) /// fill packet with zeros
+    for (byte i = 0; i < _ccPacket.length; ++i) 
 
     {
 
-        _ccPacket.data[i] = i; /// set i-th byte := i for each byte in the packet
+        _ccPacket.data[i] = i; 
 
     }
 
-    setReceiver(SERVER_01); /// setting receiver
+    setReceiver(SERVER_01); 
 
-    setSender(sender); /// setting sender
+    setSender(sender); 
 
-    setAdminKey(TEST); /// setting administration key
+    setAdminKey(TEST); 
 
-    setHash(ccHash()); /// hashing the data and saving in member _hash
+    setHash(ccHash()); 
 
 }
 
@@ -75,21 +75,21 @@ void ccPacketHandler::testPacket(byte receiver, byte sender)
 
 {
 
-    for (byte i = 0; i < _ccPacket.length; ++i) /// fill packet with zeros
+    for (byte i = 0; i < _ccPacket.length; ++i) 
 
     {
 
-        _ccPacket.data[i] = i; /// set i-th byte := i for each byte in the packet
+        _ccPacket.data[i] = i; 
 
     }
 
-    setReceiver(receiver); /// setting receiver
+    setReceiver(receiver); 
 
-    setSender(sender); /// setting sender
+    setSender(sender); 
 
-    setAdminKey(TEST); /// setting administration key - default := 255
+    setAdminKey(TEST); 
 
-    setHash(ccHash()); /// hashing the data and saving in member _hash
+    setHash(ccHash()); 
 
 }
 
@@ -98,15 +98,15 @@ void ccPacketHandler::buildPacket(byte receiver, byte sender, byte adminKey)
 
 {
 
-    clearPacket(); /// clear existing ccPacket
+    clearPacket(); 
 
-    setReceiver(receiver); /// set given receiver
+    setReceiver(receiver); 
 
-    setSender(sender); /// set sender
+    setSender(sender); 
 
-    setAdminKey(adminKey); /// set given administration key
+    setAdminKey(adminKey); 
 
-    setBuildCounter(3); /// set build counter to next free byte's position
+    setBuildCounter(3); 
 
 }
 
@@ -115,13 +115,13 @@ void ccPacketHandler::buildAccelPacket(byte receiver, byte sender, byte adminKey
 
 {
 
-    clearPacket(); /// clear existing ccPacket
+    clearPacket(); 
 
-    setReceiver(receiver); /// set given receiver
+    setReceiver(receiver); 
 
-    setSender(sender); /// set sender
+    setSender(sender); 
 
-    setAdminKey(adminKey); /// set given administration key
+    setAdminKey(adminKey);
 
     _ccPacket.data[3] = values[0];
     _ccPacket.data[4] = values[1];
@@ -130,24 +130,24 @@ void ccPacketHandler::buildAccelPacket(byte receiver, byte sender, byte adminKey
     _ccPacket.data[7] = values[4];
     _ccPacket.data[8] = values[5];
    
-    setBuildCounter(9); /// set build counter to next free byte's position
+    setBuildCounter(9); 
 
 }
 
 
 
 
-void ccPacketHandler::addToPacket(byte data)    //modified by Jenny
+void ccPacketHandler::addToPacket(byte data)    
 
 {
  
     _ccPacket.data[_buildCounter] = data;
 
-    if (_buildCounter != 9) /// build counter has reached end of ccPacket. default is 60
+    if (_buildCounter != 9) 
 
     {
 
-        ++_buildCounter; /// increase build counter and go to next free byte
+        ++_buildCounter; 
 
     }
 
@@ -159,7 +159,7 @@ void ccPacketHandler::addToPacket(byte data)    //modified by Jenny
 
 void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourID)
 {
-    clearPacket(); /// clear the packet
+    clearPacket(); 
 
     setReceiver(SERVER_01); 
 
@@ -173,12 +173,12 @@ void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourI
 
     
 
-    setBuildCounter(5); /// set build counter to next free byte's position    
+    setBuildCounter(5); 
 }
 
 void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte colorKey1, byte colorKey2)
 {
-    clearPacket(); /// clear the packet
+    clearPacket(); 
 
     setReceiver(receiver);
 
@@ -190,13 +190,13 @@ void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte c
 
     setSecondColor(colorKey2);
 
-    setBuildCounter(5); /// set build counter to next free byte's position    
+    setBuildCounter(5); 
 
 }
 
 void ccPacketHandler::buildRGBCommand(byte Red01, byte Blue01, byte Green01)
 {
-    clearPacket(); /// clear the packet
+    clearPacket(); 
 
     setReceiver(3);
 
@@ -208,7 +208,7 @@ void ccPacketHandler::buildRGBCommand(byte Red01, byte Blue01, byte Green01)
  
     setGreen(Green01);
      
-    setBuildCounter(6); /// set build counter to next free byte's position    
+    setBuildCounter(6); 
 
 }
 
@@ -225,9 +225,6 @@ boolean ccPacketHandler::hashMatches()
         return false;
 }
 
-
-
-/// hashing the data
 
 byte ccPacketHandler::ccHash()
 
@@ -320,7 +317,7 @@ void ccPacketHandler::setReceiver(byte receiver)
 
 {
 
-    _ccPacket.RECEIVER_ID = receiver; /// set receiver to a given receiver
+    _ccPacket.RECEIVER_ID = receiver; 
     
 
 }
@@ -394,13 +391,6 @@ void ccPacketHandler::setGreen(byte colorGreen)
 
 }
 
-void ccPacketHandler::setPackNum(byte packNum)
-
-{
-
-    _ccPacket.PACKNUM = packNum; 
-
-}
 
 void ccPacketHandler::setDetectedRSSI(byte rawRSSI) 
 
@@ -513,14 +503,6 @@ byte ccPacketHandler::getGreen()
 }
 
 
-byte ccPacketHandler::getPackNum()
-
-{
-
-    return _ccPacket.PACKNUM; /// get the packet's number
-
-}
-
 
 byte ccPacketHandler::getPacketRSSI()
 
@@ -555,21 +537,20 @@ void ccPacketHandler::acknowledge()
 
 {
 
-    byte sender = getPacketSender(); /// save sender
+    byte sender = getPacketSender(); 
 
-    byte receiver = getPacketReceiver(); /// save receiver
+    byte receiver = getPacketReceiver(); 
 
-    byte ulf = ccHash(); /// hash the data
+    byte ulf = ccHash(); 
 
-    clearPacket(); /// clear the packet
+    clearPacket(); 
 
-    setReceiver(sender); /// set sender as receiver
+    setReceiver(sender);
 
-    setSender(receiver); /// set receiver as sender
+    setSender(receiver); 
 
-    setAdminKey(ACKNOWLEDGE); /// set acknowlegde key
+    setAdminKey(ACKNOWLEDGE); 
 
-    setPackNum(ulf); /// set the hash as data
 
 }
 

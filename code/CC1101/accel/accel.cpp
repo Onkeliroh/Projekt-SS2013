@@ -117,7 +117,7 @@ int ACCEL::maxDelta()
 int ACCEL::minDelta()
 
 {
-    return min(min(_delta[0], _delta[1]), max(_delta[1], _delta[2]));
+    return min(min(_delta[0], _delta[1]), min(_delta[1], _delta[2]));
 }
 
 boolean ACCEL::wasShaken()

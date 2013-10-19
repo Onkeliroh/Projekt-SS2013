@@ -1,16 +1,79 @@
 \subsection{The Server}
-The heard of the communication is the server. We used java\cite{java} as our programming language of choice, because of its multi platform abilities and the build in window framework of the development suit eclipse\cite{eclipse} called swt\cite{swt}. Except for one library, the RxTx-Library\cite{rxtx}, we only used basic java libraries which came by default with the eclipse IDE\cite{ide}  or alternatively the jdk7-openjdk\cite{open_jdk} package.
-Provided the users connected through the interface with a serial It takes most of the information broadcasted by the panStamps\cite{panstamp} and processes them.
-Provided the users connected through the interface with a serial port with the server-panStamp plugged in, the server takes the message with help of the RxTx-library\cite{rxtx} on a separate thread and passes the message, after receiving it, to the parser for processing and deciding.
+The heart of the communication is the server. We chose java\cite{java} as our programming language because of its multi platform abilities and the development suit of eclipse\cite{eclipse} called swt\cite{swt} as our window-builder framework.%need to rephrase this
+Except for one library, the RxTx-Library\cite{rxtx}, we only used basic java libraries which came by default with the eclipse IDE\cite{ide} environment; in other words, the jdk7-openjdk\cite{open_jdk} package. %The heart of the communication is the server?
+
+When the Panstamp server is connected to the Java server, the latter takes the data given by the Panstamp server thanks to the RxTx library \cite{rxtx} and passes the information to the parser for processing. %Each message is processed in a different thread, right?
+
+%Provided that the user connected through the interface with a serial It takes most of the information broadcasted by the panStamps\cite{panstamp} and processes them.
+%Provided the users connected through the interface with a serial port with the server-panStamp plugged in, the server takes the message with help of the RxTx-library %on a separate thread and passes the message, after receiving it, to the parser for processing and deciding.
 
 \begin{figure*}[ht]
 	\centerline{\includegraphics[width=\textwidth]{./graph/general.pdf}}
 	\caption{UML Diagram of the Server Structure}
 	\label{fig:server_uml}
 \end{figure*}
+
+
+\subsubsection{Panstamp-to-Java server message}
+All messages sent by the Panstamp server to the Java Server contain four bytes. The message's length was set to a single value to achieve a better communication work-flow and to limit the communication's traffic to a minimum. Table~\ref{Panstamp-to-Java} shows the general structure of a message.
+
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{ c | c | c | c }
+    \hline
+    \textbf{Byte 1} & \textbf{Byte 2} & \textbf{Byte 3} & \textbf{Byte 4} \\ [0.5ex]    
+    \hline
+    Sender's & Admin & Neighbor's Id| & Checksum  \\
+    Id & Key & Dummy & \\
+    \hline
+  \end{tabular}
+  \caption[Pamstamp-to-Java]%
+          {Panstamp-to-Java server message's structure}
+  \label{Panstamp-to-Java}
+\end{table}
+
+\begin{itemize}
+\item \textbf{Sender's Id} is the Id of the network node that wants to report an event
+\item \textbf{Admin Key} indicates the event reported by the entity. See table~\ref{Admin Keys} for further information.
+\item \textbf {Neighbor's Id | Dummy } When the Admin Key equals NEARNODEEVENT, this byte contains the Id of the found neighbor node. For other keys this byte is ignored
+\item \textbf {Checksum} This byte is the sum of bytes 1, 2 and 3 (modulo 256)
+\end{itemize}
+
+Table~\ref{Admin Keys} displays all the possible Admin Keys:
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{ c | c }
+    \hline
+    \textbf{Name} & \textbf{Value}\\ [0.5ex]    
+    \hline
+    Shake Event & 31 \\
+    Kick Event  & 32 \\
+    Near Node Event & 51\\
+    Low battery & 52\\
+    In Range & 53\\   
+    \hline
+  \end{tabular}
+  \caption[Admin Keys]%
+          {Admin Keys}
+  \label{Admin Keys}
+\end{table}
+
+\begin{itemize}
+\item \textbf {Shake Event} indicates the entity has been shaken slightly so it is swaying
+\item \textbf {Kick Event} means that the entity has been kicked or moved with a strong blow
+\item \textbf {Near Node Event} signifies the entity has detected another entity which is really close to it
+\item \textbf {Low Battery} warns the server that the entity's battery has to be recharged as soon as possible
+\item \textbf {In range} indicates the server that the entity is still in range
+\end{itemize}
+
+
+
+
 \subsubsection{The Parser}
-The Parser takes messages in form of byte arrays with the length of four bytes. The message size was set fixed, due to a more convenient workflow and to limit the broadcasting overhead to a minimum. 
-First the parser checks whether the length of the package is exactly four bytes and if the last byte, which is supposed to be a checksum summing the byte values of every other byte in the message, matches the checksum calculated by the server. If every think is correct the parser then searches for a known device in the device list of the server, if it found no match, it will create a new device with default settings. Once a device was found or created the parser begins to compare the second byte of the message for matching keys stored by the server. First all system\_keys will be compared. For example if the received message contains a ''52'' as second byte, the parser will then recognize this as the ''the battery is low'' key and will toggle the boolean value battery\_low of the device to true. 
+ 
+First, the parser checks whether the length of the package is exactly four bytes and if the last byte, which is supposed to be a checksum summing the byte values of every other byte in the message, matches the checksum calculated by the server. If every think is correct the parser then searches for a known device in the device list of the server, if it found no match, it will create a new device with default settings. Once a device was found or created the parser begins to compare the second byte of the message for matching keys stored by the server. First all system\_keys will be compared. For example if the received message contains a ''52'' as second byte, the parser will then recognize this as the ''the battery is low'' key and will toggle the boolean value battery\_low of the device to true. 
 If no system key matched with the received one, the parser then checks the reaction keys of the device itself. This check only happens if the device it not currently engaged in a neighborhood relationship with another device and if the time of the last received state changing message lays back a certain time. For this checking and comparing procedure the device owns a map with all reaction keys stored to it and a associated boolean value, representing the choice of ignoring or reacting to the received key. If a appropriate key was found and according to the boolean value a reaction should happen, then the state of the devices personality will be increased and the new information about the pattern and both colours will be send to the server-panStamp using the RxTx-library.
 
 \subsubsection{Device and Personality Structure}

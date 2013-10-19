@@ -2,16 +2,11 @@
 
 //CONSTRUCTOR//
 
-ACCEL::ACCEL()
+ACCEL::ACCEL(int minShakenValue, int minKickedValue)
 {
-    _X = analogRead(ANALOGPIN_0);
-    _Y = analogRead(ANALOGPIN_1);
-    _Z = analogRead(ANALOGPIN_2);
-
-    _deltaX = _X;
-    _deltaY = _Y;
-    _deltaZ = _Z;    
-         
+   
+    shakenThreshold = minShakenValue;
+    kickedThreshold = minKickedValue;
 }
 
 
@@ -25,55 +20,131 @@ ACCEL::~ACCEL()
 }
 
 
-void ACCEL::update()
+void ACCEL::resetBuffers()
 {
-
-    _X = analogRead(ANALOGPIN_0);
-    _Y = analogRead(ANALOGPIN_1);
-    _Z = analogRead(ANALOGPIN_2);
+    cleanBuffer(_X);
+    cleanBuffer(_Y);
+    cleanBuffer(_Z);    
 
 }
 
-void ACCEL::setDelta()
+void ACCEL::cleanBuffer(int buffer[])
+{
+   for(int i=0; i<ACCEL_BUFFERLENGTH ; i++)
+   {
+       buffer[i] = 0;
+   }
+
+}
+
+void ACCEL::update(int index)
+{
+
+    _X[index] = analogRead(ANALOGPIN_0);
+    _Y[index] = analogRead(ANALOGPIN_1);
+    _Z[index] = analogRead(ANALOGPIN_2);
+
+}
+
+void ACCEL::setAccelDelta()
 
 {
-    int prevX = _X;
-    int prevY = _Y;
-    int prevZ = _Z;
-        
-    update(); 
+    findMinValues();
+    findMaxValues();
+
+    for(int i = 0; i < 3 ; i++)
+    {
+        _delta[i] = abs(_maxValues[i] - _minValues[i]);     
+    }
+
+}
+
+
+void ACCEL::findMinValues()
+{
+    
+    _minValues[0] = setMinValue(_X);
+    _minValues[1] = setMinValue(_Y);
+    _minValues[2] = setMinValue(_Z);
+
+}
+
+
+int ACCEL::setMinValue(int buffer[])
+{
+   
+   int minValue = buffer[0];
  
-    _deltaX = _X - prevX;  
-    _deltaX = abs(_deltaX);
-    _deltaY = _Y - prevY;  
-    _deltaY = abs(_deltaY);
-    _deltaZ = _Z - prevZ;
-    _deltaZ = abs(_deltaZ);
+   for(int i=1; i<ACCEL_BUFFERLENGTH; i++)
+   {
+       minValue = min(minValue, buffer[i]);
+   }
+   
+   return minValue;
+
 }
+
+void ACCEL::findMaxValues()
+{
+    
+    _maxValues[0] = setMaxValue(_X);
+    _maxValues[1] = setMaxValue(_Y);
+    _maxValues[2] = setMaxValue(_Z);
+
+}
+
+
+int ACCEL::setMaxValue(int buffer[])
+{
+    int maxValue = buffer[0];
+ 
+    for(int i=1; i<ACCEL_BUFFERLENGTH; i++)
+    {
+        maxValue = max(maxValue, buffer[i]);
+    }
+   
+    return maxValue;
+
+}
+
 
 int ACCEL::maxDelta()
+
 {
-    return max(max(_deltaX, _deltaY), max(_deltaY, _deltaZ));
+    return max(max(_delta[0], _delta[1]), max(_delta[1], _delta[2]));
 }
 
 int ACCEL::minDelta()
+
 {
-    return min(min(_deltaX, _deltaY), min(_deltaY, _deltaZ));
+    return min(min(_delta[0], _delta[1]), max(_delta[1], _delta[2]));
 }
 
 boolean ACCEL::wasShaken()
+
 {
-   boolean wasShaken = false;   
+    boolean wasShaken = false;   
 
-   setDelta();
-  
-   if (minDelta() > THRESHOLD) 
-   {
-       wasShaken = true;
-       //Serial.println("ESTOY AQUI");
-   }
+    if( (minDelta()> shakenThreshold) && (maxDelta() < kickedThreshold) )
+    {
+        wasShaken = true;
+    }
 
-   return wasShaken;     
+    return wasShaken;     
 }
+
+boolean ACCEL::wasKicked()
+
+{
+    boolean wasKicked = false;   
+
+    if( minDelta()>= kickedThreshold )
+    {
+        wasKicked = true;
+    }
+
+    return wasKicked;     
+}
+
 
 

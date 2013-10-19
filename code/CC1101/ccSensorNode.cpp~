@@ -109,7 +109,6 @@ boolean CCSENSORNODE::isPacketsSender()
        return true;
    else
        return false;
-
 }
 
 void CCSENSORNODE::reportAccelEvent()
