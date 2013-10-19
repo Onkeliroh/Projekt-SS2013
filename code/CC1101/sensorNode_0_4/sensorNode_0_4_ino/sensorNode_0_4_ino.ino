@@ -3,11 +3,10 @@
 #include "ccSensorNode.h"
 #include "accel.h"
 
-#define SENSOR_NODE_ID 2
-#define TWIN_NODE_ID 3
+#define SENSOR_NODE_ID 4
+#define TWIN_NODE_ID 5
 
 #define ACCEL_CHECK_PERIOD         22
-#define SHAKE_INTERVAL           1500 
 #define LAST_MESSAGE_TIMEOUT   100000 
 
 
@@ -37,8 +36,9 @@ enum state{
     shaken,
     kicked};
 
-state pearState = motionless;
-    
+state kidneyState = motionless;
+
+
 unsigned long _lastTimeAccelCheck = 0;
 unsigned long _lastMssgTime = 0;
 
@@ -105,7 +105,7 @@ void loop()
             {
                 _sensorNode.reportRSSI();
                 
-               updateLastMssgTimestamp();
+                updateLastMssgTimestamp();
 
             }          
         }
@@ -154,27 +154,23 @@ void loop()
 
 void checkAccelEventAndReport()
 {
-       if((_accel.wasShaken()) && (pearState != shaken))
+       if(_accel.wasShaken() && (kidneyState != shaken))
        {
            _sensorNode.reportShakeEvent();
            
            updateLastMssgTimestamp();
-           
-           pearState = shaken;
        }
        else
        {
-           if(_accel.wasKicked() && (pearState != kicked))
+           if(_accel.wasKicked() && (kidneyState != kicked))
            {
                _sensorNode.reportKickEvent();
                
                updateLastMssgTimestamp();
-               
-               pearState = kicked;
            }
-           else 
+           else
            {
-               pearState = motionless;              
+               kidneyState = motionless;  
            }
          
        }           

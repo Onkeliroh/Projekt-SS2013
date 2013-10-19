@@ -3,12 +3,14 @@
 #include "ccSensorNode.h"
 #include "accel.h"
 
-#define SENSOR_NODE_ID 2
-#define TWIN_NODE_ID 3
+#define SENSOR_NODE_ID 6
+#define TWIN_NODE_ID 7
 
 #define ACCEL_CHECK_PERIOD         22
-#define SHAKE_INTERVAL           1500 
 #define LAST_MESSAGE_TIMEOUT   100000 
+
+#define EGG_SHAKE_THRESHOLD  10
+#define EGG_KICK_THRESHOLD  120
 
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
@@ -22,7 +24,7 @@
 /////////////////////
 
 CCSENSORNODE _sensorNode = CCSENSORNODE(SENSOR_NODE_ID, TWIN_NODE_ID);
-ACCEL _accel = ACCEL(10,100);
+ACCEL _accel = ACCEL(EGG_SHAKE_THRESHOLD, EGG_KICK_THRESHOLD);
 
 ///////////////////
 //--- MEMBERS ---//
@@ -32,13 +34,6 @@ boolean _packetAvailable = false;
 
 boolean _batteryIsLow = false;
 
-enum state{
-    motionless,
-    shaken,
-    kicked};
-
-state pearState = motionless;
-    
 unsigned long _lastTimeAccelCheck = 0;
 unsigned long _lastMssgTime = 0;
 
@@ -105,7 +100,7 @@ void loop()
             {
                 _sensorNode.reportRSSI();
                 
-               updateLastMssgTimestamp();
+                updateLastMssgTimestamp();
 
             }          
         }
@@ -154,27 +149,19 @@ void loop()
 
 void checkAccelEventAndReport()
 {
-       if((_accel.wasShaken()) && (pearState != shaken))
+       if(_accel.wasShaken())
        {
            _sensorNode.reportShakeEvent();
            
            updateLastMssgTimestamp();
-           
-           pearState = shaken;
        }
        else
        {
-           if(_accel.wasKicked() && (pearState != kicked))
+           if(_accel.wasKicked())
            {
                _sensorNode.reportKickEvent();
                
                updateLastMssgTimestamp();
-               
-               pearState = kicked;
-           }
-           else 
-           {
-               pearState = motionless;              
            }
          
        }           

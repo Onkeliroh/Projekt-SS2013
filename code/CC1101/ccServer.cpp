@@ -81,31 +81,9 @@ void CCSERVER::ccHandle(void)
 
       switch (key)
     {
-        case SHAKE_EVENT: 
-            setBuffer();         
-            sendBufferToJavaServer();
-            cleanBuffer();
-            break;
-        case KICK_EVENT:
-            setBuffer();
-            sendBufferToJavaServer();
-            cleanBuffer();
-            break;
         case NEAR_NODE_EVENT:            
             checkRSSI();  
             break;    
-        case ACKNOWLEDGE:
-            setBuffer();         
-            sendBufferToJavaServer();
-            break;   
-        case LOW_BATTERY:
-            setBuffer();         
-            sendBufferToJavaServer();
-            cleanBuffer();
-        case INRANGE:
-            setBuffer();         
-            sendBufferToJavaServer(); 
-            cleanBuffer();      
         default: // unknown packet received
             //SEND MESSAGE TO ORDER A PACKAGE. NEED TO IMPLEMENT THIS
             break; 
@@ -133,15 +111,17 @@ void CCSERVER::checkRSSI()
     byte rssi_dBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
     byte emisorID = ccPacket.NEAR_NODE_ID;
   
-    if(rssi_dBm > 212)   
-    {
-        setNearNodeBuffer();      
-        sendBufferToJavaServer();
-        cleanBuffer();           
+    //if(rssi_dBm > 202)  //212 
+    //{
+        //setNearNodeBuffer();      
+        //sendBufferToJavaServer();
+        //cleanBuffer();           
 
-        //Serial.print("Detected Near Node Nr " );
-        //Serial.println(emisorID);
-    }
+        Serial.print("Near Node Nr " );
+        Serial.print(emisorID);
+        Serial.print(" Signal strength ");
+        Serial.println(rssi_dBm);
+    //}
      
 }
 
