@@ -22,7 +22,6 @@ class CCNODE
                 void  ledBlinkSetup();
                 void  rfChipInit();
                 void  ccSendPacket();
-                void  ccAcknowledge();
                 void  ccPrintPacket();
                 void  ledBlink();
                 

@@ -37,59 +37,11 @@ void ccPacketHandler::clearPacket()
 
     {
 
-        _ccPacket.data[i] = 0; 
+        _ccPacket.data[i] = 0;
 
     }
 
     setBuildCounter(0); 
-
-}
-
-
-
-void ccPacketHandler::testPacket(byte sender)
-
-{
-
-    for (byte i = 0; i < _ccPacket.length; ++i) 
-
-    {
-
-        _ccPacket.data[i] = i; 
-
-    }
-
-    setReceiver(SERVER_01); 
-
-    setSender(sender); 
-
-    setAdminKey(TEST); 
-
-    setHash(ccHash()); 
-
-}
-
-
-
-void ccPacketHandler::testPacket(byte receiver, byte sender)
-
-{
-
-    for (byte i = 0; i < _ccPacket.length; ++i) 
-
-    {
-
-        _ccPacket.data[i] = i; 
-
-    }
-
-    setReceiver(receiver); 
-
-    setSender(sender); 
-
-    setAdminKey(TEST); 
-
-    setHash(ccHash()); 
 
 }
 
@@ -110,40 +62,13 @@ void ccPacketHandler::buildPacket(byte receiver, byte sender, byte adminKey)
 
 }
 
-
-void ccPacketHandler::buildAccelPacket(byte receiver, byte sender, byte adminKey, byte values[]) 
-
-{
-
-    clearPacket(); 
-
-    setReceiver(receiver); 
-
-    setSender(sender); 
-
-    setAdminKey(adminKey);
-
-    _ccPacket.data[3] = values[0];
-    _ccPacket.data[4] = values[1];
-    _ccPacket.data[5] = values[2];
-    _ccPacket.data[6] = values[3];
-    _ccPacket.data[7] = values[4];
-    _ccPacket.data[8] = values[5];
-   
-    setBuildCounter(9); 
-
-}
-
-
-
-
-void ccPacketHandler::addToPacket(byte data)    
+void ccPacketHandler::addToPacket(byte data)   
 
 {
  
     _ccPacket.data[_buildCounter] = data;
 
-    if (_buildCounter != 9) 
+    if (_buildCounter != 5) 
 
     {
 
@@ -226,6 +151,9 @@ boolean ccPacketHandler::hashMatches()
 }
 
 
+
+/// hashing the data
+
 byte ccPacketHandler::ccHash()
 
 {
@@ -307,7 +235,7 @@ void ccPacketHandler::setPacket(CCPACKET ccPacket)
 
 {
 
-    _ccPacket = ccPacket; /// set packet to a whole given packet
+    _ccPacket = ccPacket; 
 
 }
 
@@ -417,7 +345,7 @@ CCPACKET ccPacketHandler::getPacket()
 
 {
 
-    return _ccPacket; /// get the whole packet
+    return _ccPacket;
 
 }
 
@@ -503,7 +431,6 @@ byte ccPacketHandler::getGreen()
 }
 
 
-
 byte ccPacketHandler::getPacketRSSI()
 
 {
@@ -518,39 +445,15 @@ void ccPacketHandler::printPacket()
 
 {
     
-   for (byte i = 0; i < 5 ; ++i)  //for (byte i = 0; i < _ccPacket.length; ++i) original
+   for (byte i = 0; i < _ccPacket.length; ++i)
   {
-      //Serial.write(_ccPacket.data[i]);   //for debugging
-       Serial.print("|"); //for debugging
-        
-
-       Serial.print(_ccPacket.data[i]);        //for debugging
-        //Serial.print(";");
+      
+       Serial.print("|"); 
+      
+       Serial.print(_ccPacket.data[i]);    
+      
   }   
-      Serial.println();
+       Serial.println();
 }
 
-
-/// acknowledge
-
-void ccPacketHandler::acknowledge()
-
-{
-
-    byte sender = getPacketSender(); 
-
-    byte receiver = getPacketReceiver(); 
-
-    byte ulf = ccHash(); 
-
-    clearPacket(); 
-
-    setReceiver(sender);
-
-    setSender(receiver); 
-
-    setAdminKey(ACKNOWLEDGE); 
-
-
-}
 

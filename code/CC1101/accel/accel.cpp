@@ -7,6 +7,7 @@ ACCEL::ACCEL(int minShakenValue, int minKickedValue)
    
     shakenThreshold = minShakenValue;
     kickedThreshold = minKickedValue;
+    bufferIndex = 0;
 }
 
 
@@ -37,13 +38,34 @@ void ACCEL::cleanBuffer(int buffer[])
 
 }
 
-void ACCEL::update(int index)
+void ACCEL::readAccel()
 {
 
-    _X[index] = analogRead(ANALOGPIN_0);
-    _Y[index] = analogRead(ANALOGPIN_1);
-    _Z[index] = analogRead(ANALOGPIN_2);
+    _X[bufferIndex] = analogRead(ANALOGPIN_0);
+    _Y[bufferIndex] = analogRead(ANALOGPIN_1);
+    _Z[bufferIndex] = analogRead(ANALOGPIN_2);
 
+    ++bufferIndex;
+   
+}
+
+
+boolean ACCEL::bufferIsFull()
+{
+    boolean bufferIsFull = false;
+
+    if(bufferIndex == ACCEL_BUFFERLENGTH)
+    {
+        bufferIsFull = true;
+    }
+
+    return bufferIsFull;
+
+}
+
+void ACCEL::resetBufferIndex()
+{
+    bufferIndex = 0;
 }
 
 void ACCEL::setAccelDelta()

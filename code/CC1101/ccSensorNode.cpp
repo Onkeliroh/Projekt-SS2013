@@ -88,9 +88,6 @@ void CCSENSORNODE::ccHandle()
             else
                 Serial.println("False acknowledge! Resending prev. package");
             break;    
-        case TEST: // test packet received
-            ccAcknowledge();
-            break;
         default: // unknown packet received
             Serial.print("Unknown packet received, key: ");
             Serial.println(key);
@@ -109,14 +106,23 @@ boolean CCSENSORNODE::isPacketsSender()
        return true;
    else
        return false;
-
 }
 
-void CCSENSORNODE::reportAccelEvent()
+void CCSENSORNODE::reportShakeEvent()
 
 {
 
     _ccPacketHandler.buildPacket(BROADCAST, _id, SHAKE_EVENT);
+    ccSendPacket();    
+
+}
+
+
+void CCSENSORNODE::reportKickEvent()
+
+{
+
+    _ccPacketHandler.buildPacket(BROADCAST, _id, KICK_EVENT);
     ccSendPacket();    
 
 }

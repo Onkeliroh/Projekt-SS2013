@@ -7,8 +7,8 @@
 #include "cc1101.h"
 
 
-#define CCPACKETHANDLER_LENGTH          5   //definitive value 5//6 is just for testing the accel
-#define CCPACKETHANDLER_MAXLENGTH      61
+#define CCPACKETHANDLER_LENGTH           5  
+#define CCPACKETHANDLER_MAXLENGTH       61
 
 #define RECEIVER_ID     data[0] 
 #define SENDER_ID       data[1]
@@ -81,13 +81,7 @@ class ccPacketHandler
 
         void clearPacket();
 
-        void testPacket(byte sender);
-
-        void testPacket(byte receiver, byte sender);
-
         void buildPacket(byte receiver, byte sender, byte adminKey);
-
-        void buildAccelPacket(byte receiver, byte sender, byte adminKey, byte values[]);
 
         void addToPacket(byte data);
 
@@ -137,7 +131,7 @@ class ccPacketHandler
 
 	void setGreen(byte colorGreen);
 
-	void setDetectedRSSI(byte rawRSSI);        
+        void setDetectedRSSI(byte rawRSSI);        
 
         void setNeighbourId(byte neighbourID);
 
@@ -164,24 +158,24 @@ class ccPacketHandler
 
 	byte getGreen();
 
+        byte getPackNum();
+      
         byte getPacketRSSI();
         
         void printPacket(); 
        
         boolean hashMatches();
 
-        void acknowledge();
-
         byte ccHash();
 
         boolean _ccClear;
 
     private:
-        CCPACKET _ccPacket;
+        CCPACKET _ccPacket; 
         
-        byte _hash; 
+        byte _hash;
 
-        int _buildCounter; 
+        int _buildCounter;
         
 };
 

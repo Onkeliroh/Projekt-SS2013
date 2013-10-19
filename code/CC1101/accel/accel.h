@@ -24,7 +24,9 @@ class ACCEL
                 
                 void resetBuffers();
                 void cleanBuffer(int buffer[]);
-                void update(int index);
+                void readAccel();
+		boolean bufferIsFull();
+		void resetBufferIndex();
                 void setAccelDelta();
                 void findMinValues();
                 int  setMinValue(int buffer[]);
@@ -48,6 +50,7 @@ class ACCEL
 
                 int shakenThreshold;
                 int kickedThreshold;
+                int bufferIndex;
 
 //                int _deltaX[ACCEL_BUFFERLENGTH];
 //		int _deltaY[ACCEL_BUFFERLENGTH];

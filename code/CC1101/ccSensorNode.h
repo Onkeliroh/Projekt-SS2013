@@ -21,7 +21,8 @@ class CCSENSORNODE: public CCNODE
                 boolean isPacketsSender();
                 
                 //REPORTS TO THE SERVER
-                void reportAccelEvent();
+                void reportShakeEvent();
+                void reportKickEvent();
                 void reportRSSI();
                 void reportLowBatt();
                 void sendRSSI(byte rawRSSI,byte nearNodeId);  

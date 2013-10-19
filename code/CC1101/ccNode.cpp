@@ -53,15 +53,6 @@ void CCNODE::ccSendPacket(void)
 }
 
 
-void CCNODE::ccAcknowledge(void)
-
-{
-    _ccPacketHandler.acknowledge(); 
-    ccSendPacket(); 
-    _ccPacketHandler._ccClear = true;
-
-}
-
 void CCNODE::ccPrintPacket(void)
 
 {
