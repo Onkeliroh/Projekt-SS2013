@@ -230,7 +230,8 @@ public class Server_Main
         newDevice.setText("New Device");
         newDevice.addMouseListener(new MouseAdapter()
         {
-            public void mouseDown(MouseEvent e) {
+            public void mouseDown(MouseEvent e)
+            {
                 Server.get_devices().add(new kickflick.device.device());
             }
         });
@@ -267,6 +268,7 @@ public class Server_Main
                 List<device> list = Server.get_devices();
                 DeviceTable.removeAll();
 
+                System.out.println(Server.get_devices().size());
 
                 int i = 0;
                 for (final device d : list)
@@ -325,16 +327,23 @@ public class Server_Main
     }
 
     void openConfigWindow() {
-        int index = DeviceTable.getSelectionIndex();
-        Device_Config_Dialog tmp = new Device_Config_Dialog(
-                shlKickflickServer,
-                SWT.APPLICATION_MODAL,
-                Server.get_device(index),
-                Server.get_PersonalitiesCount()
-        );
-        device tmp_dev = (device) tmp.open();
-        Server.set_device(index, tmp_dev);
-        Server.send_device(index);
+        if ( DeviceTable.getItemCount() != 0)
+        {
+            int index = DeviceTable.getSelectionIndex();
+            Device_Config_Dialog tmp = new Device_Config_Dialog(
+                    shlKickflickServer,
+                    SWT.APPLICATION_MODAL,
+                    Server.get_device(index),
+                    Server.get_PersonalitiesCount()
+            );
+            //if the configuration dialog was cloased by using the x button i will return null and no information will be processed
+            device tmp_dev = (device) tmp.open();
+            if (tmp_dev != null)
+            {
+                Server.set_device(index, tmp_dev);
+                Server.send_device(index);
+            }
+        }
     }
 
 

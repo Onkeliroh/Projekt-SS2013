@@ -25,6 +25,8 @@ public class personality implements Serializable
 
     // default
     public personality() {
+        System.out.println("Default personality constructor");
+
         create_reaction_map();
 
         this.Name_ = presetpersonalities.Paul.get_personality().Name_;
@@ -94,7 +96,7 @@ public class personality implements Serializable
     }
 
     public String get_state_name() {
-        return this.state_names[this.State_-1];
+        return this.state_names[this.State_+1];
     }
 
     public String get_state_name(short state) {
@@ -185,6 +187,7 @@ public class personality implements Serializable
 
     private void create_reaction_map()
     {
+        System.out.println("Create reaction map");
         //ToDo set default value somehow
         this.Reactions_ = new DefaultHashMap<keys, reaction[]>(new reaction[4]);
     }

@@ -9,7 +9,6 @@ import java.util.Map;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import kickflick.device.*;
-import kickflick.utility.serial_lib.com_listener;
 
 class parser implements SerialPortEventListener {
 	private final server Server_;

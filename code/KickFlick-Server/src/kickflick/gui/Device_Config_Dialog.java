@@ -5,6 +5,7 @@ import kickflick.device.personality;
 import kickflick.device.presetpersonalities;
 import kickflick.utility.color;
 import kickflick.utility.pattern;
+import org.eclipse.help.ui.internal.views.ComboPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TableEditor;
@@ -30,15 +31,15 @@ public class Device_Config_Dialog extends Dialog
 
     protected Shell shlDeviceConfugurationDialog;
     private Text name_text;
-    private Combo state_combo;
     private Combo preset_pers_combo;
+    private Combo state_combo;
 
 
     private Table trigger_table;
     private Text sensor_adr_text;
     private Text actuator_adr_text;
 
-    //    private final String[] state_names = {"Standby", "First contact", "Playing", "Playing (hard)"};
+    private String[] state_names = {};
     private final String[] tabel_heads = {"State", "Pattern", "1. Color", "2. Color"};
     private final String[] neighbor_table_heads = {"Neighbor", "Pattern", "1. Color", "2. Color"};
 
@@ -50,6 +51,7 @@ public class Device_Config_Dialog extends Dialog
     private List<CCombo> neighbor_color1_combo_list = new ArrayList<CCombo>();
     private List<CCombo> neighbor_color2_combo_list = new ArrayList<CCombo>();
     private List<Text> neighbor_text_list = new ArrayList<Text>();
+    private Table table;
 
 
     public Device_Config_Dialog(Shell parent, int style, device Dev, List<String> neighbor_pers) {
@@ -59,6 +61,7 @@ public class Device_Config_Dialog extends Dialog
         this.Device = Dev;
         this.neighbor_pers = neighbor_pers;
         this.pers_count = this.neighbor_pers.size();
+        this.state_names = this.Device.get_Personality().get_state_names();
     }
 
     /**
@@ -87,26 +90,10 @@ public class Device_Config_Dialog extends Dialog
     private void createContents() {
 //		shlDeviceConfugurationDialog = new Shell(getParent(), getStyle());
         shlDeviceConfugurationDialog = new Shell(getParent(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
-        shlDeviceConfugurationDialog.setSize(515, 466);
+        shlDeviceConfugurationDialog.setSize(641, 522);
         shlDeviceConfugurationDialog.setText("Device Confuguration Dialog");
         GridLayout gl_shlDeviceConfugurationDialog = new GridLayout(1, false);
         shlDeviceConfugurationDialog.setLayout(gl_shlDeviceConfugurationDialog);
-
-        Group grpDefaultConfigurations = new Group(shlDeviceConfugurationDialog, SWT.NONE);
-        grpDefaultConfigurations.setLayout(new GridLayout(2, false));
-        grpDefaultConfigurations.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-        grpDefaultConfigurations.setText("Default Configurations");
-
-        preset_pers_combo = new Combo(grpDefaultConfigurations, SWT.READ_ONLY);
-        preset_pers_combo.setToolTipText("Selects a pre configured personality. Please be carefull. This will overwrite your current settings!!!");
-        preset_pers_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-        new Label(grpDefaultConfigurations, SWT.NONE);
-        preset_pers_combo.addSelectionListener(new SelectionAdapter()
-        {
-            public void widgetSelected(SelectionEvent e) {
-                set_pre_pers(presetpersonalities.valueOf(preset_pers_combo.getItem(preset_pers_combo.getSelectionIndex())).get_personality());
-            }
-        });
 
         TabFolder tabFolder = new TabFolder(shlDeviceConfugurationDialog, SWT.NONE);
         tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -117,6 +104,39 @@ public class Device_Config_Dialog extends Dialog
         Composite Config_composite = new Composite(tabFolder, SWT.NONE);
         Basic_tab.setControl(Config_composite);
         Config_composite.setLayout(new GridLayout(8, false));
+        
+                Group grpDefaultConfigurations = new Group(Config_composite, SWT.NONE);
+                GridData gd_grpDefaultConfigurations = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
+                gd_grpDefaultConfigurations.widthHint = 267;
+                grpDefaultConfigurations.setLayoutData(gd_grpDefaultConfigurations);
+                grpDefaultConfigurations.setLayout(new GridLayout(2, false));
+                grpDefaultConfigurations.setText("Default Configurations");
+                
+                        preset_pers_combo = new Combo(grpDefaultConfigurations, SWT.READ_ONLY);
+                        preset_pers_combo.setToolTipText("Selects a pre configured personality. Please be carefull. This will overwrite your current settings!!!");
+                        preset_pers_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+                        new Label(grpDefaultConfigurations, SWT.NONE);
+                        preset_pers_combo.addSelectionListener(new SelectionAdapter()
+                        {
+                            public void widgetSelected(SelectionEvent e) {
+                                set_pre_pers(presetpersonalities.valueOf(preset_pers_combo.getItem(preset_pers_combo.getSelectionIndex())).get_personality());
+                            }
+                        });
+        new Label(Config_composite, SWT.NONE);
+        
+                Label label = new Label(Config_composite, SWT.SEPARATOR | SWT.VERTICAL);
+                label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 3));
+        new Label(Config_composite, SWT.NONE);
+        
+        Group grpCurrentState = new Group(Config_composite, SWT.BORDER | SWT.SHADOW_NONE);
+        grpCurrentState.setText("Current State");
+        grpCurrentState.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+        
+        Combo combo = new Combo(grpCurrentState, SWT.READ_ONLY);
+        combo.setToolTipText("Selects and sets a new state for the current device.");
+        combo.setBounds(10, 23, 304, 31);
+        combo.select(0);
+        new Label(Config_composite, SWT.NONE);
 
         Label name_label = new Label(Config_composite, SWT.NONE);
         name_label.setText("Name:");
@@ -126,9 +146,6 @@ public class Device_Config_Dialog extends Dialog
         gd_name_text.widthHint = 200;
         name_text.setLayoutData(gd_name_text);
         new Label(Config_composite, SWT.NONE);
-
-        Label label = new Label(Config_composite, SWT.SEPARATOR | SWT.VERTICAL);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 2));
         new Label(Config_composite, SWT.NONE);
 
 
@@ -176,33 +193,45 @@ public class Device_Config_Dialog extends Dialog
         tblclmnAction.setText("Action");
 
         TabItem Personality_tab = new TabItem(tabFolder, SWT.NONE);
-        Personality_tab.setText("State-Options");
+        Personality_tab.setText("Reaction-Options");
 
         Composite state_composite = new Composite(tabFolder, SWT.NONE);
         Personality_tab.setControl(state_composite);
-        state_composite.setLayout(new GridLayout(1, false));
+        state_composite.setLayout(new GridLayout(3, false));
 
         Label state_label = new Label(state_composite, SWT.NONE);
-        state_label.setText("State:");
-
-        state_combo = new Combo(state_composite, SWT.READ_ONLY);
-        state_combo.setToolTipText("Selects and sets a new state for the current device.");
-        for (int i = 0; i < Device.get_Personality().state_count; ++i)
-            state_combo.add(Device.get_Personality().get_state_name((short) i), i);
-//				state_combo.setItems(state_names);
-        state_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-        state_combo.select(0);
-
-        Label label_1 = new Label(state_composite, SWT.SEPARATOR | SWT.HORIZONTAL);
-        label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-
-        Label lblStateTable = new Label(state_composite, SWT.NONE);
-        lblStateTable.setText("State Table:");
-
-        Table state_table = new Table(state_composite, SWT.BORDER | SWT.FULL_SELECTION);
-        state_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-        state_table.setHeaderVisible(true);
-        state_table.setLinesVisible(true);
+        state_label.setText("Current State:");
+        for (int i = 0; i < (this.state_names.length -2); ++i)
+            state_combo.add(this.state_names[i+2], i);
+                new Label(state_composite, SWT.NONE);
+                new Label(state_composite, SWT.NONE);
+                
+                table = new Table(state_composite, SWT.BORDER | SWT.FULL_SELECTION);
+                table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+                table.setHeaderVisible(true);
+                table.setLinesVisible(true);
+                new Label(state_composite, SWT.NONE);
+        
+                Label label_1 = new Label(state_composite, SWT.SEPARATOR | SWT.HORIZONTAL);
+                label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+                
+                Label lblSelectKey = new Label(state_composite, SWT.NONE);
+                lblSelectKey.setText("Select Key:");
+                
+                Combo combo_1 = new Combo(state_composite, SWT.READ_ONLY);
+                combo_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+                new Label(state_composite, SWT.NONE);
+        
+                Label lblStateTable = new Label(state_composite, SWT.NONE);
+                lblStateTable.setText("Selected Reaction:");
+        new Label(state_composite, SWT.NONE);
+        new Label(state_composite, SWT.NONE);
+        
+                Table state_table = new Table(state_composite, SWT.BORDER | SWT.FULL_SELECTION);
+                state_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
+                state_table.setHeaderVisible(true);
+                state_table.setLinesVisible(true);
+                TableItem[] items = state_table.getItems();
 
         TabItem tbtmNeighbor = new TabItem(tabFolder, SWT.NONE);
         tbtmNeighbor.setText("Neighbor");
@@ -217,7 +246,6 @@ public class Device_Config_Dialog extends Dialog
         neighbor_table.setHeaderVisible(true);
         neighbor_table.setLinesVisible(true);
 
-        //TODO fix column alignment
         for (int i = 0; i < this.neighbor_table_heads.length; i++)
         {
             TableColumn column = new TableColumn(neighbor_table, SWT.CENTER);
@@ -284,7 +312,6 @@ public class Device_Config_Dialog extends Dialog
         {
             new TableItem(state_table, SWT.NONE);
         }
-        TableItem[] items = state_table.getItems();
         for (int i = 0; i < items.length; i++)
         {
             TableEditor editor = new TableEditor(state_table);
@@ -352,14 +379,14 @@ public class Device_Config_Dialog extends Dialog
 
                 result.get_Personality().set_Name(name_text.getText());
                 result.get_Personality().set_State((short) state_combo.getSelectionIndex());
-                result.get_Personality().set_pattern(new byte[]{pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key()});
+//                result.get_Personality().set_pattern(new byte[]{pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key()});
 
                 short j = 0;
                 for (Combo c : pattern_combo_list)
                 {
                     for (pattern p : pattern.values())
                         if (p.get_name().equalsIgnoreCase(c.getText()))
-                            result.get_Personality().set_pattern(p.get_key(), j);
+//                            result.get_Personality().set_pattern(p.get_key(), j);
                     ++j;
                 }
 
@@ -368,7 +395,7 @@ public class Device_Config_Dialog extends Dialog
                 {
                     for (color p : color.values())
                         if (p.get_name().equalsIgnoreCase(c.getText()))
-                            result.get_Personality().set_Color1(p.get_key(), j);
+//                            result.get_Personality().set_Color1(p.get_key(), j);
                     ++j;
                 }
                 j = 0;
@@ -376,7 +403,7 @@ public class Device_Config_Dialog extends Dialog
                 {
                     for (color p : color.values())
                         if (p.get_name().equalsIgnoreCase(c.getText()))
-                            result.get_Personality().set_Color2(p.get_key(), j);
+//                            result.get_Personality().set_Color2(p.get_key(), j);
                     ++j;
                 }
 
@@ -401,10 +428,10 @@ public class Device_Config_Dialog extends Dialog
                                     break;
                                 }
                             }
-                            for (color p : color.values())
-                                if (p.get_name().equalsIgnoreCase(neighbor_color2_combo_list.get(text).getText()))
+                            for (color c : color.values())
+                                if (c.get_name().equalsIgnoreCase(neighbor_color2_combo_list.get(text).getText()))
                                 {
-                                    settings[2] = p.get_key();
+                                    settings[2] = c.get_key();
                                     break;
                                 }
 
@@ -414,7 +441,7 @@ public class Device_Config_Dialog extends Dialog
                     // if no entry of this personality exsists
                     if (!Device.get_Personality().get_Neighbours().containsKey(str))
                     {
-                        Device.get_Personality().get_Neighbours().put(str, settings);
+//                        Device.get_Personality().get_Neighbours().put(str, settings);
                     }
                     else //if personality allready exsistsgit
                     {
@@ -455,12 +482,8 @@ public class Device_Config_Dialog extends Dialog
 
         //load device informations
         this.name_text.setText(this.Device.get_Personality().get_Name());
-
-        this.state_combo.removeAll();
         for (int i = 0; i < this.Device.get_Personality().state_count; ++i)
             this.state_combo.add(this.Device.get_Personality().get_state_name((short) i), i);
-
-        this.state_combo.select(this.Device.get_Personality().get_State());
 
 
         this.trigger_table.removeAll();
@@ -478,7 +501,7 @@ public class Device_Config_Dialog extends Dialog
         for (Combo c : pattern_combo_list)
         {
             for (int j = 0; j < pattern.values().length; ++j)
-                if (pattern.values()[j].get_key() == this.Device.get_Personality().get_pattern((short) i))
+//                if (pattern.values()[j].get_key() == this.Device.get_Personality().get_pattern((short) i))
                 {
                     c.select(j);
                     break;
@@ -490,7 +513,7 @@ public class Device_Config_Dialog extends Dialog
         for (CCombo c : color1_combo_list)
         {
             for (int j = 0; j < color.values().length; ++j)
-                if (color.values()[j].get_key() == this.Device.get_Personality().get_Color1((short) i))
+//                if (color.values()[j].get_key() == this.Device.get_Personality().get_Color1((short) i))
                 {
                     c.select(j);
                     break;
@@ -501,7 +524,7 @@ public class Device_Config_Dialog extends Dialog
         for (CCombo c : color2_combo_list)
         {
             for (int j = 0; j < color.values().length; ++j)
-                if (color.values()[j].get_key() == this.Device.get_Personality().get_Color2((short) i))
+//                if (color.values()[j].get_key() == this.Device.get_Personality().get_Color2((short) i))
                 {
                     c.select(j);
                     break;
@@ -511,26 +534,26 @@ public class Device_Config_Dialog extends Dialog
 
         for (int j = 0; j < this.neighbor_text_list.size(); ++j)
         {
-            byte[] settings = this.Device.get_Personality().get_neighbor(this.neighbor_text_list.get(j).getText());
-            for (int k = 0; k < pattern.values().length; ++k)
-            {
-                if (settings[0] == pattern.values()[k].get_key())
-                {
-                    this.neighbor_pattern_combo_list.get(j).select(k);
-                    break;
-                }
-            }
-            for (int k = 0; k < color.values().length; ++k)
-            {
-                if (settings[1] == color.values()[k].get_key())
-                {
-                    this.neighbor_color1_combo_list.get(j).select(k);
-                }
-                if (settings[2] == color.values()[k].get_key())
-                {
-                    this.neighbor_color2_combo_list.get(j).select(k);
-                }
-            }
+//            byte[] settings = this.Device.get_Personality().get_neighbor(this.neighbor_text_list.get(j).getText());
+//            for (int k = 0; k < pattern.values().length; ++k)
+//            {
+//                if (settings[0] == pattern.values()[k].get_key())
+//                {
+//                    this.neighbor_pattern_combo_list.get(j).select(k);
+//                    break;
+//                }
+//            }
+//            for (int k = 0; k < color.values().length; ++k)
+//            {
+//                if (settings[1] == color.values()[k].get_key())
+//                {
+//                    this.neighbor_color1_combo_list.get(j).select(k);
+//                }
+//                if (settings[2] == color.values()[k].get_key())
+//                {
+//                    this.neighbor_color2_combo_list.get(j).select(k);
+//                }
+//            }
 
         }
         result = Device;
@@ -549,11 +572,11 @@ public class Device_Config_Dialog extends Dialog
         for (Combo c : pattern_combo_list)
         {
             for (int j = 0; j < pattern.values().length; ++j)
-                if (pattern.values()[j].get_key() == pers.get_pattern((short) i))
-                {
-                    c.select(j);
-                    break;
-                }
+//                if (pattern.values()[j].get_key() == pers.get_pattern((short) i))
+//                {
+//                    c.select(j);
+//                    break;
+//                }
             ++i;
         }
 
@@ -561,22 +584,22 @@ public class Device_Config_Dialog extends Dialog
         for (CCombo c : color1_combo_list)
         {
             for (int j = 0; j < color.values().length; ++j)
-                if (color.values()[j].get_key() == pers.get_Color1((short) i))
-                {
-                    c.select(j);
-                    break;
-                }
+//                if (color.values()[j].get_key() == pers.get_Color1((short) i))
+//                {
+//                    c.select(j);
+//                    break;
+//                }
             ++i;
         }
         i = 0;
         for (CCombo c : color2_combo_list)
         {
             for (int j = 0; j < color.values().length; ++j)
-                if (color.values()[j].get_key() == pers.get_Color2((short) i))
-                {
-                    c.select(j);
-                    break;
-                }
+//                if (color.values()[j].get_key() == pers.get_Color2((short) i))
+//                {
+//                    c.select(j);
+//                    break;
+//                }
             ++i;
         }
     }

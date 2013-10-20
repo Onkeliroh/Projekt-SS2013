@@ -69,6 +69,7 @@ public class device implements Serializable
     }
 
     public device() {
+        System.out.println("Default device constructor");
         this.Personality_ = new personality();
         this.timestamp = new Timestamp(new Date().getTime());
         this.timestamp_last_heard_of = this.timestamp;
