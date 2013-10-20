@@ -14,9 +14,9 @@ To achieve \textbf{modularity} and \textbf{mobility}, a wireless communication p
 Panstamps, as explained in [{\url{http://www.panstamp.com/home}}], are small boards intended for implementing custom wireless networks.
 
 Due to Panstamps' open source nature, documentation and information about already implemented projects with them is at hand for everyone on the internet; this represents a very important advantage over other wireless products in the market. %search source that supports this 
-Additionally, Panstamps' core is the the ATMEGA 328 [{\url{http://www.atmel.com/devices/atmega328.aspx}}]; therefore, they are entirely programmable from the Arduino IDE, whose community is increasing each day.%search literature to support this 
+Furthermore, Panstamps' core is the the ATMEGA 328 [{\url{http://www.atmel.com/devices/atmega328.aspx}}]; therefore, they are entirely programmable from the Arduino IDE, whose community is increasing each day.%search literature to support this
 
-For all these reasons, we decided to build the envisioned system upon Panstamps. As depicted in Figure~\ref{fig:server-module}, each module in our system is constituted by a sensor and actuator node, both having a Panstamp as their nucleus. The server node has also a Panstamp as its main component, which communicates wirelessly with the other modules' panstamps. A Java-based application, the Java Server, gets the data recollected by the server node, process it and gives a response to the server node that has to be sent to the appropriate node i the network. The feedback provided by the Java Server depends entirely on the \emph{personality} of each device. For a better understanding of \emph{Personalities}, please refer to the XXX section of this work.
+For all these reasons, we decided to build the envisioned system upon Panstamps. As depicted in Figure~\ref{fig:server-module}, each module in our system is constituted by a sensor and actuator node, both having a Panstamp as their nucleus. The server node has also a Panstamp as its main component, which communicates wirelessly with the other modules' panstamps. The Java Server gets the data recollected by the server node, process it and gives a response to the server node that has to be sent to the appropriate node in the network. The feedback provided by the Java Server depends entirely on the \emph{personality} of each device. For a better understanding of \emph{Personalities}, please refer to the XXX section of this work.
 
 \begin{figure}[h!]
  \centering
@@ -27,7 +27,13 @@ For all these reasons, we decided to build the envisioned system upon Panstamps.
 
 To detect if they have been kicked or pushed, modules need to sense their own movement; therefore, an accelerometer is connected to the sensor node of each module. We used the ADXL335, a small accelerometer that measures acceleration in each of the cardinal directions (x,y and z).
 
-All the elements in a module are powered by a 11 volts Li-Po battery. This battery should not be over-discharged, for this reduces drastically the it's life. Therefore, sensor nodes have an integrated voltage-monitoring circuit with which the low-battery state is detected.
+Each module has a led strand constituted by led-and-controller pairs. To produce a certain light pattern, the actuator node, which is connected to the strand, sends information to each controller to indicate whether its led should be on or off and what color has to be displayed. 
+
+
+is connected to the module's led strand and indicates to each led controller whether its led should be on or off and what color has to be displayed.  (a LPD6803)
+ Modules express  their \emph{emotional states} by displaying different led patterns.
+
+All the elements in a module are powered by a 11 volts Li-Po battery. This battery should not be over-discharged, for this reduces drastically it's life. Therefore, sensor nodes have an integrated voltage-monitoring circuit with which the low-battery state is detected.
 
 %schematic of the battery monitor circuit
 %overall schematic of a sensor node
@@ -37,6 +43,16 @@ All the elements in a module are powered by a 11 volts Li-Po battery. This batte
 %packets structure
 
 \subsection{Software Concept} 
+
+\subsubsection{Driver} 
+Since we used the Arduino IDE to program the Panstamps, all the nodes' drivers in the network were written in C++. The driver was designed to allow \textbf{expandability}; as a result, new nodes can be added to the network by coping the basic drivers and changing them slightly. 
+
+
+\subsubsection{Java server}
+
+The Java Server is the heart of the interface; in other words, it is the orchestrator of all nodes in the system's network. The server node transfers all the data gathered in the network to the Java Server, which produces a response according to each module's personality and sends it to the intended actuator nodes through the server node (See ~\ref{fig:server-module}).  
+
+
 
 To achieve the degree of mobility, the server only needs a connected panstamp to work properly. It is also possible to put the server software on a more powerful microcontroller like a raspberry pi or some similar controller.
 The modularity is given through a number of easy configurable files. Changing behavior, appearance or the defined actions is pretty easy to do.
