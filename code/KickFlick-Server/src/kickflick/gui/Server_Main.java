@@ -15,7 +15,6 @@ import java.util.List;
 
 public class Server_Main
 {
-
     private server Server;
     private Combo combo_port;
 
@@ -26,9 +25,6 @@ public class Server_Main
     private final int time = 1500; //TODO make configurable
     private Table DeviceTable;
 
-    /**
-     * @wbp.parser.entryPoint
-     */
     public void open() {
         //display = Display.getDefault();
         shlKickflickServer.setMinimumSize(new Point(1, 23));

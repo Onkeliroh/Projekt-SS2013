@@ -14,7 +14,7 @@ public class personality implements Serializable
     private String Name_;
     private short State_ = 0;
     public final int state_count = 4;
-    private reaction standby = new reaction(color.BLUE,color.BLACK,pattern.FADE);
+    private reaction standby = new reaction(color.BLUE,color.BLACK,pattern.FADE); //TODO change default value
     private reaction current_reaction = null;
     private Map<keys, reaction[]> Reactions_;
     private Map<String, reaction> neighbours_ = new HashMap<String, reaction>();
@@ -77,6 +77,12 @@ public class personality implements Serializable
         this.standby = tmp;
     }
 
+    //requires to set the state first
+    public void set_current_reaction(keys k)
+    {
+        this.current_reaction = this.Reactions_.get(k)[this.State_];
+    }
+
     //Getter
 
     public String get_Name() {
@@ -86,30 +92,6 @@ public class personality implements Serializable
     public short get_State() {
         return this.State_;
     }
-
-//    public byte get_Color1() {
-//        return this.Color1_[this.State_];
-//    }
-//
-//    public byte get_Color2() {
-//        return this.Color2_[this.State_];
-//    }
-//
-//    public byte get_Color1(short state) {
-//        return this.Color1_[state];
-//    }
-//
-//    public byte get_Color2(short state) {
-//        return this.Color2_[state];
-//    }
-//
-//    public byte get_pattern(short state) {
-//        return this.pattern_[state];
-//    }
-//
-//    public byte get_pattern() {
-//        return this.pattern_[this.State_];
-//    }
 
     public String get_state_name() {
         return this.state_names[this.State_-1];
@@ -153,14 +135,23 @@ public class personality implements Serializable
                 return this.standby;
             }
         }
-        else
-        {
-            System.err.println("Personality get_reaction of " + this.Name_ + " wrong state");
-            return null;
-        }
+        System.err.println("Personality get_reaction of " + this.Name_ + " wrong state");
+        return null;
     }
 
+    public reaction get_current_reaction()
+    {
+        return this.current_reaction;
+    }
 
+    public byte[] get_current_reaction_array()
+    {
+        byte[] tmp = new byte[3];
+        tmp[0] = this.current_reaction.get_pattern().get_key();
+        tmp[1] = this.current_reaction.get_color1().get_key();
+        tmp[2] = this.current_reaction.get_color2().get_key();
+        return tmp;
+    }
 
     public reaction get_neighbor(String str) {
         for (Map.Entry e : neighbours_.entrySet())
@@ -168,6 +159,11 @@ public class personality implements Serializable
                 return (reaction) e.getValue();
         //if the string was'nt found in the map as a key, return default values
         return new reaction(color.GREEN_BRIGHT, color.BLUE, pattern.BLINK);
+    }
+
+    public int get_state_duration()
+    {
+        return this.get_current_reaction().get_durration();
     }
 
     public void inc_state() {

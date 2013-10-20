@@ -3,6 +3,7 @@ package kickflick.utility;
 import kickflick.device.device;
 import kickflick.device.reaction;
 import kickflick.gui.Server_Main;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -126,29 +127,19 @@ public class server extends Timer implements Serializable
         }
     }
 
-//    public void send_device(int index) {
-//        send_device(this.get_device(index));
-//    }
+    public void send_device(int index) {
+        send_device(this.get_device(index));
+    }
 
 
     //creates a byte array which will then be send to the server-panstamp
-//    public void send_device(device d) {
-//        byte[] msg = new byte[4];
-//        msg[0] = d.get_actuator_node();
-//        msg[1] = d.get_Personality().get;
-//        msg[2] = d.get_Personality().get_Color1();
-//        msg[3] = d.get_Personality().get_Color2();
-//
-//        this.send_msg(msg);
-//    }
-
-    public void send_reaction(reaction react)
-    {
+    public void send_device(device d) {
         byte[] msg = new byte[4];
+        byte[] tmp = d.get_Personality().get_current_reaction_array();
         msg[0] = d.get_actuator_node();
-        msg[1] = d.get_Personality().get;
-        msg[2] = d.get_Personality().get_Color1();
-        msg[3] = d.get_Personality().get_Color2();
+        msg[1] = tmp[0]; //pattern
+        msg[2] = tmp[1]; //color1
+        msg[3] = tmp[2]; //color2
 
         this.send_msg(msg);
     }

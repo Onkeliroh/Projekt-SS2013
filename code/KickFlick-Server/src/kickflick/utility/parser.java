@@ -9,6 +9,7 @@ import java.util.Map;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import kickflick.device.*;
+import kickflick.utility.serial_lib.com_listener;
 
 class parser implements SerialPortEventListener {
 	private final server Server_;
@@ -100,7 +101,7 @@ class parser implements SerialPortEventListener {
                     //only changes state if there is no known neihbor
                     if ( !this.Server_.get_device(index).has_neighbor())
                     {
-                        if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
+                        if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= this.Server_.get_device(index).get_Personality().get_state_duration())      //if the time difference between the last and this contact is big enougth
                         {
                             //send device information
                             for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
@@ -108,8 +109,13 @@ class parser implements SerialPortEventListener {
                                 keys k = (keys) entry.getKey();
                                 if (k.get_key() == arg[1] && (Boolean) entry.getValue())
                                 {
+                                    //increment state
                                     this.Server_.get_device(index).get_Personality().inc_state();
 
+                                    //set current reaction acording
+                                    this.Server_.get_device(index).get_Personality().set_current_reaction(k);
+
+                                    //send device(reaction) depending on the current reaction (previous step is important)
                                     this.Server_.send_device(index);
 
                                     this.Server_.get_device(index).set_new_timestamp();
