@@ -1,25 +1,33 @@
 \section{Concept}
-
 \subsection{Basic Concept}
+Feet are used in many real world tasks together with the rest of the body, but in computer environments they are almost completely put aside as an interaction possibility \cite{pakkanen}. For instance, Ubicomp researches have develop different types of interfaces for public spaces where users' hands are the protagonists and feet are partly or completely neglected. 
 
-The basic concept for this project was to create an interactive system, whose elements could be kicked or flicked by the users. 
+The basic concept of this project is a feet-based interface whose \textbf{individual modules} react when pushed or kicked. For this purpose, modules have to be highly \textbf {mobile} to yield a flexible interaction with the user. Another desired aspect is \textbf {expandability}: the envisioned system will allow the integration of new modules and features. %search literature to support this 
+Finally, a module is expected to detect if a another module comes up against it. In other words, another feature in the envisioned system is the \textbf{interaction between modules}. 
 
-The basic concept for this project was to create an interface, which is modular and mainly mobile. Like already explained we wanted to create a interface that has more degrees of freedom in terms of the usage than a installation which is bound to a place and therefore mobile. Due to the fact that we decided to use a more powerful server to manage all devices, we reached a certain degree of bounding to a place, while still being mobile. 
-So a server - client - structure is a very broad system and maybe to powerful for the target of this project. But in fact we needed a system that is highly expandable to add new features use it in another project.
-First idea was to build several independent hardware devices which communicate between each other. But the usage of a server - client based system has plenty more advantages than to build a simple hardware - communication - system:
-It is easier to implement new functionalities or to use this environment for later projects. Furthermore an administrator can change the device defaults pretty easy using the Graphical Interface.   
+%So a server - client - structure is a very broad system and maybe to powerful for the target of this project. 
+%First idea was to build several independent hardware devices which communicate between each other. But the usage of a server - client based system has plenty more advantages than to build a simple hardware - communication - system:
+%Furthermore an administrator can change the device defaults pretty easy using the Graphical Interface.   
 
 \subsection{Hardware Concept}
-Each node in the network has a panstamp: a small board whose core is the ATMEGA 328 P [{\url{http://www.atmel.com/devices/atmega328.aspx}}].
-Panstamps can communicate with other devices in a wireless way thanks to the transceiver CC1101. 
+To achieve \textbf{modularity} and \textbf{mobility}, a wireless communication platform is fundamental.   
+Panstamps, as explained in [{\url{http://www.panstamp.com/home}}], are small boards intended for implementing custom wireless networks.
 
+Due to Panstamps' open source nature, documentation and information about already implemented projects with them is at hand for everyone on the internet; this represents a very important advantage over other wireless products in the market. %search source that supports this 
+Additionally, Panstamps' core is the the ATMEGA 328 [{\url{http://www.atmel.com/devices/atmega328.aspx}}]; therefore, they are entirely programmable from the Arduino IDE, whose community is increasing each day.%search literature to support this 
 
+For all these reasons, we decided to build the envisioned system upon Panstamps. As depicted in Figure~\ref{fig:server-module}, each module in our system is constituted by a sensor and actuator node, both having a Panstamp as their nucleus. The server node has also a Panstamp as its main component, which communicates wirelessly with the other modules' panstamps. A Java-based application, the Java Server, gets the data recollected by the server node, process it and gives a response to the server node that has to be sent to the appropriate node i the network. The feedback provided by the Java Server depends entirely on the \emph{personality} of each device. For a better understanding of \emph{Personalities}, please refer to the XXX section of this work.
 
-Each sensor node has an accelerometer, which senses the acceleration experimented by an entity in each of the cardinal directions (x,y and z).
-On the sensor node board there is a circuit that monitors the voltage of the battery.
- 
-The LiPo battery should not be over-discharged for this reduces its life.
-  
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width= 0.4\textwidth, clip=true  ,keepaspectratio=true]{./graph/entity_server.png}
+ \caption{Interface's server and a module}
+ \label{fig:server-module}
+\end{figure}
+
+To detect if they have been kicked or pushed, modules need to sense their own movement; therefore, an accelerometer is connected to the sensor node of each module. We used the ADXL335, a small accelerometer that measures acceleration in each of the cardinal directions (x,y and z).
+
+All the elements in a module are powered by a 11 volts Li-Po battery. This battery should not be over-discharged, for this reduces drastically the it's life. Therefore, sensor nodes have an integrated voltage-monitoring circuit with which the low-battery state is detected.
 
 %schematic of the battery monitor circuit
 %overall schematic of a sensor node
