@@ -3,32 +3,37 @@
 #include "ccSensorNode.h"
 #include "accel.h"
 
-#define SENSOR_NODE_ID              2
-#define TWIN_NODE_ID                3
+#define SENSOR_NODE_ID                2
+#define TWIN_NODE_ID                  3
 
-#define KIDNEY_NEIGHBOR             4
-#define KIDNEY_RSSI_THRESHOLD     200
+#define KIDNEY_NEIGHBOR               4
+#define KIDNEY_RSSI_THRESHOLD       -65  //Kidney powered by AA batteries
 
-#define EGG_NEIGHBOR                6
-#define EGG_RSSI_THRESHOLD        -50     //PEAR threshold for EGG is -55
+#define EGG_NEIGHBOR                  6
+#define EGG_RSSI_THRESHOLD          -60  //Egg powered by AA batteries  
 
-#define ACCEL_CHECK_PERIOD         22
-#define SHAKE_INTERVAL           1500 
-#define LAST_MESSAGE_TIMEOUT   100000 
+#define NEIGHBOR_A                     KIDNEY_NEIGHBOR
+#define NEIGHBOR_A_THRES               KIDNEY_RSSI_THRESHOLD
 
+#define NEIGHBOR_B                     EGG_NEIGHBOR 
+#define NEIGHBOR_B_THRES               EGG_RSSI_THRESHOLD 
 
-#define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
-#define disableRFChipInterrupt()    detachInterrupt(0);
+#define ACCEL_CHECK_PERIOD           22
+#define STATE_CHANGE_INTERVAL      2000  // send message state each 2 secs even though the state hasn't change during this time
+#define LAST_MESSAGE_TIMEOUT     100000 
 
-#define enableaLowBattInterrupt()     analogComparator.enableInterrupt(lowBattInterrupt, FALLING);
-#define disableLowBattInterrupt()     analogComparator.disableInterrupt();
+#define enableRFChipInterrupt()        attachInterrupt(0, RFChipInterrupt, FALLING);
+#define disableRFChipInterrupt()       detachInterrupt(0);
+
+#define enableaLowBattInterrupt()      analogComparator.enableInterrupt(lowBattInterrupt, FALLING);
+#define disableLowBattInterrupt()      analogComparator.disableInterrupt();
 
 /////////////////////
 //--- INSTANCES ---//
 /////////////////////
 
 CCSENSORNODE _sensorNode = CCSENSORNODE(SENSOR_NODE_ID, TWIN_NODE_ID);
-ACCEL _accel = ACCEL(10,100);
+ACCEL _accel = ACCEL(10,95);
 
 ///////////////////
 //--- MEMBERS ---//
@@ -39,14 +44,15 @@ boolean _packetAvailable = false;
 boolean _batteryIsLow = false;
 
 enum state{
-    motionless,
-    shaken,
-    kicked};
+           motionless,
+           shaken,
+           kicked};
 
 state pearState = motionless;
     
 unsigned long _lastTimeAccelCheck = 0;
 unsigned long _lastMssgTime = 0;
+unsigned long _lastStateChangeTime = 0;
 
 //////////////////////
 //--- INTERRUPTS ---//
@@ -74,7 +80,7 @@ void lowBattInterrupt(void)
 void setup()
 {
     _sensorNode.setup();
-//    enableaLowBattInterrupt();
+    enableaLowBattInterrupt();
     enableRFChipInterrupt(); 
     delay(5); //For the batteryLow System
 }
@@ -88,16 +94,7 @@ void setup()
 void loop()
 {
      
-//    if(_batteryIsLow)
-//    {
-//        _sensorNode.reportLowBatt();
-//
-//        updateLastMssgTimestamp();
-//
-//        disableLowBattInterrupt();         
-//    }
-    
-    if(_packetAvailable)
+   if(_packetAvailable)
     {
         disableRFChipInterrupt();
         
@@ -109,34 +106,15 @@ void loop()
         {
             if(!_sensorNode.isPacketsSender())
             {
-//                _sensorNode.reportRSSI();   
+                _sensorNode.storeNeighborRSSI();    
               
-              
-               _sensorNode.storeNeighborRSSI();    
-              
-               if(_sensorNode.neighborSender() == KIDNEY_NEIGHBOR) 
-               {
-                   if(_sensorNode.neighborIsClose(KIDNEY_RSSI_THRESHOLD))
-                   {
-                       _sensorNode.reportRSSI(); 
-                       updateLastMssgTimestamp();
-
-                   } 
-               }
-               else
-               {
-                   if(_sensorNode.neighborSender() == EGG_NEIGHBOR) 
-                   {
-                       if(_sensorNode.neighborIsClose(EGG_RSSI_THRESHOLD))
-                       {
-                           _sensorNode.reportRSSI(); 
-                           updateLastMssgTimestamp();
-                       } 
-                    } 
-               }
-                              
-               
-            }          
+                if(oneNeighborIsClose())
+                {
+                    _sensorNode.reportRSSI(); 
+                    updateLastMssgTimestamp();                  
+                }
+        
+             }          
         }
         
         _packetAvailable = false;  
@@ -174,7 +152,17 @@ void loop()
     {
         reportInRange(); 
         updateLastMssgTimestamp(); 
-    }                
+    }  
+
+
+    if(_batteryIsLow)
+    {
+        _sensorNode.reportLowBatt();
+
+        updateLastMssgTimestamp();
+
+        disableLowBattInterrupt();         
+    }    
           
 }
 
@@ -183,23 +171,34 @@ void loop()
 
 void checkAccelEventAndReport()
 {
-       if((_accel.wasShaken()) && (pearState != shaken))
+       if(_accel.wasShaken())
        {
-           _sensorNode.reportShakeEvent();
+         if((pearState != shaken) || (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
+         {
+             _sensorNode.reportShakeEvent();
            
-           updateLastMssgTimestamp();
+             updateLastMssgTimestamp();
            
-           pearState = shaken;
-       }
+             pearState = shaken;
+           
+             _lastStateChangeTime = millis();
+           
+          }
+       }   
        else
        {
-           if(_accel.wasKicked() && (pearState != kicked))
+           if(_accel.wasKicked())
            {
-               _sensorNode.reportKickEvent();
+             if((pearState != kicked) || (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
+             {
+                 _sensorNode.reportKickEvent();
                
-               updateLastMssgTimestamp();
+                 updateLastMssgTimestamp();
                
-               pearState = kicked;
+                 pearState = kicked;
+               
+                 _lastStateChangeTime = millis();       
+              }                        
            }
            else 
            {
@@ -208,6 +207,19 @@ void checkAccelEventAndReport()
          
        }           
                 
+}
+
+boolean oneNeighborIsClose()
+{
+    boolean oneNeighborIsClose = false;
+    
+    if( (_sensorNode.isNeighborClose(NEIGHBOR_A, NEIGHBOR_A_THRES)) || (_sensorNode.isNeighborClose(NEIGHBOR_B,NEIGHBOR_B_THRES)) )
+    {
+        oneNeighborIsClose = true;     
+    }
+  
+    return oneNeighborIsClose;  
+  
 }
 
 

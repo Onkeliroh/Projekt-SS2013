@@ -3,10 +3,19 @@
 #include "ccSensorNode.h"
 #include "accel.h"
 
-#define SENSOR_NODE_ID 4
-#define TWIN_NODE_ID 5
+#define SENSOR_NODE_ID 6
+#define TWIN_NODE_ID 7
+
+
+#define PEAR_NEIGHBOR               2
+#define PEAR_RSSI_THRESHOLD       -60     
+
+#define KIDNEY_NEIGHBOR             4
+#define KIDNEY_RSSI_THRESHOLD     -60
+
 
 #define ACCEL_CHECK_PERIOD         22
+#define STATE_CHANGE_INTERVAL    1500 
 #define LAST_MESSAGE_TIMEOUT   100000 
 
 
@@ -21,7 +30,7 @@
 /////////////////////
 
 CCSENSORNODE _sensorNode = CCSENSORNODE(SENSOR_NODE_ID, TWIN_NODE_ID);
-ACCEL _accel = ACCEL(10,100);
+ACCEL _accel = ACCEL(10,120);
 
 ///////////////////
 //--- MEMBERS ---//
@@ -41,6 +50,7 @@ state kidneyState = motionless;
 
 unsigned long _lastTimeAccelCheck = 0;
 unsigned long _lastMssgTime = 0;
+unsigned long _lastStateChangeTime = 0;
 
 //////////////////////
 //--- INTERRUPTS ---//
@@ -99,16 +109,37 @@ void loop()
         {
             _sensorNode.ccHandle();  
         }
+       
         else
         {
             if(!_sensorNode.isPacketsSender())
             {
-                _sensorNode.reportRSSI();
-                
-                updateLastMssgTimestamp();
+//                _sensorNode.reportRSSI();                 
+//              
+               _sensorNode.storeNeighborRSSI();    
+              
+               if(_sensorNode.neighborSender() == PEAR_NEIGHBOR) 
+               {
+                   if(_sensorNode.neighborIsClose(PEAR_RSSI_THRESHOLD))
+                   {
+                       _sensorNode.reportRSSI(); 
+                       updateLastMssgTimestamp();
 
-            }          
-        }
+                   } 
+               }
+               else
+               {
+                   if(_sensorNode.neighborSender() == KIDNEY_NEIGHBOR) 
+                   {
+                       if(_sensorNode.neighborIsClose(KIDNEY_RSSI_THRESHOLD))
+                       {
+                           _sensorNode.reportRSSI(); 
+                           updateLastMssgTimestamp();
+                       } 
+                    } 
+                }                         
+             }  
+           }
         
         _packetAvailable = false;  
         
@@ -154,19 +185,27 @@ void loop()
 
 void checkAccelEventAndReport()
 {
-       if(_accel.wasShaken() && (kidneyState != shaken))
+       if(_accel.wasShaken() && (kidneyState != shaken) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
        {
            _sensorNode.reportShakeEvent();
            
            updateLastMssgTimestamp();
+           
+           kidneyState = shaken;
+           
+           _lastStateChangeTime = millis();
        }
        else
        {
-           if(_accel.wasKicked() && (kidneyState != kicked))
+           if(_accel.wasKicked() && (kidneyState != kicked) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
            {
                _sensorNode.reportKickEvent();
                
                updateLastMssgTimestamp();
+               
+               kidneyState = kicked;
+           
+               _lastStateChangeTime = millis();
            }
            else
            {

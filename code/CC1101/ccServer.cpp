@@ -148,18 +148,6 @@ void CCSERVER::checkRSSI()
 }
 
 
-void CCSERVER::lowBatteryAlert()
-{
-    CCPACKET ccPacket = _ccPacketHandler.getPacket();
-    byte nodeLowBattery = ccPacket.SENDER_ID;
- 
-    //Serial.print("Node Nr. " );
-    //Serial.print(nodeLowBattery);
-    //Serial.println("  is running out of Battery!!!");      
-
-}
-
-
 void CCSERVER::setBuffer()
 
 {
@@ -256,10 +244,6 @@ void CCSERVER::setTestColorCommand(byte COLORR, byte COLORB, byte COLORG)
     _ccPacketHandler.buildRGBCommand(COLORR, COLORB, COLORG); 
 }
             
-
-
- 
-     
 byte CCSERVER::getBufferChecksum()
 {
     byte checkSum = 0;

@@ -24,7 +24,8 @@ class CCSENSORNODE: public CCNODE
                 byte neighborSender();
                 int calculateTrueRSSI(byte rawRSSI);
                 void storeNeighborRSSI();
-                boolean neighborIsClose(int neighborThreshold);
+                boolean neighborRssiIsHigh(int neighborThreshold);
+                boolean isNeighborClose(int neighborId, int neighborRssiThreshold);
                 
                 //REPORTS TO THE SERVER
                 void reportShakeEvent();

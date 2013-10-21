@@ -136,32 +136,38 @@ int CCSENSORNODE::calculateTrueRSSI(byte rawRSSI)
 
 void CCSENSORNODE::storeNeighborRSSI()
 {
-    CCPACKET ccPacket = _ccPacketHandler.getPacket();
-    byte rssi_dBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
-    byte emisorID = ccPacket.NEAR_NODE_ID;
-
     byte rawRSSI =  _ccPacketHandler.getPacketRSSI();
 
     _neighborRSSI = calculateTrueRSSI(rawRSSI);
 
-     Serial.print("NeighborRSSI " );
-     Serial.println(_neighborRSSI);
-
 }
 
-boolean CCSENSORNODE::neighborIsClose(int neighborThreshold)
+boolean CCSENSORNODE::neighborRssiIsHigh(int neighborThreshold)
 {
 
-    boolean neighborClose = false;
+    boolean rssiIsHigh = false;
 
     if(_neighborRSSI >= neighborThreshold)
     {
-        neighborClose = true;
+        rssiIsHigh = true;
     }
     
-    return neighborClose;
+    return rssiIsHigh;
 
 }
+
+boolean CCSENSORNODE::isNeighborClose(int neighborId, int neighborRssiThreshold)
+{
+    boolean neighborIsClose = false;
+  
+    if( (neighborSender() == neighborId) && (neighborRssiIsHigh(neighborRssiThreshold)))
+    {
+        neighborIsClose = true;         
+    }
+     
+    return neighborIsClose;  
+}
+
 
 void CCSENSORNODE::reportShakeEvent()
 

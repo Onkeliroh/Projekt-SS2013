@@ -42,8 +42,7 @@ class CCSERVER: public CCNODE
                 void ccHandle(void); 
                 int  ccRSSI(byte rawRSSI);
                 void checkRSSI();
-                void lowBatteryAlert(void);
-
+               
                 void setBuffer();
                 void setNearNodeBuffer();
                 void sendBufferToJavaServer();
