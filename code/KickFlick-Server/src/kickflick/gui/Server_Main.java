@@ -268,8 +268,6 @@ public class Server_Main
                 List<device> list = Server.get_devices();
                 DeviceTable.removeAll();
 
-                System.out.println(Server.get_devices().size());
-
                 int i = 0;
                 for (final device d : list)
                 {
