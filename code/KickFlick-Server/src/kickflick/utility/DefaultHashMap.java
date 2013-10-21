@@ -8,8 +8,13 @@ public class DefaultHashMap<K,V> extends HashMap<K,V> {
     public DefaultHashMap(V defaultValue) {
         this.defaultValue = defaultValue;
     }
+    
     public V get(Object k) {
         V v = super.get(k);
         return ((v == null) && !this.containsKey(k)) ? this.defaultValue : v;
+    }
+    
+    public V get_default() {
+    	return this.defaultValue;
     }
 }
