@@ -25,15 +25,27 @@ For all these reasons, we decided to build the envisioned system upon Panstamps.
  \label{fig:server-module}
 \end{figure}
 
-To detect if they have been kicked or pushed, modules need to sense their own movement; therefore, an accelerometer is connected to the sensor node of each module. We used the ADXL335, a small accelerometer that measures acceleration in each of the cardinal directions (x,y and z).
+To detect if they have been kicked or pushed, modules need to sense their own movement; therefore, an accelerometer is connected to the sensor node of each module as shown by Figure \ref{fig:sensor-node}. We used the ADXL335, a small accelerometer that measures acceleration in each of the cardinal directions (x,y and z).
 
-Each module has a led strand constituted by led-and-controller pairs. To produce a certain light pattern, the actuator node, which is connected to the strand, sends information to each controller to indicate whether its led should be on or off and what color has to be displayed. 
-
-
-is connected to the module's led strand and indicates to each led controller whether its led should be on or off and what color has to be displayed.  (a LPD6803)
- Modules express  their \emph{emotional states} by displaying different led patterns.
+Each module has a led strand constituted by led-and-controller pairs. To produce a certain light pattern, the actuator node, which is connected to the strand, sends information to each controller to indicate whether its led should be on or off and what color has to be displayed. Led patterns play an important role in the interface because each module expresses its \textbf{personality} through led patterns.  
 
 All the elements in a module are powered by a 11 volts Li-Po battery. This battery should not be over-discharged, for this reduces drastically it's life. Therefore, sensor nodes have an integrated voltage-monitoring circuit with which the low-battery state is detected.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width= 0.4\textwidth, clip=true  ,keepaspectratio=true]{./graph/sensor_node.png}
+ \caption{Sensor node elements}
+ \label{fig:sensor-node}
+\end{figure}
+
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width= 0.3\textwidth, clip=true  ,keepaspectratio=true]{./graph/actuator_node.png}
+ \caption{Actuator node elements}
+ \label{fig:actuator-node}
+\end{figure}
+
 
 %schematic of the battery monitor circuit
 %overall schematic of a sensor node
