@@ -1,10 +1,10 @@
 #include "EEPROM.h"
 #include "ccActuatorNode.h"
-#include "kidneyLeds.h"
+#include "pearLeds.h"
 
 
-#define ACTUATORNODE 5     //needed a number with a normal ascii character for testing
-#define TWIN_NODE_ID 4
+#define ACTUATORNODE 3     //needed a number with a normal ascii character for testing
+#define TWIN_NODE_ID 2
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()    detachInterrupt(0);
@@ -15,7 +15,7 @@
 /////////////////////
 
 CCACTUATORNODE _actuatorNode = CCACTUATORNODE(ACTUATORNODE,TWIN_NODE_ID); 
-KIDNEYLEDS _kidneyLeds = KIDNEYLEDS();
+PEARLEDS _pearLeds = PEARLEDS();
 
 
 ////////////////////
@@ -23,9 +23,9 @@ KIDNEYLEDS _kidneyLeds = KIDNEYLEDS();
 ///////////////////
 
 boolean _packetAvailable = false;
-byte patternKey = BLINK;
-byte firstColor = 0;
-byte secondColor = 0;
+byte _patternKey = BLINK;
+byte _firstColor = 7;
+byte _secondColor = 4;
 
 
 unsigned long lastTimeBlink = 0;
@@ -47,9 +47,9 @@ void RFChipInterrupt()
 void setup()
 {
     _actuatorNode.setup();
-    _kidneyLeds.setup();
+    _pearLeds.setup();
     enableRFChipInterrupt();           
-    _kidneyLeds.updateLedPattern();
+    _pearLeds.updateLedPattern();
 }
 
 
@@ -69,16 +69,16 @@ void loop()
                      
            if(_actuatorNode.keyforLeds())  
            {
-               firstColor = _actuatorNode.getFirstColor();
-               _kidneyLeds.setFirstColor(firstColor);
+               _firstColor = _actuatorNode.getFirstColor();
+               _pearLeds.setFirstColor(_firstColor);
                
-               secondColor = _actuatorNode.getSecondColor();
-               _kidneyLeds.setSecondColor(secondColor); 
+               _secondColor = _actuatorNode.getSecondColor();
+               _pearLeds.setSecondColor(_secondColor); 
                
-               patternKey = _actuatorNode.getKey();
-               _kidneyLeds.setPattern(patternKey);    
+               _patternKey = _actuatorNode.getKey();
+               _pearLeds.setPattern(_patternKey);    
                
-               _kidneyLeds.updateLedPattern();
+               _pearLeds.updateLedPattern();
            }
            else         
                _actuatorNode.ccHandle();  
@@ -100,10 +100,10 @@ void loop()
 
 void changePatternState()
 {
-   if(millis() - lastTimeBlink > 500 )
+   if(millis() - _lastTimeBlink > 500 )
    {
-       lastTimeBlink = millis();
-       _kidneyLeds.updateLedPattern();            
+       _lastTimeBlink = millis();
+       _pearLeds.updateLedPattern();            
    }       
        
 }

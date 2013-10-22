@@ -120,7 +120,7 @@ void loop()
               
                if(_sensorNode.neighborSender() == PEAR_NEIGHBOR) 
                {
-                   if(_sensorNode.neighborIsClose(PEAR_RSSI_THRESHOLD))
+                   if(_sensorNode.neighborRssiIsHigh(PEAR_RSSI_THRESHOLD))
                    {
                        _sensorNode.reportRSSI(); 
                        updateLastMssgTimestamp();
@@ -131,7 +131,7 @@ void loop()
                {
                    if(_sensorNode.neighborSender() == KIDNEY_NEIGHBOR) 
                    {
-                       if(_sensorNode.neighborIsClose(KIDNEY_RSSI_THRESHOLD))
+                       if(_sensorNode.neighborRssiIsHigh(KIDNEY_RSSI_THRESHOLD))
                        {
                            _sensorNode.reportRSSI(); 
                            updateLastMssgTimestamp();
