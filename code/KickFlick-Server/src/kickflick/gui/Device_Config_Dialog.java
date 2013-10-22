@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 public class Device_Config_Dialog extends Dialog
 {
@@ -56,6 +58,8 @@ public class Device_Config_Dialog extends Dialog
     private List<Text> neighbor_text_list = new ArrayList<Text>();
     private Table standby_table;
     private Combo key_select_combo;
+
+    private boolean pre_set_selected = false;
 
 
     public Device_Config_Dialog(Shell parent, int style, device Dev, List<String> neighbor_pers) {
@@ -98,6 +102,8 @@ public class Device_Config_Dialog extends Dialog
         shlDeviceConfugurationDialog.setText("Device Confuguration Dialog");
         GridLayout gl_shlDeviceConfugurationDialog = new GridLayout(1, false);
         shlDeviceConfugurationDialog.setLayout(gl_shlDeviceConfugurationDialog);
+        
+        result = this.Device;
 
         TabFolder tabFolder = new TabFolder(shlDeviceConfugurationDialog, SWT.NONE);
         tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -123,6 +129,7 @@ public class Device_Config_Dialog extends Dialog
         preset_pers_combo.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e) {
+                pre_set_selected = true;
                 set_pre_pers(presetpersonalities.valueOf(preset_pers_combo.getItem(preset_pers_combo.getSelectionIndex())).get_personality());
             }
         });
@@ -138,6 +145,11 @@ public class Device_Config_Dialog extends Dialog
         grpCurrentState.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
         
         state_combo = new Combo(grpCurrentState, SWT.READ_ONLY);
+        state_combo.addSelectionListener(new SelectionAdapter() {        	
+        	public void widgetSelected(SelectionEvent e) {
+        		result.get_Personality().set_State((short) state_combo.getSelectionIndex());
+        	}
+        });
         state_combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
         
         new Label(Config_composite, SWT.NONE);
@@ -146,6 +158,11 @@ public class Device_Config_Dialog extends Dialog
         name_label.setText("Name:");
 
         name_text = new Text(Config_composite, SWT.BORDER);
+        name_text.addModifyListener(new ModifyListener() {
+        	public void modifyText(ModifyEvent arg0) {
+        		result.get_Personality().set_Name(name_text.getText());
+        	}
+        });
         GridData gd_name_text = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
         gd_name_text.widthHint = 200;
         name_text.setLayoutData(gd_name_text);
@@ -157,6 +174,11 @@ public class Device_Config_Dialog extends Dialog
         lblActuatorId.setText("Actuator Id:");
 
         actuator_adr_text = new Text(Config_composite, SWT.BORDER | SWT.READ_ONLY);
+        actuator_adr_text.addModifyListener(new ModifyListener() {
+        	public void modifyText(ModifyEvent arg0) {
+        		result.set_actuator_node((byte) Integer.parseInt(actuator_adr_text.getText()));
+        	}
+        });
         actuator_adr_text.setToolTipText("Sets the adress of the actuator node.");
         actuator_adr_text.setEditable(true);
         GridData gd_actuator_adr_text = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -175,6 +197,11 @@ public class Device_Config_Dialog extends Dialog
         lblSenderId.setText("Sensor Id:");
 
         sensor_adr_text = new Text(Config_composite, SWT.BORDER | SWT.READ_ONLY);
+        sensor_adr_text.addModifyListener(new ModifyListener() {
+        	public void modifyText(ModifyEvent arg0) {
+        		result.set_sensor_node((byte) Integer.parseInt(sensor_adr_text.getText()));
+        	}
+        });
         sensor_adr_text.setToolTipText("Sets the adress of the sensor node.");
         sensor_adr_text.setEditable(true);
         GridData gd_sensor_adr_text = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -183,6 +210,11 @@ public class Device_Config_Dialog extends Dialog
         new Label(Config_composite, SWT.NONE);
 
         trigger_table = new Table(Config_composite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
+        trigger_table.addSelectionListener(new SelectionAdapter() {
+        	public void widgetSelected(SelectionEvent e) {
+//        		result.get_trigger_map().put(key, value)
+        	}
+        });
         GridData gd_trigger_table = new GridData(SWT.FILL, SWT.FILL, true, true, 8, 1);
         gd_trigger_table.widthHint = 242;
         gd_trigger_table.heightHint = 61;
@@ -200,15 +232,15 @@ public class Device_Config_Dialog extends Dialog
         Composite state_composite = new Composite(tabFolder, SWT.NONE);
         Personality_tab.setControl(state_composite);
         state_composite.setLayout(new GridLayout(3, false));
-        new Label(state_composite, SWT.NONE);
+        
+        Label lblStandbyReaction = new Label(state_composite, SWT.NONE);
+        lblStandbyReaction.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 2));
+        lblStandbyReaction.setText("Standby Reaction:");
         
         standby_table = new Table(state_composite, SWT.BORDER | SWT.FULL_SELECTION);
-        standby_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+        standby_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 2));
         standby_table.setHeaderVisible(true);
         standby_table.setLinesVisible(true);
-        new Label(state_composite, SWT.NONE);
-        new Label(state_composite, SWT.NONE);
-        new Label(state_composite, SWT.NONE);
 
         Label label_1 = new Label(state_composite, SWT.SEPARATOR | SWT.HORIZONTAL);
         label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
@@ -223,6 +255,16 @@ public class Device_Config_Dialog extends Dialog
         for ( keys k : keys.values())
         	key_select_combo.add(k.get_name());
         key_select_combo.select(0);
+
+        //setup state table depending wether  pre set personality was selected or not
+        key_select_combo.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                if ( !pre_set_selected )
+                    set_state_combos(Device.get_Personality());
+                else
+                    set_state_combos(presetpersonalities.valueOf(preset_pers_combo.getItem(preset_pers_combo.getSelectionIndex())).get_personality());
+            }
+        });
 
         Label lblStateTable = new Label(state_composite, SWT.NONE);
         lblStateTable.setText("Selected Reaction:");
@@ -303,6 +345,54 @@ public class Device_Config_Dialog extends Dialog
         }
 
 
+        for (int i = 0; i < 4; i++)
+        {
+            TableColumn column = new TableColumn(standby_table, SWT.CENTER);
+            column.setText(tabel_heads[i]);
+            column.setWidth(100);
+        }
+
+        new TableItem(standby_table, SWT.NONE);
+
+        TableEditor standby_editor = new TableEditor(standby_table);
+        Text standby_text = new Text(standby_table, SWT.NONE);
+        standby_text.setText(this.state_names[1]);
+        standby_text.setEditable(false);
+        standby_text.setCapture(false);
+        standby_editor.grabHorizontal = true;
+        standby_editor.setEditor(standby_text, this.standby_table.getItem(0), 0);
+
+        standby_editor = new TableEditor(standby_table);
+        final Combo standby_pattern_combo = new Combo(standby_table, SWT.READ_ONLY);
+        for (pattern p : pattern.values())
+            standby_pattern_combo.add(p.get_name());
+
+        standby_pattern_combo.select(0);
+        standby_editor.grabHorizontal = true;
+        standby_editor.setEditor(standby_pattern_combo, this.standby_table.getItem(0), 1);
+        pattern_combo_list.add(standby_pattern_combo);
+
+        standby_editor = new TableEditor(standby_table);
+        CCombo standby_color1_combo = new CCombo(standby_table, SWT.NONE);
+        for (color c : color.values())
+            standby_color1_combo.add(c.get_name());
+        standby_color1_combo.setEditable(false);
+        standby_color1_combo.select(0);
+        standby_editor.grabHorizontal = true;
+        standby_editor.setEditor(standby_color1_combo, this.standby_table.getItem(0), 2);
+        color1_combo_list.add(standby_color1_combo);
+
+        standby_editor = new TableEditor(standby_table);
+        CCombo standby_color2_combo = new CCombo(standby_table, SWT.NONE);
+        for (color c : color.values())
+            standby_color2_combo.add(c.get_name());
+        standby_color2_combo.setEditable(false);
+        standby_color2_combo.select(0);
+        standby_editor.grabHorizontal = true;
+        standby_editor.setEditor(standby_color2_combo, this.standby_table.getItem(0), 3);
+        color2_combo_list.add(standby_color2_combo);
+        
+        standby_table.pack();
 
         //create state table and cell skeleton
         for (int i = 0; i < 4; i++)
@@ -517,56 +607,8 @@ public class Device_Config_Dialog extends Dialog
         
         
         //setup state table
-        short i = 1;
-        for (Combo c : pattern_combo_list)
-        {
-        	reaction tmp = null;
-        	for ( keys k : keys.values())
-        		if ( k.get_name().equals(key_select_combo.getText()))
-        			tmp = this.Device.get_Personality().get_reaction(k,i);
-        	
-            for (int j = 0; j < pattern.values().length; ++j)
-            	if ( pattern.values()[j].get_key() == tmp.get_pattern().get_key())
-                {
-                    c.select(j);
-                    break;
-                }
-            ++i;
-        }
+        set_state_combos(this.Device.get_Personality());
 
-        i = 1;
-        for (CCombo c : color1_combo_list)
-        {
-        	reaction tmp = null;
-        	for ( keys k : keys.values())
-        		if ( k.get_name().equals(key_select_combo.getText()))
-        			tmp = this.Device.get_Personality().get_reaction(k,i);
-        	
-            for (int j = 0; j < color.values().length; ++j)
-            	if ( color.values()[j].get_key() == tmp.get_color1().get_key())
-                {
-                    c.select(j);
-                    break;
-                }
-            ++i;
-        }
-        
-        i = 1;
-        for (CCombo c : color2_combo_list)
-        {
-        	reaction tmp = null;
-        	for ( keys k : keys.values())
-        		if ( k.get_name().equals(key_select_combo.getText()))
-        			tmp = this.Device.get_Personality().get_reaction(k,i);
-        	
-            for (int j = 0; j < color.values().length; ++j)
-            	if ( color.values()[j].get_key() == tmp.get_color2().get_key())
-                {
-                    c.select(j);
-                    break;
-                }
-            ++i;
-        }
 
         //setup neighbor table
         for (int j = 0; j < this.neighbor_text_list.size(); ++j)
@@ -604,42 +646,65 @@ public class Device_Config_Dialog extends Dialog
 //        this.state_combo.removeAll(); //setting state combo each time redundant?
 //        for (int i = 0; i < pers.state_count; ++i)
 //            this.state_combo.add(pers.get_state_name((short) i), i);
-
 //        this.state_combo.select(pers.get_State());
 
-//        short i = 0;
-//        for (Combo c : pattern_combo_list)
-//        {
-//            for (int j = 0; j < pattern.values().length; ++j)
-////                if (pattern.values()[j].get_key() == pers.get_pattern((short) i))
-////                {
-////                    c.select(j);
-////                    break;
-////                }
-//            ++i;
-//        }
-//
-//        i = 0;
-//        for (CCombo c : color1_combo_list)
-//        {
-//            for (int j = 0; j < color.values().length; ++j)
-////                if (color.values()[j].get_key() == pers.get_Color1((short) i))
-////                {
-////                    c.select(j);
-////                    break;
-////                }
-//            ++i;
-//        }
-//        i = 0;
-//        for (CCombo c : color2_combo_list)
-//        {
-//            for (int j = 0; j < color.values().length; ++j)
-////                if (color.values()[j].get_key() == pers.get_Color2((short) i))
-////                {
-////                    c.select(j);
-////                    break;
-////                }
-//            ++i;
-//        }
+        this.key_select_combo.select(0);
+
+        //setup state table
+        set_state_combos(pers);
+    }
+
+    private void set_state_combos(personality p)
+    {
+        short i = 0;
+        for (Combo c : pattern_combo_list)
+        {
+            reaction tmp = null;
+            for ( keys k : keys.values())
+                if ( k.get_name().equals(key_select_combo.getText()))
+                    tmp = p.get_reaction(k,i);
+
+            for (int j = 0; j < pattern.values().length; ++j)
+                if ( pattern.values()[j].get_key() == tmp.get_pattern().get_key())
+                {
+                    c.select(j);
+                    break;
+                }
+            ++i;
+        }
+
+        i = 0;
+        for (CCombo c : color1_combo_list)
+        {
+            reaction tmp = null;
+            for ( keys k : keys.values())
+                if ( k.get_name().equals(key_select_combo.getText()))
+                    tmp = p.get_reaction(k, i);
+
+            for (int j = 0; j < color.values().length; ++j)
+                if ( color.values()[j].get_key() == tmp.get_color1().get_key())
+                {
+                    c.select(j);
+                    break;
+                }
+            ++i;
+        }
+
+        i = 0;
+        for (CCombo c : color2_combo_list)
+        {
+            reaction tmp = null;
+            for ( keys k : keys.values())
+                if ( k.get_name().equals(key_select_combo.getText()))
+                    tmp = p.get_reaction(k, i);
+
+            for (int j = 0; j < color.values().length; ++j)
+                if ( color.values()[j].get_key() == tmp.get_color2().get_key())
+                {
+                    c.select(j);
+                    break;
+                }
+            ++i;
+        }
     }
 }

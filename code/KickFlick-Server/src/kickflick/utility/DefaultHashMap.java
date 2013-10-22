@@ -17,4 +17,9 @@ public class DefaultHashMap<K,V> extends HashMap<K,V> {
     public V get_default() {
     	return this.defaultValue;
     }
+
+    public void set_default(V defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
 }
