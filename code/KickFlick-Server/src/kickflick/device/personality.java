@@ -138,6 +138,11 @@ public class personality implements Serializable
         System.err.println("Personality get_reaction of " + this.Name_ + " wrong state");
         return null;
     }
+    
+    public Map<keys,reaction[]> get_reactions()
+    {
+    	return this.Reactions_;
+    }
 
     public reaction get_current_reaction()
     {

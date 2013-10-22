@@ -297,7 +297,7 @@ public class Server_Main
 
                         Display.getCurrent().asyncExec(dialog);
                     }
-                    if (d.get_Personality().get_State() == -1)
+                    if (d.get_Personality().get_State() == -1 && Server.get_SerialCom().is_connected() )
                     {
                         Runnable dialog = new Runnable()
                         {
@@ -318,8 +318,7 @@ public class Server_Main
                 } finally
                 {
                 }
-
-                display.timerExec(time, this);
+            display.timerExec(time, this);
             }
         };
     }
@@ -339,7 +338,9 @@ public class Server_Main
             if (tmp_dev != null)
             {
                 Server.set_device(index, tmp_dev);
-                Server.send_device(index);
+
+                if ( Server.get_SerialCom().is_connected() )
+                    Server.send_device(index);
             }
         }
     }

@@ -209,10 +209,14 @@ public class Device_Config_Dialog extends Dialog
         sensor_adr_text.setLayoutData(gd_sensor_adr_text);
         new Label(Config_composite, SWT.NONE);
 
+
         trigger_table = new Table(Config_composite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION);
         trigger_table.addSelectionListener(new SelectionAdapter() {
         	public void widgetSelected(SelectionEvent e) {
-//        		result.get_trigger_map().put(key, value)
+        		String selected_item  = trigger_table.getSelection()[0].getText();
+                for ( keys k : keys.values())
+                    if ( k.get_name().equals(selected_item))
+                        result.get_trigger_map().put(k, trigger_table.getSelection()[0].getChecked());
         	}
         });
         GridData gd_trigger_table = new GridData(SWT.FILL, SWT.FILL, true, true, 8, 1);
@@ -255,6 +259,13 @@ public class Device_Config_Dialog extends Dialog
         for ( keys k : keys.values())
         	key_select_combo.add(k.get_name());
         key_select_combo.select(0);
+        key_select_combo.addSelectionListener( new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+            	apply_state();
+            	set_state_combos();
+            }
+        });
+        
 
         //setup state table depending wether  pre set personality was selected or not
         key_select_combo.addSelectionListener(new SelectionAdapter() {
@@ -275,7 +286,6 @@ public class Device_Config_Dialog extends Dialog
         state_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
         state_table.setHeaderVisible(true);
         state_table.setLinesVisible(true);
-        TableItem[] items = state_table.getItems();
 
         TabItem tbtmNeighbor = new TabItem(tabFolder, SWT.NONE);
         tbtmNeighbor.setText("Neighbor");
@@ -459,51 +469,6 @@ public class Device_Config_Dialog extends Dialog
         btnApply.addMouseListener(new MouseAdapter()
         {
             public void mouseDown(MouseEvent e) {
-            	//TODO make function
-//                System.out.println("Actuator: " + Integer.parseInt(actuator_adr_text.getText()) + "\t" + (byte) Integer.parseInt(actuator_adr_text.getText()));
-//                result.set_sensor_node((byte) Integer.parseInt(sensor_adr_text.getText()));
-//                result.set_actuator_node((byte) Integer.parseInt(actuator_adr_text.getText()));
-//
-//                Map<kickflick.utility.keys, Boolean> trigger = Device.get_trigger_map();
-//
-//                int i = 0;
-//                for (Map.Entry<kickflick.utility.keys, Boolean> entry : result.get_trigger_map().entrySet())
-//                {
-//                    if (entry.getKey().get_name().equalsIgnoreCase(trigger_table.getItem(i).getText()))
-//                        entry.setValue(trigger_table.getItem(i).getChecked());
-//                    ++i;
-//                }
-//
-//                result.get_Personality().set_Name(name_text.getText());
-//                result.get_Personality().set_State((short) state_combo.getSelectionIndex());
-////                result.get_Personality().set_pattern(new byte[]{pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key()});
-//
-//                short j = 0;
-//                for (Combo c : pattern_combo_list)
-//                {
-//                    for (pattern p : pattern.values())
-//                        if (p.get_name().equalsIgnoreCase(c.getText()))
-////                            result.get_Personality().set_pattern(p.get_key(), j);
-//                    ++j;
-//                }
-//
-//                j = 0;
-//                for (CCombo c : color1_combo_list)
-//                {
-//                    for (color p : color.values())
-//                        if (p.get_name().equalsIgnoreCase(c.getText()))
-////                            result.get_Personality().set_Color1(p.get_key(), j);
-//                    ++j;
-//                }
-//                j = 0;
-//                for (CCombo c : color2_combo_list)
-//                {
-//                    for (color p : color.values())
-//                        if (p.get_name().equalsIgnoreCase(c.getText()))
-////                            result.get_Personality().set_Color2(p.get_key(), j);
-//                    ++j;
-//                }
-//
 //                pattern p_setting = null;
 //                color c1_setting = null;
 //                color c2_setting = null;
@@ -592,6 +557,7 @@ public class Device_Config_Dialog extends Dialog
         this.state_combo.add(this.state_names[4]); 
         
         this.state_combo.select(this.Device.get_Personality().get_State());
+        System.out.println(this.Device.get_Personality().get_State());
 
         //setup trigger table with device configs
         this.trigger_table.removeAll();
@@ -641,19 +607,17 @@ public class Device_Config_Dialog extends Dialog
 
     private void set_pre_pers(personality pers) {
         this.name_text.setText(pers.get_Name());
-
-        //todo maybe no need to change state
-//        this.state_combo.removeAll(); //setting state combo each time redundant?
-//        for (int i = 0; i < pers.state_count; ++i)
-//            this.state_combo.add(pers.get_state_name((short) i), i);
-//        this.state_combo.select(pers.get_State());
-
         this.key_select_combo.select(0);
 
         //setup state table
         set_state_combos(pers);
     }
 
+    private void set_state_combos()
+    {
+    	set_state_combos(this.Device.get_Personality());
+    }
+    
     private void set_state_combos(personality p)
     {
         short i = 0;
@@ -694,9 +658,8 @@ public class Device_Config_Dialog extends Dialog
         for (CCombo c : color2_combo_list)
         {
             reaction tmp = null;
-            for ( keys k : keys.values())
-                if ( k.get_name().equals(key_select_combo.getText()))
-                    tmp = p.get_reaction(k, i);
+            
+            tmp = p.get_reaction(find_keys_element(key_select_combo.getText()), i);
 
             for (int j = 0; j < color.values().length; ++j)
                 if ( color.values()[j].get_key() == tmp.get_color2().get_key())
@@ -706,5 +669,45 @@ public class Device_Config_Dialog extends Dialog
                 }
             ++i;
         }
+    }
+    
+    private void apply_state()
+    {
+    	reaction[] key_settings = new reaction[3];
+        for ( int i = 0 ; i < (pattern_combo_list.size()-1); i++)
+        {
+            System.out.println("Itteration: " + i + "\t" + pattern_combo_list.size());
+		    pattern tmp_p = find_pattern_element(pattern_combo_list.get(i+1).getText());
+		    color tmp_c1 = find_color_element(color1_combo_list.get(i+1).getText());
+		    color tmp_c2 = find_color_element(color2_combo_list.get(i+1).getText());
+
+            key_settings[i] = new reaction(tmp_c1,tmp_c2,tmp_p);
+        }
+        System.out.println("Finished collectiong Data");
+		  result.get_Personality().get_reactions().put(find_keys_element(key_select_combo.getText()), key_settings);
+    }
+    
+    private pattern find_pattern_element(String str)
+    {
+    	for ( pattern p : pattern.values())
+    		if ( p.get_name().equalsIgnoreCase(str))
+    			return p;
+		return null;
+    }
+    
+    private color find_color_element(String str)
+    {
+    	for ( color c : color.values())
+    		if ( c.get_name().equalsIgnoreCase(str))
+    			return c;
+		return null;
+    }
+    
+    private keys find_keys_element(String str)
+    {
+    	for ( keys k : keys.values() )
+    		if ( k.get_name().equalsIgnoreCase(str))
+    			return k;
+    	return null;
     }
 }
