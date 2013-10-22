@@ -18,6 +18,7 @@
 #define LEDSOFF      4
 #define ONESTRIPE    5
 #define STRIPES      6
+#define TWOFADE      7
 
 
 //STATES
@@ -32,6 +33,7 @@
 #define BLACK        0
 
 
+#define FADINGDELTA  1
 
 class LEDS
 {
@@ -54,9 +56,19 @@ class LEDS
 		void colorWipe(uint16_t c);
 		void flipRainbow();
 		void rainbow();
-		unsigned int Wheel(byte WheelPos);		
+		unsigned int Wheel(byte WheelPos);
+                void fade();		
                 uint16_t findColor(byte colorIndex);
-                unsigned int Color(byte r, byte g, byte b);
+                uint16_t Color(byte r, byte g, byte b);
+                void setBlueRedGreenComp(uint16_t Color);
+		byte getBlueComp(uint16_t Color);
+		byte getGreenComp(uint16_t Color);
+		byte getRedComp(uint16_t Color);
+                boolean componentNotNull(byte Component);
+                byte highestComponent();
+                byte lowestComponent();
+                int findColorCase();
+                void adjustFadeDelta();
 
         protected:
 
@@ -65,6 +77,10 @@ class LEDS
                 byte Pattern;
                 byte patternState;
                 byte fadeState;
+                byte blueComp;    
+                byte greenComp;
+                byte redComp;
+                int fadeDelta;
           
 };
 

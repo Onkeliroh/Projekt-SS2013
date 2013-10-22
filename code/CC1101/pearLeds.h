@@ -18,8 +18,7 @@ class PEARLEDS : public LEDS
                 void blinkLeds();
                 void setStripes();
                 void setOneStripe();
-                void fade();
-             
+                             
 };
 
 

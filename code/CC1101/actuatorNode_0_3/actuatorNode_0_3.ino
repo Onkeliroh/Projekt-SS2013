@@ -23,12 +23,13 @@ PEARLEDS _pearLeds = PEARLEDS();
 ///////////////////
 
 boolean _packetAvailable = false;
-byte _patternKey = BLINK;
-byte _firstColor = 7;
+byte _patternKey = FADE;
+byte _firstColor = 0;
 byte _secondColor = 4;
 
 
-unsigned long lastTimeBlink = 0;
+unsigned long _lastTimeBlink = 0;
+
 //////////////////////
 //--- INTERRUPTS ---//
 //////////////////////
@@ -49,7 +50,7 @@ void setup()
     _actuatorNode.setup();
     _pearLeds.setup();
     enableRFChipInterrupt();           
-    _pearLeds.updateLedPattern();
+    setDefaultlLedPattern();
 }
 
 
@@ -98,14 +99,36 @@ void loop()
 
 }
 
+void setDefaultlLedPattern()
+{
+    _pearLeds.setFirstColor(_firstColor); 
+    _pearLeds.setSecondColor(_secondColor); 
+    _pearLeds.setPattern(_patternKey);
+    _pearLeds.updateLedPattern(); 
+    
+}
+
+
+
 void changePatternState()
 {
-   if(millis() - _lastTimeBlink > 500 )
-   {
-       _lastTimeBlink = millis();
-       _pearLeds.updateLedPattern();            
-   }       
-       
+    if(_patternKey == FADE)
+    {
+        if(millis() - _lastTimeBlink > 55 )
+        {
+            _lastTimeBlink = millis();
+            _pearLeds.updateLedPattern();       
+        }         
+    }
+    else
+    {
+        if(millis() - _lastTimeBlink > 500 )
+        {
+            _lastTimeBlink = millis();
+            _pearLeds.updateLedPattern();       
+        }     
+    }
+        
 }
 
 

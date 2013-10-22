@@ -151,6 +151,79 @@ unsigned int LEDS::Wheel(byte WheelPos)
   return(Color(r, g, b));
 }
 
+void LEDS::fade()
+{
+    int colorScenario;
+
+    setBlueRedGreenComp(Color1);
+
+    colorScenario = findColorCase();
+ 
+    adjustFadeDelta();
+
+    switch (colorScenario)
+    {
+           case 1: 
+               greenComp = greenComp + fadeDelta;
+               break;
+           case 2:
+               redComp = redComp + fadeDelta;               
+               break;
+           case 3:  
+               if(greenComp +fadeDelta*(greenComp/redComp) < 0)
+               {
+                   fadeDelta = FADINGDELTA;                   
+               }  
+               if(greenComp +fadeDelta*(greenComp/redComp) > 31)
+               {
+                   fadeDelta = -FADINGDELTA;                               
+               }  
+               greenComp = byte(greenComp + fadeDelta*(greenComp/redComp));
+               redComp = redComp + fadeDelta;
+               break;              
+           case 4:  
+               blueComp = blueComp + fadeDelta;
+               break;
+           case 5:   
+               if(greenComp +fadeDelta*(greenComp/blueComp) < 0)
+               {
+                   fadeDelta = FADINGDELTA;
+               }  
+               if(greenComp +fadeDelta*(greenComp/blueComp) > 31)
+               {
+                   fadeDelta = -FADINGDELTA;
+               }             
+               greenComp = byte(greenComp + fadeDelta*(greenComp/blueComp));
+               blueComp = blueComp + fadeDelta;
+               break;
+           case 6:  
+               if(redComp +fadeDelta*(redComp/blueComp) < 0)
+               {
+                   fadeDelta = FADINGDELTA;
+               }  
+               if(redComp +fadeDelta*(redComp/blueComp) > 31)
+               {
+                   fadeDelta = -FADINGDELTA;
+               } 
+               redComp = byte(redComp + fadeDelta*(redComp/blueComp));
+	       blueComp = blueComp + fadeDelta;
+               break;
+           case 7:                   
+               redComp = byte(redComp + fadeDelta*(redComp/blueComp));
+               greenComp = byte(greenComp + fadeDelta*(greenComp/blueComp));
+               blueComp = blueComp + fadeDelta;
+               break;   
+           default:
+               break;  
+      }
+ 
+      Color1 = Color(blueComp, redComp, greenComp); 
+
+      setOneColorForAll(Color1); 
+  
+}
+
+
 uint16_t LEDS::findColor(byte colorIndex)
 
 {
@@ -215,9 +288,105 @@ uint16_t LEDS::findColor(byte colorIndex)
 }
 
 // Create a 16 bit color value from R, G, B
-unsigned int LEDS::Color(byte r, byte g, byte b)
+uint16_t LEDS::Color(byte b, byte r, byte g)
 {
   //Take the lowest 5 bits of each value and append them end to end
-  return(((unsigned int)g & 0x1F ) << 10 | ((unsigned int)b & 0x1F) << 5 | (unsigned int)r & 0x1F);
+  return(((unsigned int)r & 0x1F ) << 10 | ((unsigned int)g & 0x1F) << 5 | (unsigned int)b & 0x1F);
 }
  
+void LEDS::setBlueRedGreenComp(uint16_t Color)
+{
+    blueComp = getBlueComp(Color);
+    greenComp = getGreenComp(Color);
+    redComp = getRedComp(Color);
+}
+
+byte LEDS::getBlueComp(uint16_t Color)
+{
+    return byte(Color & 0x1F);
+}
+
+byte LEDS::getGreenComp(uint16_t Color)
+{
+    return byte((Color1 >> 5) & 0x1F);
+}
+
+byte LEDS::getRedComp(uint16_t Color)
+{
+    return byte((Color1 >> 10) & 0x1F);
+}
+
+boolean LEDS::componentNotNull(byte Component)
+{
+
+    boolean componentNotNull = false;
+
+    if(Component > 0)
+    {
+        componentNotNull = true;
+    } 
+   
+    return componentNotNull;
+}
+
+byte LEDS::highestComponent()
+{
+    byte highestComponent = (byte)max(max(blueComp, greenComp), max(greenComp,redComp));
+   
+    return highestComponent;
+
+}
+
+byte LEDS::lowestComponent()
+{
+    byte lowestComponent = (byte)min(min(blueComp, greenComp), min(greenComp,redComp));
+   
+    return lowestComponent;
+
+}
+
+int LEDS::findColorCase()
+{
+    int colorCase = 0;
+
+    if(componentNotNull(blueComp))
+    {
+        colorCase = 4;
+    }
+
+    if(componentNotNull(redComp))
+    {
+        colorCase = colorCase + 2;        
+    }
+
+    if(componentNotNull(greenComp)) 
+    {
+        colorCase = colorCase + 1;        
+    }
+
+    return colorCase;
+
+}
+
+
+void LEDS::adjustFadeDelta()
+{
+
+    if(highestComponent() + fadeDelta > 31 )
+    {
+        fadeDelta = -FADINGDELTA;  //cannot increase the component beyond 31
+    }
+    else
+    {
+        if((highestComponent() == FADINGDELTA)||(highestComponent() < FADINGDELTA) )   
+	{
+	    fadeDelta = FADINGDELTA;  //cannot decrease the component beyond 1
+	}
+    }
+   
+}
+
+
+
+
+

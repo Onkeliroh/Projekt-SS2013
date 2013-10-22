@@ -67,6 +67,10 @@ PEARLEDS::PEARLEDS()
     Color2 = ZERO;
     Pattern = 0;
     patternState = 0;
+    blueComp = 0;    
+    greenComp = 0;
+    redComp = 0;
+    fadeDelta = 1;
 
 }
 
@@ -85,11 +89,11 @@ void PEARLEDS::updateLedPattern()
 
     switch (Pattern)
     {        
-        case BLINK:
+        case BLINK:            
             blinkLeds();                
             break;
-        case FADE: 
-            fade();           
+        case FADE:
+            fade();                      
             break;
         case RAINBOW:
             rainbow();
@@ -115,7 +119,7 @@ void PEARLEDS::blinkLeds()
      switch(patternState)
     {
         case ZERO:
-	    setOneColorForAll(Color1);
+            setOneColorForAll(Color1);
 	    ++patternState;
             break;       
         case ONE:
@@ -127,16 +131,10 @@ void PEARLEDS::blinkLeds()
             ++patternState; 
             break;       
         case THREE:
-	    setOneColorForAll(BLACK);       
+            setOneColorForAll(BLACK);       
             patternState = ZERO;  
             break; 
      }
-}
-
-void PEARLEDS::fade()
-{
-   
-   
 }
 
 
