@@ -58,6 +58,7 @@ public class Device_Config_Dialog extends Dialog
     private List<Text> neighbor_text_list = new ArrayList<Text>();
     private Table standby_table;
     private Combo key_select_combo;
+    private int key_combo_pre_selection = 0;
 
     private boolean pre_set_selected = false;
 
@@ -261,8 +262,10 @@ public class Device_Config_Dialog extends Dialog
         key_select_combo.select(0);
         key_select_combo.addSelectionListener( new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-            	apply_state();
-            	set_state_combos();
+            	apply_state(); 
+//            	set_state_combos();
+            	
+            	key_combo_pre_selection = key_select_combo.getSelectionIndex();
             }
         });
         
@@ -557,7 +560,6 @@ public class Device_Config_Dialog extends Dialog
         this.state_combo.add(this.state_names[4]); 
         
         this.state_combo.select(this.Device.get_Personality().get_State());
-        System.out.println(this.Device.get_Personality().get_State());
 
         //setup trigger table with device configs
         this.trigger_table.removeAll();
@@ -608,6 +610,7 @@ public class Device_Config_Dialog extends Dialog
     private void set_pre_pers(personality pers) {
         this.name_text.setText(pers.get_Name());
         this.key_select_combo.select(0);
+        this.key_combo_pre_selection = 0;
 
         //setup state table
         set_state_combos(pers);
@@ -676,15 +679,15 @@ public class Device_Config_Dialog extends Dialog
     	reaction[] key_settings = new reaction[3];
         for ( int i = 0 ; i < (pattern_combo_list.size()-1); i++)
         {
-            System.out.println("Itteration: " + i + "\t" + pattern_combo_list.size());
 		    pattern tmp_p = find_pattern_element(pattern_combo_list.get(i+1).getText());
 		    color tmp_c1 = find_color_element(color1_combo_list.get(i+1).getText());
 		    color tmp_c2 = find_color_element(color2_combo_list.get(i+1).getText());
 
             key_settings[i] = new reaction(tmp_c1,tmp_c2,tmp_p);
         }
-        System.out.println("Finished collectiong Data");
-		  result.get_Personality().get_reactions().put(find_keys_element(key_select_combo.getText()), key_settings);
+        keys tmp_key = find_keys_element(key_select_combo.getItems()[key_combo_pre_selection]);
+		result.get_Personality().get_reactions().put(tmp_key, key_settings);
+//		result.get_Personality().get_reactions().put(keys.rolledy, new reaction[]{new reaction(color.BLACK, color.BLACK, pattern.BLINK),new reaction(color.BLACK, color.BLACK, pattern.BLINK),new reaction(color.BLACK, color.BLACK, pattern.BLINK)});
     }
     
     private pattern find_pattern_element(String str)

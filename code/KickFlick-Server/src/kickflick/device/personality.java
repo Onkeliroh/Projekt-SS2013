@@ -53,8 +53,6 @@ public class personality implements Serializable
     }
 
     public personality(personality pers) {
-        create_reaction_map();
-
         this.Name_ = pers.Name_;
         this.State_ = pers.State_;
         this.Reactions_ = pers.Reactions_;
@@ -126,9 +124,9 @@ public class personality implements Serializable
                 for (Map.Entry e : this.Reactions_.entrySet())
                 {
                     if ( e.getKey().equals(key) )
-                        return ((reaction[])e.getValue())[state];
+                        return ((reaction[])e.getValue())[state -1];
                 }
-                return this.Reactions_.get(key)[state];
+                return this.Reactions_.get(key)[state -1];
             }
             else if (state == 0)
             {
