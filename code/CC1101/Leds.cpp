@@ -3,6 +3,8 @@
 
 LPD6803 _ledStrip = LPD6803(NUMLEDS, DATAPIN, CLOCKPIN); // Set the first variable to the NUMBER of pixels. 20 = 20 pixels in a row
 
+
+
 //int _pillarHead = 0;
 //int _pillarLength = 4;
 //unsigned int _pillarColor;
@@ -17,14 +19,16 @@ boolean _flagRainbow = false; // true := rainbow()
 LEDS::~LEDS()
 
 {
-
+   
 	
 }
 
 //METHODS
-void LEDS::setup()
+void LEDS::setup(int numberLeds)
 
 {
+    
+    _ledStrip = LPD6803(numberLeds, DATAPIN, CLOCKPIN); // Set the first variable to the NUMBER of pixels. 20 = 20 pixels in a row     
     ledStripInit();    
 
 }
@@ -55,6 +59,8 @@ void LEDS::setPatternState(byte state)
 }
 
 
+
+
 // Initializing the LED-strip
 void LEDS::ledStripInit()
 {
@@ -68,13 +74,14 @@ void LEDS::ledStripInit()
 void LEDS::setOneColorForAll(uint16_t color1)
 { 
   int i = 0;
-
+ 
   while(i < _ledStrip.numPixels())
   {
       _ledStrip.setPixelColor(i, color1);  
-      ++i;  
-      _ledStrip.show();      
-   }
+      ++i;          
+      _ledStrip.show(); 
+  }
+ 
  }
 
 void LEDS::setSectionColor(byte section[], int sectionLength, uint16_t sectionColor)
@@ -112,17 +119,32 @@ void LEDS::flipRainbow()
     _flagRainbow = true;
 }
 
-// The rainbow method drives every LED through all possible colors
-void LEDS::rainbow()//uint8_t wait)
+void LEDS::rainbow()
 {
-  for (int j = 0; j < 96 * 3; ++j) // 3 cycles of all 96 colors in the wheel
-  {
-    for (int i = 0; i < _ledStrip.numPixels(); ++i) 
-    {
-      _ledStrip.setPixelColor(i, Wheel((i + j) % 96));      
-    }  
+    _ledStrip.setPixelColor(firstRainbowIndex, Wheel((firstRainbowIndex + secondRainbowIndex) % 96));   
     _ledStrip.show();   // write all the pixels out
-  }
+
+    if(firstRainbowIndex < _ledStrip.numPixels()) 
+    {
+        ++firstRainbowIndex;    
+    }
+    else
+    {
+        firstRainbowIndex = 0;
+        if(secondRainbowIndex < 96 * 3) 
+        {
+            ++secondRainbowIndex;    
+        }
+        else
+        {
+            secondRainbowIndex = 0;
+        }
+     }
+     Serial.print("first  ");
+    Serial.println(firstRainbowIndex);
+    Serial.print("second  ");
+     Serial.println(secondRainbowIndex);
+
 }
 
 // Input a value 0 to 127 to get a color value.
@@ -217,8 +239,7 @@ void LEDS::fade()
                break;  
       }
  
-      Color1 = Color(blueComp, redComp, greenComp); 
-
+      Color1 = Color(blueComp, redComp, greenComp);
       setOneColorForAll(Color1); 
   
 }
@@ -337,11 +358,26 @@ byte LEDS::highestComponent()
 
 }
 
-byte LEDS::lowestComponent()
+byte LEDS::lowestNotNullComponent()
 {
-    byte lowestComponent = (byte)min(min(blueComp, greenComp), min(greenComp,redComp));
+    byte lowestNotNullComponent = 0;
    
-    return lowestComponent;
+    if(componentNotNull(blueComp))
+    {
+        lowestNotNullComponent = blueComp;        
+    }
+
+    if(componentNotNull(redComp))
+    {
+        lowestNotNullComponent = min(lowestNotNullComponent, redComp);        
+    }
+    
+    if(componentNotNull(greenComp)) 
+    {
+        lowestNotNullComponent = min(lowestNotNullComponent, greenComp);
+    }
+
+    return lowestNotNullComponent;
 
 }
 
@@ -378,7 +414,7 @@ void LEDS::adjustFadeDelta()
     }
     else
     {
-        if((highestComponent() == FADINGDELTA)||(highestComponent() < FADINGDELTA) )   
+        if(lowestNotNullComponent() == FADINGDELTA)   
 	{
 	    fadeDelta = FADINGDELTA;  //cannot decrease the component beyond 1
 	}

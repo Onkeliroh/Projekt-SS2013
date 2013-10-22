@@ -1,7 +1,5 @@
 #include "eggLeds.h"
 
-byte stripeState = 0;
-
 typedef struct
 {
     byte section1[2];
@@ -46,6 +44,12 @@ EGGLEDS::EGGLEDS()
     Color2 = ZERO;
     Pattern = 0;
     patternState = 0;
+    blueComp = 0;    
+    greenComp = 0;
+    redComp = 0;
+    fadeDelta = FADINGDELTA;
+    firstRainbowIndex = 0;
+    secondRainbowIndex = 0;
 
 }
 
@@ -82,11 +86,46 @@ void EGGLEDS::updateLedPattern()
             setOneStripe();     
             break;
         case STRIPES:
-            setStripes();     
-            break;             
+            setOneStripe();     
+            break;
         default:            
             break; 
     }
+}
+
+unsigned long EGGLEDS::getPatternPeriod(byte patternKey)
+{
+  unsigned long patternPeriod;
+ 
+  switch(patternKey)
+  {
+    case BLINK:
+      patternPeriod = EGGBLINK_PERIOD;
+      break; 
+    case FADE:
+      patternPeriod = EGGFADE_PERIOD;
+      break; 
+    case RAINBOW:
+      patternPeriod = EGGRAINBOW_PERIOD;
+      break;      
+    case LEDSON:
+      patternPeriod = EGGLEDSON_PERIOD;
+      break; 
+    case LEDSOFF:
+      patternPeriod = EGGLEDSOFF_PERIOD;
+      break;
+    case ONESTRIPE:
+      patternPeriod = EGGONESTRIPE_PERIOD;
+      break;
+    case STRIPES:
+      patternPeriod = EGGSTRIPES_PERIOD;
+      break;
+    default:
+      patternPeriod = EGGSTRIPES_PERIOD;
+      break;
+   }
+ 
+   return patternPeriod;
 }
 
 void EGGLEDS::blinkLeds()
@@ -110,12 +149,6 @@ void EGGLEDS::blinkLeds()
             patternState = ZERO;  
             break; 
      }
-}
-
-void EGGLEDS::fade()
-{
-   
-   
 }
 
 

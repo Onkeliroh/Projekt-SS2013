@@ -12,6 +12,11 @@
 #define EGG_NEIGHBOR                6
 #define EGG_RSSI_THRESHOLD        -65   //Egg using AA batteries 
 
+#define NEIGHBOR_A                     PEAR_NEIGHBOR
+#define NEIGHBOR_A_THRES               PEAR_RSSI_THRESHOLD
+
+#define NEIGHBOR_B                     EGG_NEIGHBOR 
+#define NEIGHBOR_B_THRES               EGG_RSSI_THRESHOLD 
 
 #define ACCEL_CHECK_PERIOD         22
 #define STATE_CHANGE_INTERVAL    2000   // send message state each 2 secs even though it hasn't change during this time
@@ -29,7 +34,7 @@
 /////////////////////
 
 CCSENSORNODE _sensorNode = CCSENSORNODE(SENSOR_NODE_ID, TWIN_NODE_ID);
-ACCEL _accel = ACCEL(10,110);
+ACCEL _accel = ACCEL(10,80);
 
 ///////////////////
 //--- MEMBERS ---//
@@ -113,30 +118,14 @@ void loop()
         {
             if(!_sensorNode.isPacketsSender())
             {
-//                _sensorNode.reportRSSI();                 
-              
                _sensorNode.storeNeighborRSSI();    
               
-               if(_sensorNode.neighborSender() == PEAR_NEIGHBOR) 
+               if(oneNeighborIsClose())
                {
-                   if(_sensorNode.neighborRssiIsHigh(PEAR_RSSI_THRESHOLD))
-                   {
-                       _sensorNode.reportRSSI(); 
-                       updateLastMssgTimestamp();
-
-                   } 
-               }
-               else
-               {
-                   if(_sensorNode.neighborSender() == EGG_NEIGHBOR) 
-                   {
-                       if(_sensorNode.neighborRssiIsHigh(EGG_RSSI_THRESHOLD))
-                       {
-                           _sensorNode.reportRSSI(); 
-                           updateLastMssgTimestamp();
-                       } 
-                    } 
-                }                         
+                    _sensorNode.reportRSSI(); 
+                    updateLastMssgTimestamp();                  
+                }     
+                
              }  
            }
         
@@ -215,6 +204,19 @@ void checkAccelEventAndReport()
                 
 }
 
+
+boolean oneNeighborIsClose()
+{
+    boolean oneNeighborIsClose = false;
+    
+    if( (_sensorNode.isNeighborClose(NEIGHBOR_A, NEIGHBOR_A_THRES)) || (_sensorNode.isNeighborClose(NEIGHBOR_B,NEIGHBOR_B_THRES)) )
+    {
+        oneNeighborIsClose = true;     
+    }
+  
+    return oneNeighborIsClose;  
+  
+}
 
 boolean longTimeSinceLastMssg()
 {

@@ -3,8 +3,10 @@
 #include "pearLeds.h"
 
 
-#define ACTUATORNODE 3     //needed a number with a normal ascii character for testing
+#define ACTUATORNODE 3   
 #define TWIN_NODE_ID 2
+
+#define NUMLEDS  50       //PEAR has 50 leds
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()    detachInterrupt(0);
@@ -24,9 +26,9 @@ PEARLEDS _pearLeds = PEARLEDS();
 
 boolean _packetAvailable = false;
 byte _patternKey = FADE;
-byte _firstColor = 0;
-byte _secondColor = 4;
-
+byte _firstColor = 13;
+byte _secondColor = 7;
+unsigned long  _patternPeriod = 0;
 
 unsigned long _lastTimeBlink = 0;
 
@@ -48,7 +50,7 @@ void RFChipInterrupt()
 void setup()
 {
     _actuatorNode.setup();
-    _pearLeds.setup();
+    _pearLeds.setup(NUMLEDS);
     enableRFChipInterrupt();           
     setDefaultlLedPattern();
 }
@@ -66,8 +68,7 @@ void loop()
          
         if(_actuatorNode.ccGetNewPacket())
         {
-//           _actuatorNode.ledBlink();   
-                     
+                    
            if(_actuatorNode.keyforLeds())  
            {
                _firstColor = _actuatorNode.getFirstColor();
@@ -77,7 +78,9 @@ void loop()
                _pearLeds.setSecondColor(_secondColor); 
                
                _patternKey = _actuatorNode.getKey();
-               _pearLeds.setPattern(_patternKey);    
+               _pearLeds.setPattern(_patternKey);  
+             
+               _patternPeriod = _pearLeds.getPatternPeriod(_patternKey);  
                
                _pearLeds.updateLedPattern();
            }
@@ -92,9 +95,10 @@ void loop()
     } 
     else 
     {
-      
-         changePatternState();    
-         
+         if(patternHasPeriod(_patternKey))
+         {
+             changePatternState();   
+         } 
     }
 
 }
@@ -104,31 +108,33 @@ void setDefaultlLedPattern()
     _pearLeds.setFirstColor(_firstColor); 
     _pearLeds.setSecondColor(_secondColor); 
     _pearLeds.setPattern(_patternKey);
+    _patternPeriod = _pearLeds.getPatternPeriod(_patternKey);      
     _pearLeds.updateLedPattern(); 
     
 }
 
 
-
 void changePatternState()
 {
-    if(_patternKey == FADE)
+    if(millis() - _lastTimeBlink > _patternPeriod )
     {
-        if(millis() - _lastTimeBlink > 55 )
-        {
-            _lastTimeBlink = millis();
-            _pearLeds.updateLedPattern();       
-        }         
-    }
-    else
-    {
-        if(millis() - _lastTimeBlink > 500 )
-        {
-            _lastTimeBlink = millis();
-            _pearLeds.updateLedPattern();       
-        }     
-    }
-        
+        _lastTimeBlink = millis();
+        _pearLeds.updateLedPattern();
+           
+    }         
+   
 }
 
+boolean patternHasPeriod(byte pattern)
+{
+    boolean hasPeriod = true;
+   
+    if((pattern == LEDSON)||(pattern == LEDSOFF))  
+    {
+        hasPeriod = false;  
+      
+    }
+  
+    return hasPeriod;
+}
 

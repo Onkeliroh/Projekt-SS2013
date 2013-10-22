@@ -3,8 +3,11 @@
 #include "eggLeds.h"
 
 
-#define ACTUATORNODE 7     //needed a number with a normal ascii character for testing
+#define ACTUATORNODE 7     
 #define TWIN_NODE_ID 6
+
+#define NUMLEDS  12       //EGG has 12 leds
+
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()    detachInterrupt(0);
@@ -23,12 +26,13 @@ EGGLEDS _eggLeds = EGGLEDS();
 ///////////////////
 
 boolean _packetAvailable = false;
-byte patternKey = BLINK;
-byte firstColor = 0;
-byte secondColor = 0;
+byte _patternKey = ONESTRIPE;
+byte _firstColor = 15;
+byte _secondColor = 1;
+unsigned long  _patternPeriod = 0;
 
 
-unsigned long lastTimeBlink = 0;
+unsigned long _lastTimeBlink = 0;
 //////////////////////
 //--- INTERRUPTS ---//
 //////////////////////
@@ -47,9 +51,9 @@ void RFChipInterrupt()
 void setup()
 {
     _actuatorNode.setup();
-    _eggLeds.setup();
+    _eggLeds.setup(NUMLEDS);
     enableRFChipInterrupt();           
-    _eggLeds.updateLedPattern();
+    setDefaultlLedPattern();
 }
 
 
@@ -65,18 +69,19 @@ void loop()
          
         if(_actuatorNode.ccGetNewPacket())
         {
-//           _actuatorNode.ledBlink();   
-                     
+    
            if(_actuatorNode.keyforLeds())  
            {
-               firstColor = _actuatorNode.getFirstColor();
-               _eggLeds.setFirstColor(firstColor);
+               _firstColor = _actuatorNode.getFirstColor();
+               _eggLeds.setFirstColor(_firstColor);
                
-               secondColor = _actuatorNode.getSecondColor();
-               _eggLeds.setSecondColor(secondColor); 
+               _secondColor = _actuatorNode.getSecondColor();
+               _eggLeds.setSecondColor(_secondColor); 
                
-               patternKey = _actuatorNode.getKey();
-               _eggLeds.setPattern(patternKey);    
+               _patternKey = _actuatorNode.getKey();
+               _eggLeds.setPattern(_patternKey);
+           
+               _patternPeriod = _eggLeds.getPatternPeriod(_patternKey);    
                
                _eggLeds.updateLedPattern();
            }
@@ -91,21 +96,48 @@ void loop()
     } 
     else 
     {
-      
-         changePatternState();    
+         if(patternHasPeriod(_patternKey))
+         {
+             changePatternState();   
+         } 
          
     }
 
 }
 
+void setDefaultlLedPattern()
+{
+    _eggLeds.setFirstColor(_firstColor); 
+    _eggLeds.setSecondColor(_secondColor); 
+    _eggLeds.setPattern(_patternKey);
+    _patternPeriod = _eggLeds.getPatternPeriod(_patternKey);      
+    _eggLeds.updateLedPattern(); 
+    
+}
+
 void changePatternState()
 {
-   if(millis() - lastTimeBlink > 500 )
-   {
-       lastTimeBlink = millis();
-       _eggLeds.updateLedPattern();            
-   }       
-       
+    if(millis() - _lastTimeBlink > _patternPeriod )
+    {
+        _lastTimeBlink = millis();
+        _eggLeds.updateLedPattern();
+           
+    }         
+   
 }
+
+boolean patternHasPeriod(byte pattern)
+{
+    boolean hasPeriod = true;
+   
+    if((pattern == LEDSON)||(pattern == LEDSOFF))  
+    {
+        hasPeriod = false;  
+      
+    }
+  
+    return hasPeriod;
+}
+
 
 

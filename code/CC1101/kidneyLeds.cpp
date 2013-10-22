@@ -62,7 +62,13 @@ KIDNEYLEDS::KIDNEYLEDS()
     Color1 = ZERO; 
     Color2 = ZERO;
     Pattern = 0;
-    patternState = 0;       
+    patternState = 0;
+    blueComp = 0;    
+    greenComp = 0;
+    redComp = 0;
+    fadeDelta = FADINGDELTA;
+    firstRainbowIndex = 0;
+    secondRainbowIndex = 0;    
 
 }
 
@@ -81,16 +87,19 @@ void KIDNEYLEDS::updateLedPattern()
         case BLINK:
             blinkLeds();                
             break;
-        case FADE:            
+        case FADE:
+            fade();                                  
             break;
         case RAINBOW:
             rainbow();
+            secondRainbowIndex = random(0, 96*3);
             break;
         case LEDSON:
-            setOneColorForAll(Color1);                   
+            setOneColorForAll(Color1);                
             break; 
         case LEDSOFF:
             setOneColorForAll(BLACK);
+            break;
         case ONESTRIPE:
             setOneStripe();     
             break;
@@ -101,6 +110,43 @@ void KIDNEYLEDS::updateLedPattern()
             break; 
     }
 }
+
+unsigned long KIDNEYLEDS::getPatternPeriod(byte patternKey)
+{
+  unsigned long patternPeriod;
+ 
+  switch(patternKey)
+  {
+    case BLINK:
+      patternPeriod = KIDNEYBLINK_PERIOD;
+      break; 
+    case FADE:
+      patternPeriod = KIDNEYFADE_PERIOD;
+      break; 
+    case RAINBOW:
+      patternPeriod = KIDNEYRAINBOW_PERIOD;
+      break;      
+    case LEDSON:
+      patternPeriod = KIDNEYLEDSON_PERIOD;
+      break; 
+    case LEDSOFF:
+      patternPeriod = KIDNEYLEDSOFF_PERIOD;
+      break;
+    case ONESTRIPE:
+      patternPeriod = KIDNEYONESTRIPE_PERIOD;
+      break;
+    case STRIPES:
+      patternPeriod = KIDNEYSTRIPES_PERIOD;
+      break;
+    default:
+      patternPeriod = KIDNEYONESTRIPE_PERIOD;
+      break;
+   }
+ 
+   return patternPeriod;
+}
+
+
 
 void KIDNEYLEDS::blinkLeds()
 {

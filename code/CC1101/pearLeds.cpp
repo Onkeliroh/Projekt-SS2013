@@ -1,6 +1,5 @@
 #include "pearLeds.h"
 
-byte stripeState = 0;
 
 typedef struct
 {
@@ -70,7 +69,9 @@ PEARLEDS::PEARLEDS()
     blueComp = 0;    
     greenComp = 0;
     redComp = 0;
-    fadeDelta = 1;
+    fadeDelta = FADINGDELTA;
+    firstRainbowIndex = 0;
+    secondRainbowIndex = 0;
 
 }
 
@@ -97,12 +98,14 @@ void PEARLEDS::updateLedPattern()
             break;
         case RAINBOW:
             rainbow();
+            secondRainbowIndex = random(0, 96*3); 
             break;
         case LEDSON:
             setOneColorForAll(Color1);                 
             break; 
         case LEDSOFF:
             setOneColorForAll(BLACK);
+            break;
         case ONESTRIPE:
             setOneStripe();     
             break;
@@ -113,6 +116,42 @@ void PEARLEDS::updateLedPattern()
             break; 
     }
 }
+
+unsigned long PEARLEDS::getPatternPeriod(byte patternKey)
+{
+  unsigned long patternPeriod;
+ 
+  switch(patternKey)
+  {
+    case BLINK:
+      patternPeriod = PEARBLINK_PERIOD;
+      break; 
+    case FADE:
+      patternPeriod = PEARFADE_PERIOD;
+      break; 
+    case RAINBOW:
+      patternPeriod = PEARRAINBOW_PERIOD;
+      break;      
+    case LEDSON:
+      patternPeriod = PEARLEDSON_PERIOD;
+      break; 
+    case LEDSOFF:
+      patternPeriod = PEARLEDSOFF_PERIOD;
+      break;
+    case ONESTRIPE:
+      patternPeriod = PEARONESTRIPE_PERIOD;
+      break;
+    case STRIPES:
+      patternPeriod = PEARSTRIPES_PERIOD;
+      break;
+    default:
+      patternPeriod = 0;
+      break;
+   }
+ 
+   return patternPeriod;
+}
+
 
 void PEARLEDS::blinkLeds()
 {

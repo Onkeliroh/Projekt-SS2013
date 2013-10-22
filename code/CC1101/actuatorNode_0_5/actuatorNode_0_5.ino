@@ -6,6 +6,8 @@
 #define ACTUATORNODE 5     //needed a number with a normal ascii character for testing
 #define TWIN_NODE_ID 4
 
+#define NUMLEDS  38       //KIDNEY has 38 leds
+
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()    detachInterrupt(0);
 
@@ -23,12 +25,12 @@ KIDNEYLEDS _kidneyLeds = KIDNEYLEDS();
 ///////////////////
 
 boolean _packetAvailable = false;
-byte patternKey = BLINK;
-byte firstColor = 0;
-byte secondColor = 0;
+byte _patternKey = ONESTRIPE;
+byte _firstColor = 15;
+byte _secondColor = 7;
+unsigned long  _patternPeriod = 0;
 
-
-unsigned long lastTimeBlink = 0;
+unsigned long _lastTimeBlink = 0;
 //////////////////////
 //--- INTERRUPTS ---//
 //////////////////////
@@ -47,9 +49,9 @@ void RFChipInterrupt()
 void setup()
 {
     _actuatorNode.setup();
-    _kidneyLeds.setup();
+    _kidneyLeds.setup(NUMLEDS);
     enableRFChipInterrupt();           
-    _kidneyLeds.updateLedPattern();
+    setDefaultlLedPattern();
 }
 
 
@@ -69,14 +71,16 @@ void loop()
                      
            if(_actuatorNode.keyforLeds())  
            {
-               firstColor = _actuatorNode.getFirstColor();
-               _kidneyLeds.setFirstColor(firstColor);
+               _firstColor = _actuatorNode.getFirstColor();
+               _kidneyLeds.setFirstColor(_firstColor);
                
-               secondColor = _actuatorNode.getSecondColor();
-               _kidneyLeds.setSecondColor(secondColor); 
+               _secondColor = _actuatorNode.getSecondColor();
+               _kidneyLeds.setSecondColor(_secondColor); 
                
-               patternKey = _actuatorNode.getKey();
-               _kidneyLeds.setPattern(patternKey);    
+               _patternKey = _actuatorNode.getKey();
+               _kidneyLeds.setPattern(_patternKey);  
+             
+               _patternPeriod = _kidneyLeds.getPatternPeriod(_patternKey);  
                
                _kidneyLeds.updateLedPattern();
            }
@@ -91,21 +95,48 @@ void loop()
     } 
     else 
     {
-      
-         changePatternState();    
+         if(patternHasPeriod(_patternKey))
+         {
+             changePatternState();   
+         } 
          
     }
 
 }
 
+void setDefaultlLedPattern()
+{
+    _kidneyLeds.setFirstColor(_firstColor); 
+    _kidneyLeds.setSecondColor(_secondColor); 
+    _kidneyLeds.setPattern(_patternKey);
+    _patternPeriod = _kidneyLeds.getPatternPeriod(_patternKey);      
+    _kidneyLeds.updateLedPattern(); 
+    
+}
+
+
 void changePatternState()
 {
-   if(millis() - lastTimeBlink > 500 )
-   {
-       lastTimeBlink = millis();
-       _kidneyLeds.updateLedPattern();            
-   }       
-       
+    if(millis() - _lastTimeBlink > _patternPeriod )
+    {
+        _lastTimeBlink = millis();
+        _kidneyLeds.updateLedPattern();
+           
+    }        
+   
+}
+
+boolean patternHasPeriod(byte pattern)
+{
+    boolean hasPeriod = true;
+   
+    if((pattern == LEDSON)||(pattern == LEDSOFF))  
+    {
+        hasPeriod = false;  
+      
+    }
+  
+    return hasPeriod;
 }
 
 

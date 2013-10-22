@@ -51,11 +51,10 @@ void loop()
         
           if(_server.ccGetNewPacket())
           { 
-              _server.ccHandle();
+                _server.ccHandle();
 //              _server.ledBlink(); 
-//           
-             //_server.checkRSSI();  
-             _server.ccPrintPacket();  //For debugging
+
+//             _server.ccPrintPacket();  //For debugging
 //              testVariable = !testVariable;
 //              if(testVariable)
 //              {
@@ -71,21 +70,21 @@ void loop()
            enableRFChipInterrupt();
     
        }
-//     else 
-//       {
-//           if(_server.newJavaCommand())
-//           { 
-//              disableRFChipInterrupt();
-//              
-//              _server.getJavaCommand();
-//              _server.ccSendCommand();
-//              _server.cleanBuffer();
-//              
-//              enableRFChipInterrupt();
-//              
-//           } 
-//           
-//       }        
+     else 
+       {
+           if(_server.newJavaCommand())
+           { 
+              disableRFChipInterrupt();
+              
+              _server.getJavaCommand();
+              _server.ccSendCommand();
+              _server.cleanBuffer();
+              
+              enableRFChipInterrupt();
+              
+           } 
+           
+       }        
          
 }
 

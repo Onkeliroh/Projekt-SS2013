@@ -3,37 +3,39 @@
 #include "ccSensorNode.h"
 #include "accel.h"
 
-#define SENSOR_NODE_ID                2
-#define TWIN_NODE_ID                  3
+#define SENSOR_NODE_ID 6
+#define TWIN_NODE_ID 7
 
-#define KIDNEY_NEIGHBOR               4
-#define KIDNEY_RSSI_THRESHOLD       -65  //Kidney powered by AA batteries
 
-#define EGG_NEIGHBOR                  6
-#define EGG_RSSI_THRESHOLD          -60  //Egg powered by AA batteries  
+#define PEAR_NEIGHBOR               2
+#define PEAR_RSSI_THRESHOLD       -60     
 
-#define NEIGHBOR_A                     KIDNEY_NEIGHBOR
-#define NEIGHBOR_A_THRES               KIDNEY_RSSI_THRESHOLD
+#define KIDNEY_NEIGHBOR             4
+#define KIDNEY_RSSI_THRESHOLD     -60
 
-#define NEIGHBOR_B                     EGG_NEIGHBOR 
-#define NEIGHBOR_B_THRES               EGG_RSSI_THRESHOLD 
+#define NEIGHBOR_A                     PEAR_NEIGHBOR
+#define NEIGHBOR_A_THRES               PEAR_RSSI_THRESHOLD
 
-#define ACCEL_CHECK_PERIOD           22
-#define STATE_CHANGE_INTERVAL      2000  // send message state each 2 secs even though the state hasn't change during this time
-#define LAST_MESSAGE_TIMEOUT     100000 
+#define NEIGHBOR_B                     KIDNEY_NEIGHBOR 
+#define NEIGHBOR_B_THRES               KIDNEY_RSSI_THRESHOLD 
 
-#define enableRFChipInterrupt()        attachInterrupt(0, RFChipInterrupt, FALLING);
-#define disableRFChipInterrupt()       detachInterrupt(0);
+#define ACCEL_CHECK_PERIOD         22
+#define STATE_CHANGE_INTERVAL    1500 
+#define LAST_MESSAGE_TIMEOUT   100000 
 
-#define enableaLowBattInterrupt()      analogComparator.enableInterrupt(lowBattInterrupt, FALLING);
-#define disableLowBattInterrupt()      analogComparator.disableInterrupt();
+
+#define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);
+#define disableRFChipInterrupt()    detachInterrupt(0);
+
+#define enableaLowBattInterrupt()     analogComparator.enableInterrupt(lowBattInterrupt, FALLING);
+#define disableLowBattInterrupt()     analogComparator.disableInterrupt();
 
 /////////////////////
 //--- INSTANCES ---//
 /////////////////////
 
 CCSENSORNODE _sensorNode = CCSENSORNODE(SENSOR_NODE_ID, TWIN_NODE_ID);
-ACCEL _accel = ACCEL(10,95);
+ACCEL _accel = ACCEL(10,120);
 
 ///////////////////
 //--- MEMBERS ---//
@@ -44,12 +46,13 @@ boolean _packetAvailable = false;
 boolean _batteryIsLow = false;
 
 enum state{
-           motionless,
-           shaken,
-           kicked};
+    motionless,
+    shaken,
+    kicked};
 
-state pearState = motionless;
-    
+state kidneyState = motionless;
+
+
 unsigned long _lastTimeAccelCheck = 0;
 unsigned long _lastMssgTime = 0;
 unsigned long _lastStateChangeTime = 0;
@@ -80,10 +83,9 @@ void lowBattInterrupt(void)
 void setup()
 {
     _sensorNode.setup();
-    enableaLowBattInterrupt();  
+//    enableaLowBattInterrupt();
     enableRFChipInterrupt(); 
-    delay(5); //For the batteryLow section
-    
+    delay(5); //For the batteryLow System
 }
 
 
@@ -95,7 +97,16 @@ void setup()
 void loop()
 {
      
-   if(_packetAvailable)
+//    if(_batteryIsLow)
+//    {
+//        _sensorNode.reportLowBatt();
+//
+//        updateLastMssgTimestamp();
+//
+//        disableLowBattInterrupt();         
+//    }
+    
+    if(_packetAvailable)
     {
         disableRFChipInterrupt();
         
@@ -103,20 +114,21 @@ void loop()
         {
             _sensorNode.ccHandle();  
         }
+       
         else
         {
             if(!_sensorNode.isPacketsSender())
             {
-                _sensorNode.storeNeighborRSSI();    
-              
-                if(oneNeighborIsClose())
-                {
-                    _sensorNode.reportRSSI(); 
-                    updateLastMssgTimestamp();                  
-                }
-        
-             }          
-        }
+               _sensorNode.storeNeighborRSSI();  
+               
+               if(oneNeighborIsClose())
+               {
+                   _sensorNode.reportRSSI(); 
+                   updateLastMssgTimestamp();                  
+               }              
+                         
+             }  
+           }
         
         _packetAvailable = false;  
         
@@ -153,17 +165,7 @@ void loop()
     {
         reportInRange(); 
         updateLastMssgTimestamp(); 
-    }  
-
-
-    if(_batteryIsLow)
-    {
-        _sensorNode.reportLowBatt();
-
-        updateLastMssgTimestamp();
-
-        disableLowBattInterrupt();         
-    }    
+    }                
           
 }
 
@@ -172,43 +174,37 @@ void loop()
 
 void checkAccelEventAndReport()
 {
-       if(_accel.wasShaken())
+       if(_accel.wasShaken() && (kidneyState != shaken) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
        {
-         if((pearState != shaken) || (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
-         {
-             _sensorNode.reportShakeEvent();
+           _sensorNode.reportShakeEvent();
            
-             updateLastMssgTimestamp();
+           updateLastMssgTimestamp();
            
-             pearState = shaken;
+           kidneyState = shaken;
            
-             _lastStateChangeTime = millis();
-           
-          }
-       }   
+           _lastStateChangeTime = millis();
+       }
        else
        {
-           if(_accel.wasKicked())
+           if(_accel.wasKicked() && (kidneyState != kicked) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
            {
-             if((pearState != kicked) || (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
-             {
-                 _sensorNode.reportKickEvent();
+               _sensorNode.reportKickEvent();
                
-                 updateLastMssgTimestamp();
+               updateLastMssgTimestamp();
                
-                 pearState = kicked;
-               
-                 _lastStateChangeTime = millis();       
-              }                        
+               kidneyState = kicked;
+           
+               _lastStateChangeTime = millis();
            }
-           else 
+           else
            {
-               pearState = motionless;              
+               kidneyState = motionless;  
            }
          
        }           
                 
 }
+
 
 boolean oneNeighborIsClose()
 {

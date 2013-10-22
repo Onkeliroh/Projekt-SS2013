@@ -18,7 +18,13 @@
 #define LEDSOFF      4
 #define ONESTRIPE    5
 #define STRIPES      6
-#define TWOFADE      7
+
+//*PATTERN PERIODS*//
+#define BLINK_PERIOD        500
+#define FADE_PERIOD         55
+#define RAINBOW_PERIOD      25
+#define ONESTRIPE_PERIOD    500
+#define STRIPES_PERIOD      500
 
 
 //STATES
@@ -32,7 +38,6 @@
 //COLORKEYS
 #define BLACK        0
 
-
 #define FADINGDELTA  1
 
 class LEDS
@@ -41,12 +46,14 @@ class LEDS
 	public:
                 ~LEDS();
             
-                void setup();
+                void setup(int numberLeds);
 		void setFirstColor(byte firstColorKey);
 		void setSecondColor(byte secondColorKey);
 		void setPattern(byte patternKey);
 		void setPatternState(byte state);
-		
+
+                virtual unsigned long  getPatternPeriod(byte patternKey) = 0;	
+
                 virtual void updateLedPattern() = 0;
                       
                 void ledStripInit();
@@ -66,7 +73,7 @@ class LEDS
 		byte getRedComp(uint16_t Color);
                 boolean componentNotNull(byte Component);
                 byte highestComponent();
-                byte lowestComponent();
+                byte lowestNotNullComponent();
                 int findColorCase();
                 void adjustFadeDelta();
 
@@ -76,11 +83,14 @@ class LEDS
                 uint16_t Color2;
                 byte Pattern;
                 byte patternState;
+                unsigned long patternPeriod;
                 byte fadeState;
                 byte blueComp;    
                 byte greenComp;
                 byte redComp;
                 int fadeDelta;
+                int firstRainbowIndex;
+                int secondRainbowIndex;
           
 };
 
