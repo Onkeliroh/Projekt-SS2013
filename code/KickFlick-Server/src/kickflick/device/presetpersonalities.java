@@ -25,7 +25,7 @@ public enum presetpersonalities
                     put("Mama", new reaction(color.WHITE, color.BLACK, pattern.BLINK));
                 }
             },
-            new reaction(color.BLUE,color.BLUE,pattern.BLINK, 10000) //standby
+            new reaction(color.BLUE,color.BLUE,pattern.BLINK, 1000) //standby
     ));
 
 //    Tanja(new personality(

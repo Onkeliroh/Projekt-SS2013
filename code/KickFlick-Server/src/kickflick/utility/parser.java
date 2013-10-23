@@ -73,7 +73,7 @@ class parser implements SerialPortEventListener {
                 case system_keys.STILL_ALIVE:
                 {
                     this.Server_.get_device(index).set_new_timestamp_last_heard_of();
-                    this.Server_.send_msg(new byte[]{arg[0],system_keys.MESSAGE_RECEIVED,0,0});
+//                    this.Server_.send_msg(new byte[]{arg[0],system_keys.MESSAGE_RECEIVED,0,0});
                     break;
                 }
                 case system_keys.FOUND_NEIGHBOR:
@@ -108,6 +108,7 @@ class parser implements SerialPortEventListener {
                                 keys k = (keys) entry.getKey();
                                 if (k.get_key() == arg[1] && (Boolean) entry.getValue())
                                 {
+                                    System.out.println("Found key: " +k.get_name() +" and reacing to it");
                                     //increment state
                                     this.Server_.get_device(index).get_Personality().inc_state();
 

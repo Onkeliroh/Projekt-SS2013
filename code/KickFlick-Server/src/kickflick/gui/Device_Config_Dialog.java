@@ -701,8 +701,6 @@ public class Device_Config_Dialog extends Dialog
     			find_pattern_element(pattern_combo_list.get(0).getText()),
     			Integer.parseInt(duration_text_list.get(0).getText())
     			));
-    			
-    	
     }
     
     private void apply_state()

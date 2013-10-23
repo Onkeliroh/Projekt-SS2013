@@ -83,16 +83,6 @@ public class server extends Timer implements Serializable
         this.serial_com.exit();
     }
 
-    //is meant to be part of a configuation process
-//	private void read_settings()
-//	{
-//		try {
-//			this.set_pars.parse_settings("res/keys");
-//		} finally {}
-//		System.out.println(set_pars.get_element_keys());
-//
-//	}
-
     //Getter
     public kickflick.utility.serial_lib get_SerialCom() {
         return this.serial_com;
@@ -112,6 +102,7 @@ public class server extends Timer implements Serializable
 
     //basic sending function, takes a byte array and sends it to the serialport, if connected
     public void send_msg(byte[] msg) {
+        System.out.println("Sending message");
         if (this.serial_com.is_connected())
         {
             serial_lib.com_writer writer = new serial_lib.com_writer(this.get_SerialCom().get_outputstream(), msg);
@@ -128,14 +119,18 @@ public class server extends Timer implements Serializable
     }
 
     public void send_device(int index) {
+//        System.out.println("Sending device 1");
         send_device(this.get_device(index));
     }
 
 
     //creates a byte array which will then be send to the server-panstamp
     public void send_device(device d) {
+//        System.out.println("Sending device 2");
         byte[] msg = new byte[4];
         byte[] tmp = d.get_Personality().get_current_reaction_array();
+
+//        System.out.println("got current reaction");
         msg[0] = d.get_actuator_node();
         msg[1] = tmp[0]; //pattern
         msg[2] = tmp[1]; //color1
@@ -179,12 +174,14 @@ public class server extends Timer implements Serializable
                             {
                                 System.out.println("Server Timer: set device '" + Server.devices.get(i).get_Personality().get_Name() + "\t Id: " + i + "' to default state.");
                                 Server.devices.get(i).get_Personality().set_State((short) 0);
+                                Server.devices.get(i).get_Personality().set_current_reaction(null);
                                 Server.devices.get(i).set_new_timestamp();
-//                                Server.send_device(i);
+                                Server.send_device(i);
                             }
                     }
                     if (stamp.getTime() - Server.devices.get(i).get_timestamp_last_heard_of().getTime() >= OUT_OF_RANGE)
                     {
+
                         Server.get_device(i).get_Personality().set_State((short) -1);
                     }
                 }

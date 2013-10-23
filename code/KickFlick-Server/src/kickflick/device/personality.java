@@ -16,6 +16,7 @@ public class personality implements Serializable
     public final int state_count = 4;
     private reaction standby = null;
     private reaction current_reaction = null;
+    private keys current_reaction_key = null;
     private Map<keys, reaction[]> Reactions_;
     private Map<String, reaction> neighbours_ = new HashMap<String, reaction>();
 
@@ -32,6 +33,7 @@ public class personality implements Serializable
         this.Reactions_ = presetpersonalities.Paul.get_personality().Reactions_;
         this.neighbours_ = presetpersonalities.Paul.get_personality().neighbours_;
         this.standby = presetpersonalities.Paul.get_personality().standby;
+//        this.current_reaction = this.standby;
     }
 
     public personality(String name, short state, DefaultHashMap<keys, reaction[]> tmp_reactions, HashMap<String, reaction> neighbours, reaction stand) {
@@ -42,6 +44,7 @@ public class personality implements Serializable
         this.Reactions_ = tmp_reactions;
         this.neighbours_ = neighbours;
         this.standby = stand;
+//        this.current_reaction = this.standby;
     }
 
     public personality(String name, short state, DefaultHashMap<keys, reaction[]> tmp_reactions, HashMap<String, reaction> neighbours) {
@@ -51,12 +54,16 @@ public class personality implements Serializable
         this.State_ = state;
         this.Reactions_ = tmp_reactions;
         this.neighbours_ = neighbours;
+        this.standby = presetpersonalities.Paul.get_personality().standby;
+//        this.current_reaction = this.standby;
     }
 
     public personality(personality pers) {
         this.Name_ = pers.Name_;
         this.State_ = pers.State_;
         this.Reactions_ = pers.Reactions_;
+        this.standby = pers.standby;
+        this.current_reaction_key = pers.current_reaction_key;
     }
 
 
@@ -68,7 +75,10 @@ public class personality implements Serializable
 
     public void set_State(short state) {
         if (state < state_count && state >= -1)
+        {
             this.State_ = state;
+//            System.out.println("New state :" + this.get_Name() + "\t" + this.State_);
+        }
     }
 
     public void set_standby (reaction tmp)
@@ -79,8 +89,14 @@ public class personality implements Serializable
     //requires to set the state first
     public void set_current_reaction(keys k)
     {
-        this.current_reaction = this.Reactions_.get(k)[this.State_];
+        System.out.println("Setting current reaction");
+        this.current_reaction_key = k;
     }
+
+//    public void set_current_reaction(reaction r)
+//    {
+//        this.current_reaction = r;
+//    }
 
     //Getter
 
@@ -145,16 +161,35 @@ public class personality implements Serializable
 
     public reaction get_current_reaction()
     {
-        return this.current_reaction;
+        if ( this.current_reaction_key != null)
+        {
+            return this.Reactions_.get(this.current_reaction_key)[this.State_ -1];
+        }
+        return this.standby;
     }
 
     public byte[] get_current_reaction_array()
     {
+//        System.out.println("creating current reaction array");
         byte[] tmp = new byte[3];
-        tmp[0] = this.current_reaction.get_pattern().get_key();
-        tmp[1] = this.current_reaction.get_color1().get_key();
-        tmp[2] = this.current_reaction.get_color2().get_key();
+        if ( this.current_reaction_key != null || this.State_ <= 0)
+        {
+            tmp[0] = this.Reactions_.get(this.current_reaction_key)[this.State_ -1].get_pattern().get_key();
+            tmp[1] = this.Reactions_.get(this.current_reaction_key)[this.State_ -1].get_color1().get_key();
+            tmp[2] = this.Reactions_.get(this.current_reaction_key)[this.State_ -1].get_color2().get_key();
+        }
+        else
+        {
+            tmp[0] = this.standby.get_pattern().get_key();
+            tmp[1] = this.standby.get_color1().get_key();
+            tmp[2] = this.standby.get_color2().get_key();
+        }
         return tmp;
+    }
+
+    public reaction get_standby()
+    {
+        return this.standby;
     }
 
     public reaction get_neighbor(String str) {

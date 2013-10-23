@@ -337,10 +337,14 @@ public class Server_Main
             device tmp_dev = (device) tmp.open();
             if (tmp_dev != null)
             {
+//                System.out.println("Return is not null");
                 Server.set_device(index, tmp_dev);
 
                 if ( Server.get_SerialCom().is_connected() )
+                {
+//                    System.out.println("Trying to send device");
                     Server.send_device(index);
+                }
             }
         }
     }
