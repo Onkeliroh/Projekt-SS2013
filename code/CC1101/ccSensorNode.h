@@ -8,6 +8,11 @@
 #define RSSI_OFFSET 74 
 
 
+
+
+
+
+
 class CCSENSORNODE: public CCNODE
 {
 

@@ -91,8 +91,11 @@ void CCSERVER::ccHandle(void)
             sendBufferToJavaServer();
             cleanBuffer();
             break;
-        case NEAR_NODE_EVENT:            
-            checkRSSI();  
+        case NEAR_NODE_EVENT:   
+            setNearNodeBuffer();
+            sendBufferToJavaServer();
+            cleanBuffer();        
+            //checkRSSI();  
             break;    
         case ACKNOWLEDGE:
             setBuffer();         

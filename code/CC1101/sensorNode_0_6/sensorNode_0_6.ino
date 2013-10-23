@@ -21,7 +21,7 @@
 
 #define ACCEL_CHECK_PERIOD         22
 #define STATE_CHANGE_INTERVAL    1500 
-#define LAST_MESSAGE_TIMEOUT   100000 
+#define LAST_MESSAGE_TIMEOUT    30000 
 
 
 #define enableRFChipInterrupt()     attachInterrupt(0, RFChipInterrupt, FALLING);

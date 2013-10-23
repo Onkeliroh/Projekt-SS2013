@@ -94,11 +94,11 @@ void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourI
 
     setNeighbourId(neighbourID);
 
-    setDetectedRSSI(rawRSSI);
-
+    //setDetectedRSSI(rawRSSI);
+    //setBuildCounter(5); 
     
 
-    setBuildCounter(5); 
+    setBuildCounter(4); 
 }
 
 void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte colorKey1, byte colorKey2)

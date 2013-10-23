@@ -20,7 +20,7 @@
 
 #define ACCEL_CHECK_PERIOD           22
 #define STATE_CHANGE_INTERVAL      2000  // send message state each 2 secs even though the state hasn't change during this time
-#define LAST_MESSAGE_TIMEOUT     100000 
+#define LAST_MESSAGE_TIMEOUT      30000 
 
 #define enableRFChipInterrupt()        attachInterrupt(0, RFChipInterrupt, FALLING);
 #define disableRFChipInterrupt()       detachInterrupt(0);

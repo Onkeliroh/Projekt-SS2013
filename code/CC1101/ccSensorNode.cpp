@@ -212,6 +212,7 @@ void CCSENSORNODE::reportLowBatt()
 void CCSENSORNODE::sendRSSI(byte rawRSSI,byte nearNodeId)
 {
     _ccPacketHandler.buildRSSIPacket(_id, rawRSSI,nearNodeId);
+
     ccSendPacket();  
 }
 

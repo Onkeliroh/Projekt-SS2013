@@ -24,9 +24,9 @@ class ACCEL
                 
                 void resetBuffers();
                 void cleanBuffer(int buffer[]);
-                void ACCEL::readAccel();
-		boolean ACCEL::bufferIsFull()
-
+                void readAccel();
+		boolean bufferIsFull();
+		void resetBufferIndex();
                 void setAccelDelta();
                 void findMinValues();
                 int  setMinValue(int buffer[]);

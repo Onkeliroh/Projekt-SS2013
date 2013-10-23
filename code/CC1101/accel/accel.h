@@ -51,11 +51,7 @@ class ACCEL
                 int shakenThreshold;
                 int kickedThreshold;
                 int bufferIndex;
-
-//                int _deltaX[ACCEL_BUFFERLENGTH];
-//		int _deltaY[ACCEL_BUFFERLENGTH];
-//		int _deltaZ[ACCEL_BUFFERLENGTH];     
-                                                      
+     
 };
 
 
