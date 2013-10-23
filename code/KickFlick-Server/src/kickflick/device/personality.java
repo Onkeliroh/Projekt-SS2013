@@ -14,7 +14,7 @@ public class personality implements Serializable
     private String Name_;
     private short State_ = 0;
     public final int state_count = 4;
-    private reaction standby = new reaction(color.BLUE,color.BLACK,pattern.RAINBOW); //TODO change default value
+    private reaction standby = null;
     private reaction current_reaction = null;
     private Map<keys, reaction[]> Reactions_;
     private Map<String, reaction> neighbours_ = new HashMap<String, reaction>();
@@ -31,6 +31,7 @@ public class personality implements Serializable
         this.State_ = presetpersonalities.Paul.get_personality().State_;
         this.Reactions_ = presetpersonalities.Paul.get_personality().Reactions_;
         this.neighbours_ = presetpersonalities.Paul.get_personality().neighbours_;
+        this.standby = presetpersonalities.Paul.get_personality().standby;
     }
 
     public personality(String name, short state, DefaultHashMap<keys, reaction[]> tmp_reactions, HashMap<String, reaction> neighbours, reaction stand) {
@@ -162,6 +163,11 @@ public class personality implements Serializable
                 return (reaction) e.getValue();
         //if the string was'nt found in the map as a key, return default values
         return new reaction(color.GREEN_BRIGHT, color.BLUE, pattern.BLINK); //TODO change return value to something configurable
+    }
+    
+    public reaction get_standby_reaction()
+    {
+    	return this.standby;
     }
 
     public int get_state_duration()

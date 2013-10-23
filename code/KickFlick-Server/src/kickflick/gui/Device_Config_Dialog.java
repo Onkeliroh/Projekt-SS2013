@@ -16,6 +16,8 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -23,6 +25,7 @@ import org.eclipse.swt.widgets.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
 
@@ -45,12 +48,13 @@ public class Device_Config_Dialog extends Dialog
     private Text actuator_adr_text;
 
     private String[] state_names = {};
-    private final String[] tabel_heads = {"State", "Pattern", "1. Color", "2. Color"};
+    private final String[] tabel_heads = {"State", "Pattern", "1. Color", "2. Color", "Duration in ms"};
     private final String[] neighbor_table_heads = {"Neighbor", "Pattern", "1. Color", "2. Color"};
 
     private List<Combo> pattern_combo_list = new ArrayList<Combo>();
     private List<CCombo> color1_combo_list = new ArrayList<CCombo>();
     private List<CCombo> color2_combo_list = new ArrayList<CCombo>();
+    private List<Text> duration_text_list = new ArrayList<Text>();
 
     private List<Combo> neighbor_pattern_combo_list = new ArrayList<Combo>();
     private List<CCombo> neighbor_color1_combo_list = new ArrayList<CCombo>();
@@ -103,6 +107,12 @@ public class Device_Config_Dialog extends Dialog
         shlDeviceConfugurationDialog.setText("Device Confuguration Dialog");
         GridLayout gl_shlDeviceConfugurationDialog = new GridLayout(1, false);
         shlDeviceConfugurationDialog.setLayout(gl_shlDeviceConfugurationDialog);
+        
+        shlDeviceConfugurationDialog.addShellListener( new ShellAdapter() {
+        	public void shellClosed(ShellEvent e) {
+                result = null; //if dialog is closed by not clicking the "close" button no changes will be made
+            }
+		});
         
         result = this.Device;
 
@@ -259,20 +269,13 @@ public class Device_Config_Dialog extends Dialog
         new Label(state_composite, SWT.NONE);
         for ( keys k : keys.values())
         	key_select_combo.add(k.get_name());
-        key_select_combo.select(0);
-        key_select_combo.addSelectionListener( new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-            	apply_state(); 
-//            	set_state_combos();
-            	
-            	key_combo_pre_selection = key_select_combo.getSelectionIndex();
-            }
-        });
-        
+        key_select_combo.select(0);        
 
         //setup state table depending wether  pre set personality was selected or not
         key_select_combo.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
+            	apply_state(); 
+            	key_combo_pre_selection = key_select_combo.getSelectionIndex();
                 if ( !pre_set_selected )
                     set_state_combos(Device.get_Personality());
                 else
@@ -354,11 +357,11 @@ public class Device_Config_Dialog extends Dialog
             color2_combo.select(0);
             editor.grabHorizontal = true;
             editor.setEditor(color2_combo, neighbor_items[i], 3);
-            neighbor_color2_combo_list.add(color2_combo);
+            neighbor_color2_combo_list.add(color2_combo);                       
         }
 
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < this.tabel_heads.length; i++)
         {
             TableColumn column = new TableColumn(standby_table, SWT.CENTER);
             column.setText(tabel_heads[i]);
@@ -405,10 +408,17 @@ public class Device_Config_Dialog extends Dialog
         standby_editor.setEditor(standby_color2_combo, this.standby_table.getItem(0), 3);
         color2_combo_list.add(standby_color2_combo);
         
-        standby_table.pack();
+        standby_editor = new TableEditor(standby_table);
+        Text standby_duration_text = new Text(standby_table, SWT.NONE);
+        standby_duration_text.setEditable(true);
+        standby_editor.grabHorizontal = true;
+        standby_editor.setEditor(standby_duration_text, this.standby_table.getItem(0), 4);
+        duration_text_list.add(standby_duration_text);
+        
+        this.standby_table.pack();
 
         //create state table and cell skeleton
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < this.tabel_heads.length; i++)
         {
             TableColumn column = new TableColumn(state_table, SWT.CENTER);
             column.setText(tabel_heads[i]);
@@ -459,19 +469,26 @@ public class Device_Config_Dialog extends Dialog
             editor.grabHorizontal = true;
             editor.setEditor(color2_combo, state_items[i], 3);
             color2_combo_list.add(color2_combo);
+            
+            editor = new TableEditor(state_table);
+            Text state_duration_text = new Text(state_table, SWT.NONE);
+            standby_duration_text.setEditable(true);
+            editor.grabHorizontal = true;
+            editor.setEditor(state_duration_text, state_items[i], 4);
+            duration_text_list.add(state_duration_text);
         }
 
         Composite composite = new Composite(shlDeviceConfugurationDialog, SWT.NONE);
         composite.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, false, 1, 1));
         composite.setLayout(new GridLayout(2, true));
 
-        Button btnApply = new Button(composite, SWT.NONE);
-        btnApply.setToolTipText("Apply the current settings the the device.");
-        btnApply.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
-        btnApply.setText("Apply");
-        btnApply.addMouseListener(new MouseAdapter()
-        {
-            public void mouseDown(MouseEvent e) {
+//        Button btnApply = new Button(composite, SWT.NONE);
+//        btnApply.setToolTipText("Apply the current settings the the device.");
+//        btnApply.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
+//        btnApply.setText("Apply");
+//        btnApply.addMouseListener(new MouseAdapter()
+//        {
+//            public void mouseDown(MouseEvent e) {
 //                pattern p_setting = null;
 //                color c1_setting = null;
 //                color c2_setting = null;
@@ -519,18 +536,18 @@ public class Device_Config_Dialog extends Dialog
 //                            }
 //                    }
 //                }
-            }
-
-        });
+//            }
+//
+//        });
 
         Button btnClose = new Button(composite, SWT.RIGHT);
         btnClose.setToolTipText("Close and save the Settings.");
         btnClose.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
         btnClose.setText("Save|Close");
-
         btnClose.addMouseListener(new MouseAdapter()
         {
             public void mouseDown(MouseEvent e) {
+            	apply();
                 shlDeviceConfugurationDialog.dispose();
             }
         });
@@ -621,16 +638,13 @@ public class Device_Config_Dialog extends Dialog
     	set_state_combos(this.Device.get_Personality());
     }
     
+    //sets state table AND standby items
     private void set_state_combos(personality p)
     {
         short i = 0;
         for (Combo c : pattern_combo_list)
         {
-            reaction tmp = null;
-            for ( keys k : keys.values())
-                if ( k.get_name().equals(key_select_combo.getText()))
-                    tmp = p.get_reaction(k,i);
-
+            reaction tmp = p.get_reaction(find_keys_element(c.getText()), i);
             for (int j = 0; j < pattern.values().length; ++j)
                 if ( pattern.values()[j].get_key() == tmp.get_pattern().get_key())
                 {
@@ -643,10 +657,7 @@ public class Device_Config_Dialog extends Dialog
         i = 0;
         for (CCombo c : color1_combo_list)
         {
-            reaction tmp = null;
-            for ( keys k : keys.values())
-                if ( k.get_name().equals(key_select_combo.getText()))
-                    tmp = p.get_reaction(k, i);
+        	reaction tmp = p.get_reaction(find_keys_element(c.getText()), i);
 
             for (int j = 0; j < color.values().length; ++j)
                 if ( color.values()[j].get_key() == tmp.get_color1().get_key())
@@ -660,9 +671,7 @@ public class Device_Config_Dialog extends Dialog
         i = 0;
         for (CCombo c : color2_combo_list)
         {
-            reaction tmp = null;
-            
-            tmp = p.get_reaction(find_keys_element(key_select_combo.getText()), i);
+            reaction tmp = p.get_reaction(find_keys_element(key_select_combo.getText()), i);
 
             for (int j = 0; j < color.values().length; ++j)
                 if ( color.values()[j].get_key() == tmp.get_color2().get_key())
@@ -672,22 +681,44 @@ public class Device_Config_Dialog extends Dialog
                 }
             ++i;
         }
+        
+        i = 0;
+        for ( Text t : duration_text_list)
+        {
+        	t.setText(Integer.toString(p.get_reaction(find_keys_element(key_select_combo.getText()), i).get_durration()));
+        	++i;
+        }
+    }
+    
+    private void apply()
+    {
+    	apply_state();
+    	
+    	result.get_Personality().set_standby( new reaction(
+    			find_color_element(color1_combo_list.get(0).getText()),
+    			find_color_element(color2_combo_list.get(0).getText()),
+    			find_pattern_element(pattern_combo_list.get(0).getText()),
+    			Integer.parseInt(duration_text_list.get(0).getText())
+    			));
+    			
+    	
     }
     
     private void apply_state()
     {
+    	//TODO run one last time when closing window
     	reaction[] key_settings = new reaction[3];
         for ( int i = 0 ; i < (pattern_combo_list.size()-1); i++)
         {
 		    pattern tmp_p = find_pattern_element(pattern_combo_list.get(i+1).getText());
 		    color tmp_c1 = find_color_element(color1_combo_list.get(i+1).getText());
 		    color tmp_c2 = find_color_element(color2_combo_list.get(i+1).getText());
+		    int tmp_duration = Integer.parseInt(duration_text_list.get(i+1).getText());
 
-            key_settings[i] = new reaction(tmp_c1,tmp_c2,tmp_p);
+            key_settings[i] = new reaction(tmp_c1,tmp_c2,tmp_p,tmp_duration);
         }
         keys tmp_key = find_keys_element(key_select_combo.getItems()[key_combo_pre_selection]);
 		result.get_Personality().get_reactions().put(tmp_key, key_settings);
-//		result.get_Personality().get_reactions().put(keys.rolledy, new reaction[]{new reaction(color.BLACK, color.BLACK, pattern.BLINK),new reaction(color.BLACK, color.BLACK, pattern.BLINK),new reaction(color.BLACK, color.BLACK, pattern.BLINK)});
     }
     
     private pattern find_pattern_element(String str)

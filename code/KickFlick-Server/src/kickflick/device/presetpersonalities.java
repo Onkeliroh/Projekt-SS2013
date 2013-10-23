@@ -13,11 +13,7 @@ public enum presetpersonalities
     Paul(new personality(
             "Paul",
             (short) 0,
-//            new byte[]{color.BLUE.get_key(), color.RED.get_key(), color.GREEN.get_key(), color.ORANGE.get_key()},    //Color 1
-//            new byte[]{color.BLUE.get_key(), color.RED.get_key(), color.GREEN.get_key(), color.ORANGE.get_key()},    //Color 2
-//            new byte[]{pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.BLINK.get_key(), pattern.RAINBOW.get_key()},     //Pattern
             new DefaultHashMap<keys, reaction[]>(new reaction[]{
-                        new reaction(color.BLUE,color.BLUE,pattern.BLINK),
                         new reaction(color.RED,color.RED,pattern.BLINK),
                         new reaction(color.GREEN,color.GREEN,pattern.BLINK),
                         new reaction(color.ORANGE,color.ORANGE,pattern.RAINBOW)
@@ -28,7 +24,8 @@ public enum presetpersonalities
                     put("Tanja", new reaction(color.RED, color.BLUE, pattern.BLINK));
                     put("Mama", new reaction(color.WHITE, color.BLACK, pattern.BLINK));
                 }
-            }
+            },
+            new reaction(color.BLUE,color.BLUE,pattern.BLINK, 10000) //standby
     ));
 
 //    Tanja(new personality(
