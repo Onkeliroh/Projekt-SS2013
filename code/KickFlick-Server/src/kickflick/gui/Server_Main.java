@@ -25,6 +25,8 @@ public class Server_Main
     private final int time = 1500; //TODO make configurable
     private Table DeviceTable;
 
+    private boolean lowBatteryShown = false;
+
     public void open() {
         //display = Display.getDefault();
         shlKickflickServer.setMinimumSize(new Point(1, 23));
@@ -284,7 +286,7 @@ public class Server_Main
                             d.get_battery_state()
                     });
 
-                    if (d.is_battery_low())
+                    if (d.is_battery_low() && lowBatteryShown)
                     {
                         Runnable dialog = new Runnable()
                         {
@@ -296,6 +298,7 @@ public class Server_Main
                         };
 
                         Display.getCurrent().asyncExec(dialog);
+                        lowBatteryShown = true;
                     }
                     if (d.get_Personality().get_State() == -1 && Server.get_SerialCom().is_connected() )
                     {
