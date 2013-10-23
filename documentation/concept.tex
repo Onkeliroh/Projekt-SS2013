@@ -36,16 +36,20 @@ The modularity is given through a number of easy configurable files. Changing be
 The system contains the different hardware devices and the server. The communication is enabled by using panstamps. When one of the devices gets activated by e.g. kicking it, the accelerometer sensor will trigger an input sending it to the panstamp. There a packet will be created which contains the ID of the device, the intensity of the kinetic input and a checksum bit at the end.
 The kinetic inputs "first contact", "played" and "played hard" are triggered by each other:
 So when the device gets kicked, his state will change from "standby" to "first contact", then when the threshold is high enough, the state changes directly to "played". There cannot be a change from "first contact" to "played hard". 
-% !!weitere daten des paketes
+\newline
+\newline
 Those data will be send to the panstamp of the server where this data will be analyzed and compared to the corresponding personality of the device. The personality then outputs the behaviour for the device. A behaviour consists two colors (which can be the same) and a pattern. This pattern describes the appearance of the colors. (Like a blinking or fading of the LEDs)
-The idea was to create typical characters for the devices. Below you can see the table which describes how a device reacts to kinetic inputs into his environment. So if it is in his default state the device "Paul" is fading blue. By changing input the state will change perhaps to the state "hard played". Those behaviour can be manipulated using the servers graphical interface. The % INSERT DEVICE - STATE TABLE
-The next table indicates the behaviour of the personalities to each other. Using the antennas field  it is possible to identify directly neighboured devices. But the usage of this effect is really not exact, because the antennas must be parallel to each other. So apparently most time when two devices got in contact there won't be a "found neighbour" - message. The devices have to be both in right position. This means that the antennas have to be rightly erected. (The ground has to be on bottom side.)   
+The idea was to create typical characters for the devices. Below you can see the table which describes how a device reacts to kinetic inputs into his environment. So if it is in his default state the device "Paul" is fading blue. By changing input the state will change perhaps to the state "hard played". Those behaviour can be manipulated using the servers graphical interface. The 
+\newline
+\newline
+Using the antennas field  it is possible to identify directly neighboured devices. But the usage of this effect is really not exact, because the antennas must be parallel to each other. So apparently most time when two devices got in contact there won't be a "found neighbour" - message. The devices have to be both in right position. This means that the antennas have to be rightly erected. (The ground has to be on bottom side.)   
 So by using this technique the following rules shown in this table can be implemented.
 When the servers got from the device panstamp the data with which other device it is confronted, the server looks up in the data of the presetpersonalities.java file and returns the matching pattern. For this use it is necessary to define which personality is more dominant than another.
-The table below shows how the different personalities will interact to each other.
-% INSERT DEVICE -DEVICE TABLE
+\newline
+\newline
 For sure there is no interaction when "Paul" gets in touch with another "Paul" (because there should only be one Paul) but by using the servers settings it is quite easy to do so. There won't be any interaction between the same personalities.
-
+\newline
+\newline
 So when the server has received the data of its state and his neighbourhood of the sending device it will send a new pattern for the LEDs chain actuator when the situation of the sending device has changed.
 When the device hadn't send its data packet for two minutes a warning will pop up in the graphical interface. Apparently this will happen when the device is out of range of the sending area of the panstamp antennas (approximately ~50 metres).
 This very functionality is illustrated in the following graphic.
