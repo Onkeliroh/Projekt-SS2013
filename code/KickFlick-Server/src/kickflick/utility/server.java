@@ -19,7 +19,7 @@ public class server extends Timer implements Serializable
     //fixed variables
     //!!!only change if you want timings to be different
     private final int OUT_OF_RANGE = 120000;    //default : 120000ms
-    private final int CHECK_STATE_TIME = 30000; //0.5 minutes
+    private final int CHECK_STATE_TIME = 45000; //0.75 minutes
     //END fixed variables
 
 

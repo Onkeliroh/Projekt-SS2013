@@ -25,7 +25,7 @@ public enum presetpersonalities
                     put("Mama", new reaction(color.WHITE, color.BLACK, pattern.BLINK));
                 }
             },
-            new reaction(color.BLUE,color.BLUE,pattern.BLINK, 10000) //standby
+            new reaction(color.BLUE,color.BLUE,pattern.BLINK, 1000) //standby
 
     )),
 
@@ -44,7 +44,7 @@ public enum presetpersonalities
             put("Mama", new reaction(color.RED, color.RED_BRIGHT, pattern.BLINK));
         }
     },
-        new reaction(color.LILA,color.LILA,pattern.BLINK, 10000) //standby
+        new reaction(color.LILA,color.LILA,pattern.BLINK, 1000) //standby
     )),
 
 
@@ -63,7 +63,7 @@ public enum presetpersonalities
             put("Mama", new reaction(color.GREEN, color.ORANGE, pattern.BLINK));
         }
     },
-        new reaction(color.BLUE_DIM,color.WHITE,pattern.BLINK, 10000) //standby
+        new reaction(color.BLUE_DIM,color.WHITE,pattern.BLINK, 1000) //standby
     ));
 
     private final personality personality_;

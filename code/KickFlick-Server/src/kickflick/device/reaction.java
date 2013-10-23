@@ -7,7 +7,7 @@ public class reaction {
     private color color1_;
     private color color2_;
     private pattern pattern_;
-    private int duration_ = 30000; // in milliseconds
+    private int duration_ = 1000; // in milliseconds
 
 
     public reaction (color c1, color c2, pattern p, int tmp_durration)
