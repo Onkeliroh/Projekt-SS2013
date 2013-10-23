@@ -693,6 +693,7 @@ public class Device_Config_Dialog extends Dialog
     private void apply()
     {
     	apply_state();
+    	apply_neighborhood();
     	
     	result.get_Personality().set_standby( new reaction(
     			find_color_element(color1_combo_list.get(0).getText()),
@@ -719,6 +720,44 @@ public class Device_Config_Dialog extends Dialog
         }
         keys tmp_key = find_keys_element(key_select_combo.getItems()[key_combo_pre_selection]);
 		result.get_Personality().get_reactions().put(tmp_key, key_settings);
+    }
+    
+    private void apply_neighborhood()
+    {
+	  pattern p_setting = null;
+	  color c1_setting = null;
+	  color c2_setting = null;
+	  
+	  for (String str : neighbor_pers)
+	  {
+		  for (int text = 0; text < neighbor_text_list.size(); ++text)
+		  {
+			  if (neighbor_text_list.get(text).getText().equalsIgnoreCase(str))
+			  {
+				  for (pattern p : pattern.values())
+					  if (p.get_name().equalsIgnoreCase(neighbor_pattern_combo_list.get(text).getText()))
+					  {
+						  p_setting =  p;
+						  break;
+					  }
+				  for (color c : color.values())
+				  {
+					  if (c.get_name().equalsIgnoreCase(neighbor_color1_combo_list.get(text).getText()))
+					  {
+						  c1_setting = c;
+						  break;
+					  }
+				  }
+				  for (color c : color.values())
+					  if (c.get_name().equalsIgnoreCase(neighbor_color2_combo_list.get(text).getText()))
+					  {
+						  c2_setting = c;
+						  break;
+					  }
+			  }
+		  }
+		  result.get_Personality().get_Neighbours().put(str, new reaction(c1_setting, c2_setting, p_setting));
+	  }
     }
     
     private pattern find_pattern_element(String str)
