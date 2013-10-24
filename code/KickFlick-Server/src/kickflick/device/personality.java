@@ -172,7 +172,7 @@ public class personality implements Serializable
     {
 //        System.out.println("creating current reaction array");
         byte[] tmp = new byte[3];
-        if ( this.current_reaction_key != null || this.State_ <= 0)
+        if ( this.current_reaction_key != null && this.State_ > 0)
         {
             tmp[0] = this.Reactions_.get(this.current_reaction_key)[this.State_ -1].get_pattern().get_key();
             tmp[1] = this.Reactions_.get(this.current_reaction_key)[this.State_ -1].get_color1().get_key();

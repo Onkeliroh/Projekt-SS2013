@@ -126,11 +126,11 @@ public class server extends Timer implements Serializable
 
     //creates a byte array which will then be send to the server-panstamp
     public void send_device(device d) {
-//        System.out.println("Sending device 2");
+        System.out.println("Sending device 2");
         byte[] msg = new byte[4];
         byte[] tmp = d.get_Personality().get_current_reaction_array();
 
-//        System.out.println("got current reaction");
+        System.out.println("got current reaction");
         msg[0] = d.get_actuator_node();
         msg[1] = tmp[0]; //pattern
         msg[2] = tmp[1]; //color1

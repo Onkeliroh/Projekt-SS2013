@@ -345,7 +345,7 @@ public class Server_Main
 
                 if ( Server.get_SerialCom().is_connected() )
                 {
-//                    System.out.println("Trying to send device");
+                    System.out.println("Trying to send device");
                     Server.send_device(index);
                 }
             }

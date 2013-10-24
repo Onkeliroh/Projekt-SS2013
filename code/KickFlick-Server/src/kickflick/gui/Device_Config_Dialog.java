@@ -113,8 +113,9 @@ public class Device_Config_Dialog extends Dialog
                 result = null; //if dialog is closed by not clicking the "close" button no changes will be made
             }
 		});
-        
-        result = this.Device;
+
+        result = new device();
+//        result = this.Device;
 
         TabFolder tabFolder = new TabFolder(shlDeviceConfugurationDialog, SWT.NONE);
         tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -482,64 +483,6 @@ public class Device_Config_Dialog extends Dialog
         composite.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, false, 1, 1));
         composite.setLayout(new GridLayout(2, true));
 
-//        Button btnApply = new Button(composite, SWT.NONE);
-//        btnApply.setToolTipText("Apply the current settings the the device.");
-//        btnApply.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
-//        btnApply.setText("Apply");
-//        btnApply.addMouseListener(new MouseAdapter()
-//        {
-//            public void mouseDown(MouseEvent e) {
-//                pattern p_setting = null;
-//                color c1_setting = null;
-//                color c2_setting = null;
-//                
-//                for (String str : neighbor_pers)
-//                {
-//                    for (int text = 0; text < neighbor_text_list.size(); ++text)
-//                    {
-//                        if (neighbor_text_list.get(text).getText().equalsIgnoreCase(str))
-//                        {
-//                            for (pattern p : pattern.values())
-//                                if (p.get_name().equalsIgnoreCase(neighbor_pattern_combo_list.get(text).getText()))
-//                                {
-//                                   p_setting =  p;
-//                                    break;
-//                                }
-//                            for (color c : color.values())
-//                            {
-//                                if (c.get_name().equalsIgnoreCase(neighbor_color1_combo_list.get(text).getText()))
-//                                {
-//                                    c1_setting = c;
-//                                    break;
-//                                }
-//                            }
-//                            for (color c : color.values())
-//                                if (c.get_name().equalsIgnoreCase(neighbor_color2_combo_list.get(text).getText()))
-//                                {
-//                                    c2_setting = c;
-//                                    break;
-//                                }
-//                        }
-//                    }
-//                    // if no entry of this personality exsists
-//                    if (!Device.get_Personality().get_Neighbours().containsKey(str))
-//                    {
-//                        Device.get_Personality().get_Neighbours().put(str, new reaction(c1_setting, c2_setting, p_setting));
-//                    }
-//                    else //if personality allready exsistsgit
-//                    {
-//                        for (Map.Entry entry : Device.get_Personality().get_Neighbours().entrySet())
-//                            if (entry.getKey().equals(str))
-//                            {
-//                                entry.setValue(new reaction(c1_setting, c2_setting, p_setting));
-//                                break;
-//                            }
-//                    }
-//                }
-//            }
-//
-//        });
-
         Button btnClose = new Button(composite, SWT.RIGHT);
         btnClose.setToolTipText("Close and save the Settings.");
         btnClose.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
@@ -619,9 +562,6 @@ public class Device_Config_Dialog extends Dialog
                 }
             }
         }
-        
-        //the possible result equals the current device (Greetings from Cpt. Obvious) 
-        result = Device;
     }
 
     private void set_pre_pers(personality pers) {
@@ -641,52 +581,28 @@ public class Device_Config_Dialog extends Dialog
     //sets state table AND standby items
     private void set_state_combos(personality p)
     {
-        short i = 0;
-        for (Combo c : pattern_combo_list)
+        for ( int i = 0 ; i < p.state_count ; ++i)
         {
-            reaction tmp = p.get_reaction(find_keys_element(c.getText()), i);
+            reaction tmp = p.get_reaction(find_keys_element(key_select_combo.getText()), i);
             for (int j = 0; j < pattern.values().length; ++j)
                 if ( pattern.values()[j].get_key() == tmp.get_pattern().get_key())
                 {
-                    c.select(j);
+                    pattern_combo_list.get(i).select(j);
                     break;
                 }
-            ++i;
-        }
-
-        i = 0;
-        for (CCombo c : color1_combo_list)
-        {
-        	reaction tmp = p.get_reaction(find_keys_element(c.getText()), i);
-
             for (int j = 0; j < color.values().length; ++j)
                 if ( color.values()[j].get_key() == tmp.get_color1().get_key())
                 {
-                    c.select(j);
+                    color1_combo_list.get(i).select(j);
                     break;
                 }
-            ++i;
-        }
-
-        i = 0;
-        for (CCombo c : color2_combo_list)
-        {
-            reaction tmp = p.get_reaction(find_keys_element(key_select_combo.getText()), i);
-
-            for (int j = 0; j < color.values().length; ++j)
+            for (int j = 0; j < pattern.values().length; ++j)
                 if ( color.values()[j].get_key() == tmp.get_color2().get_key())
                 {
-                    c.select(j);
+                    color2_combo_list.get(i).select(j);
                     break;
                 }
-            ++i;
-        }
-        
-        i = 0;
-        for ( Text t : duration_text_list)
-        {
-        	t.setText(Integer.toString(p.get_reaction(find_keys_element(key_select_combo.getText()), i).get_durration()));
-        	++i;
+            duration_text_list.get(i).setText(Integer.toString(tmp.get_durration()));
         }
     }
     
@@ -705,7 +621,6 @@ public class Device_Config_Dialog extends Dialog
     
     private void apply_state()
     {
-    	//TODO run one last time when closing window
     	reaction[] key_settings = new reaction[3];
         for ( int i = 0 ; i < (pattern_combo_list.size()-1); i++)
         {
