@@ -289,7 +289,7 @@ public class Server_Main
                     });
 
                     if ( d.is_battery_low() || d.get_Personality().get_State() < 0)
-                        tableItem.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+                        tableItem.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
                     ++i;
                 }
                 try
