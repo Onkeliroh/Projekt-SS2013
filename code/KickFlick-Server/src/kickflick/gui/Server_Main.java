@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Server_Main
 {
@@ -25,8 +26,9 @@ public class Server_Main
     private final int time = 1500; //TODO make configurable
     private Table DeviceTable;
 
-    private boolean lowBatteryShown = false;
-
+    /**
+     * @wbp.parser.entryPoint
+     */
     public void open() {
         //display = Display.getDefault();
         shlKickflickServer.setMinimumSize(new Point(1, 23));
@@ -286,33 +288,8 @@ public class Server_Main
                             d.get_battery_state()
                     });
 
-                    if (d.is_battery_low() && lowBatteryShown)
-                    {
-                        Runnable dialog = new Runnable()
-                        {
-                            public void run() {
-                                MessageBox alert = new MessageBox(shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK);
-                                alert.setMessage("Battery low on device " + d.get_Personality().get_Name());
-                                alert.open();
-                            }
-                        };
-
-                        Display.getCurrent().asyncExec(dialog);
-                        lowBatteryShown = true;
-                    }
-                    if (d.get_Personality().get_State() == -1 && Server.get_SerialCom().is_connected() )
-                    {
-                        Runnable dialog = new Runnable()
-                        {
-                            public void run() {
-                                MessageBox alert = new MessageBox(shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK);
-                                alert.setMessage("Didn't receive signal for " + d.get_Personality().get_Name() + " for 2 minutes");
-                                alert.open();
-                            }
-                        };
-
-                        Display.getCurrent().asyncExec(dialog);
-                    }
+                    if ( d.is_battery_low() || d.get_Personality().get_State() < 0)
+                        tableItem.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
                     ++i;
                 }
                 try

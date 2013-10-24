@@ -13,8 +13,6 @@ import kickflick.device.*;
 class parser implements SerialPortEventListener {
 	private final server Server_;
 
-    private final int STATE_CHANGE_DELAY = 15000;
-
 	public parser(server Serv)
 	{
 		System.out.println("Create Parser");
