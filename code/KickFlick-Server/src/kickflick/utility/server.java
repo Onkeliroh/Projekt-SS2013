@@ -1,7 +1,9 @@
 package kickflick.utility;
 
 import kickflick.device.device;
+import kickflick.device.reaction;
 import kickflick.gui.Server_Main;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -16,8 +18,8 @@ public class server extends Timer implements Serializable
 
     //fixed variables
     //!!!only change if you want timings to be different
-    private final int OUT_OF_RANGE = 120000;    //default : 120000ms
-    private final int CHECK_STATE_TIME = 30000; //0.5 minutes
+    private final int OUT_OF_RANGE = 300000;    //default : 5min
+    private final int CHECK_STATE_TIME = 30000; //0.75 minutes
     //END fixed variables
 
 
@@ -81,16 +83,6 @@ public class server extends Timer implements Serializable
         this.serial_com.exit();
     }
 
-    //is meant to be part of a configuation process
-//	private void read_settings()
-//	{
-//		try {
-//			this.set_pars.parse_settings("res/keys");
-//		} finally {}
-//		System.out.println(set_pars.get_element_keys());
-//
-//	}
-
     //Getter
     public kickflick.utility.serial_lib get_SerialCom() {
         return this.serial_com;
@@ -110,6 +102,7 @@ public class server extends Timer implements Serializable
 
     //basic sending function, takes a byte array and sends it to the serialport, if connected
     public void send_msg(byte[] msg) {
+        System.out.println("Sending message");
         if (this.serial_com.is_connected())
         {
             serial_lib.com_writer writer = new serial_lib.com_writer(this.get_SerialCom().get_outputstream(), msg);
@@ -126,17 +119,22 @@ public class server extends Timer implements Serializable
     }
 
     public void send_device(int index) {
+//        System.out.println("Sending device 1");
         send_device(this.get_device(index));
     }
 
 
     //creates a byte array which will then be send to the server-panstamp
     public void send_device(device d) {
+        System.out.println("Sending device 2");
         byte[] msg = new byte[4];
+        byte[] tmp = d.get_Personality().get_current_reaction_array();
+
+        System.out.println("got current reaction");
         msg[0] = d.get_actuator_node();
-        msg[1] = d.get_Personality().get_pattern();
-        msg[2] = d.get_Personality().get_Color1();
-        msg[3] = d.get_Personality().get_Color2();
+        msg[1] = tmp[0]; //pattern
+        msg[2] = tmp[1]; //color1
+        msg[3] = tmp[2]; //color2
 
         this.send_msg(msg);
     }
@@ -144,11 +142,11 @@ public class server extends Timer implements Serializable
     public void send_neighbor(device d, device neighbor) {
         //takes the neighbor values and puts them in to a byte array, which is to be send
         byte[] msg = new byte[4];
-        byte[] neighbor_pers = d.get_Personality().get_neighbor(neighbor.get_Personality().get_Name());
+        reaction neighbor_pers = d.get_Personality().get_neighbor(neighbor.get_Personality().get_Name());
         msg[0] = d.get_actuator_node();
-        msg[1] = neighbor_pers[0];
-        msg[2] = neighbor_pers[1];
-        msg[3] = neighbor_pers[2];
+        msg[1] = neighbor_pers.get_pattern().get_key();
+        msg[2] = neighbor_pers.get_color1().get_key();
+        msg[3] = neighbor_pers.get_color2().get_key();
 
         this.send_msg(msg);
 
@@ -176,12 +174,14 @@ public class server extends Timer implements Serializable
                             {
                                 System.out.println("Server Timer: set device '" + Server.devices.get(i).get_Personality().get_Name() + "\t Id: " + i + "' to default state.");
                                 Server.devices.get(i).get_Personality().set_State((short) 0);
+                                Server.devices.get(i).get_Personality().set_current_reaction(null);
                                 Server.devices.get(i).set_new_timestamp();
                                 Server.send_device(i);
                             }
                     }
                     if (stamp.getTime() - Server.devices.get(i).get_timestamp_last_heard_of().getTime() >= OUT_OF_RANGE)
                     {
+
                         Server.get_device(i).get_Personality().set_State((short) -1);
                     }
                 }

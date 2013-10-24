@@ -19,10 +19,7 @@ public enum keys
     //    falled_down("Fallen down",(byte)36),
 //    has_stopped_accelerometer("Has stopped",(byte)37),
     rolledy("Rolled Y", (byte) 38),
-    rolledz("Rolled Z", (byte) 39),
-
-    found_neighbor("Found Neighbor", (byte) 51),
-    low_battery("Low Battery", (byte) 52);
+    rolledz("Rolled Z", (byte) 39);
 
     private final String name_;
     private final byte key_;

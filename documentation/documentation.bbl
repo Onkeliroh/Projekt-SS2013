@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{open_jdk}
 {\sc Arch Linux}.
@@ -24,6 +24,12 @@
 {\sc ORACLE}.
 \newblock {\em Java Homepage}.
 \newblock \url{https://www.java.com/en/}.
+
+\bibitem{pakkanen}
+{\sc Pakkanen, T., and Raisamo, R.}
+\newblock {\em Appropriateness of foot interaction for non-accurate spatial
+  tasks}.
+\newblock New York, NY, USA, 2004.
 
 \bibitem{panstamp}
 {\sc panStamp S.L.U}.

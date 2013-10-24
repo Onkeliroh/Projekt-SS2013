@@ -12,10 +12,10 @@ import org.eclipse.swt.widgets.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Server_Main
 {
-
     private server Server;
     private Combo combo_port;
 
@@ -234,7 +234,8 @@ public class Server_Main
         newDevice.setText("New Device");
         newDevice.addMouseListener(new MouseAdapter()
         {
-            public void mouseDown(MouseEvent e) {
+            public void mouseDown(MouseEvent e)
+            {
                 Server.get_devices().add(new kickflick.device.device());
             }
         });
@@ -271,7 +272,6 @@ public class Server_Main
                 List<device> list = Server.get_devices();
                 DeviceTable.removeAll();
 
-
                 int i = 0;
                 for (final device d : list)
                 {
@@ -288,32 +288,8 @@ public class Server_Main
                             d.get_battery_state()
                     });
 
-                    if (d.is_battery_low())
-                    {
-                        Runnable dialog = new Runnable()
-                        {
-                            public void run() {
-                                MessageBox alert = new MessageBox(shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK);
-                                alert.setMessage("Battery low on device " + d.get_Personality().get_Name());
-                                alert.open();
-                            }
-                        };
-
-                        Display.getCurrent().asyncExec(dialog);
-                    }
-                    if (d.get_Personality().get_State() == -1)
-                    {
-                        Runnable dialog = new Runnable()
-                        {
-                            public void run() {
-                                MessageBox alert = new MessageBox(shlKickflickServer, SWT.RESIZE | SWT.ICON_WARNING | SWT.OK);
-                                alert.setMessage("Didn't receive signal for " + d.get_Personality().get_Name() + " for 2 minutes");
-                                alert.open();
-                            }
-                        };
-
-                        Display.getCurrent().asyncExec(dialog);
-                    }
+                    if ( d.is_battery_low() || d.get_Personality().get_State() < 0)
+                        tableItem.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
                     ++i;
                 }
                 try
@@ -322,23 +298,35 @@ public class Server_Main
                 } finally
                 {
                 }
-
-                display.timerExec(time, this);
+            display.timerExec(time, this);
             }
         };
     }
 
     void openConfigWindow() {
-        int index = DeviceTable.getSelectionIndex();
-        Device_Config_Dialog tmp = new Device_Config_Dialog(
-                shlKickflickServer,
-                SWT.APPLICATION_MODAL,
-                Server.get_device(index),
-                Server.get_PersonalitiesCount()
-        );
-        device tmp_dev = (device) tmp.open();
-        Server.set_device(index, tmp_dev);
-        Server.send_device(index);
+        if ( DeviceTable.getItemCount() != 0)
+        {
+            int index = DeviceTable.getSelectionIndex();
+            Device_Config_Dialog tmp = new Device_Config_Dialog(
+                    shlKickflickServer,
+                    SWT.APPLICATION_MODAL,
+                    Server.get_device(index),
+                    Server.get_PersonalitiesCount()
+            );
+            //if the configuration dialog was cloased by using the x button i will return null and no information will be processed
+            device tmp_dev = (device) tmp.open();
+            if (tmp_dev != null)
+            {
+//                System.out.println("Return is not null");
+                Server.set_device(index, tmp_dev);
+
+                if ( Server.get_SerialCom().is_connected() )
+                {
+                    System.out.println("Trying to send device");
+                    Server.send_device(index);
+                }
+            }
+        }
     }
 
 

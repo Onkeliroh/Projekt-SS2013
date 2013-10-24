@@ -13,8 +13,6 @@ import kickflick.device.*;
 class parser implements SerialPortEventListener {
 	private final server Server_;
 
-    private final int STATE_CHANGE_DELAY = 15000;
-
 	public parser(server Serv)
 	{
 		System.out.println("Create Parser");
@@ -73,7 +71,7 @@ class parser implements SerialPortEventListener {
                 case system_keys.STILL_ALIVE:
                 {
                     this.Server_.get_device(index).set_new_timestamp_last_heard_of();
-                    this.Server_.send_msg(new byte[]{arg[0],system_keys.MESSAGE_RECEIVED,0,0});
+//                    this.Server_.send_msg(new byte[]{arg[0],system_keys.MESSAGE_RECEIVED,0,0});
                     break;
                 }
                 case system_keys.FOUND_NEIGHBOR:
@@ -100,7 +98,7 @@ class parser implements SerialPortEventListener {
                     //only changes state if there is no known neihbor
                     if ( !this.Server_.get_device(index).has_neighbor())
                     {
-                        if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= STATE_CHANGE_DELAY)      //if the time difference between the last and this contact is big enougth
+                        if ( stamp.getTime() - this.Server_.get_device(index).get_timestamp().getTime() >= this.Server_.get_device(index).get_Personality().get_state_duration())      //if the time difference between the last and this contact is big enougth
                         {
                             //send device information
                             for ( Map.Entry entry : this.Server_.get_device(index).get_trigger_map().entrySet())
@@ -108,8 +106,14 @@ class parser implements SerialPortEventListener {
                                 keys k = (keys) entry.getKey();
                                 if (k.get_key() == arg[1] && (Boolean) entry.getValue())
                                 {
+                                    System.out.println("Found key: " +k.get_name() +" and reacing to it");
+                                    //increment state
                                     this.Server_.get_device(index).get_Personality().inc_state();
 
+                                    //set current reaction acording
+                                    this.Server_.get_device(index).get_Personality().set_current_reaction(k);
+
+                                    //send device(reaction) depending on the current reaction (previous step is important)
                                     this.Server_.send_device(index);
 
                                     this.Server_.get_device(index).set_new_timestamp();
