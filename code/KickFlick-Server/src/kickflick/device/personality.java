@@ -15,7 +15,6 @@ public class personality implements Serializable
     private short State_ = 0;
     public final int state_count = 4;
     private reaction standby = null;
-    private reaction current_reaction = null;
     private keys current_reaction_key = null;
     private Map<keys, reaction[]> Reactions_;
     private Map<String, reaction> neighbours_ = new HashMap<String, reaction>();
