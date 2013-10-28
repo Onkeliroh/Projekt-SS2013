@@ -6,7 +6,6 @@
 /// constructor
 
 ccPacketHandler::ccPacketHandler()
-
 {
 
     _ccPacket.length = CCPACKETHANDLER_LENGTH;
@@ -19,7 +18,6 @@ ccPacketHandler::ccPacketHandler()
 /// destructor
 
 ccPacketHandler::~ccPacketHandler()
-
 {
 
 
@@ -75,12 +73,26 @@ void ccPacketHandler::addToPacket(byte data)
         ++_buildCounter; 
 
     }
-
-    else
-
-        Serial.println("ERROR - end of ccAcknowledge() ccPacket reached.");
-
+   
 }
+
+void ccPacketHandler::buildDetectedNodePacket(byte sender, byte neighbourID)
+{
+    clearPacket(); 
+
+    setReceiver(SERVER_01); 
+
+    setSender(sender); 
+
+    setAdminKey(NEAR_NODE_EVENT);
+
+    setNeighbourId(neighbourID);
+
+    setBuildCounter(4); 
+}
+
+
+
 
 void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourID)
 {
@@ -94,11 +106,10 @@ void ccPacketHandler::buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourI
 
     setNeighbourId(neighbourID);
 
-    //setDetectedRSSI(rawRSSI);
-    //setBuildCounter(5); 
-    
+    setDetectedRSSI(rawRSSI);
 
-    setBuildCounter(4); 
+    setBuildCounter(5); 
+
 }
 
 void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte colorKey1, byte colorKey2)
@@ -118,25 +129,6 @@ void ccPacketHandler::buildPatternCommand(byte receiver, byte PatternKey, byte c
     setBuildCounter(5); 
 
 }
-
-void ccPacketHandler::buildRGBCommand(byte Red01, byte Blue01, byte Green01)
-{
-    clearPacket(); 
-
-    setReceiver(3);
-
-    setSender(SERVER_01); 
-  
-    setRed(Red01);
-
-    setBlue(Blue01);
- 
-    setGreen(Green01);
-     
-    setBuildCounter(6); 
-
-}
-
 
 
 boolean ccPacketHandler::hashMatches()

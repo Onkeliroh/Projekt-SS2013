@@ -5,12 +5,7 @@
 #include "ccNode.h"
 #include "analogComp.h"
 
-#define RSSI_OFFSET 74 
-
-
-
-
-
+#define RSSI_OFFSET 74   //According to the Design Note DN505 http://www.ti.com/lit/an/swra114d/swra114d.pdf
 
 
 class CCSENSORNODE: public CCNODE
@@ -36,6 +31,7 @@ class CCSENSORNODE: public CCNODE
                 void reportShakeEvent();
                 void reportKickEvent();
                 void reportRSSI();
+                void reportDetectedNearNode();
                 void reportLowBatt();
                 void sendRSSI(byte rawRSSI,byte nearNodeId);  
                 void sendInRangePacket();

@@ -18,7 +18,6 @@
 #define NEIGHBOR_B                     EGG_NEIGHBOR 
 #define NEIGHBOR_B_THRES               EGG_RSSI_THRESHOLD 
 
-#define ACCEL_CHECK_PERIOD         22
 #define STATE_CHANGE_INTERVAL    2000   // send message state each 2 secs even though it hasn't change during this time
 #define LAST_MESSAGE_TIMEOUT    30000 
 
@@ -49,7 +48,7 @@ enum state{
     shaken,
     kicked};
 
-state kidneyState = motionless;
+state _state = motionless;
 
 
 unsigned long _lastTimeAccelCheck = 0;
@@ -63,7 +62,7 @@ unsigned long _lastStateChangeTime = 0;
 // Handle interrupt from CC1101 (INT0)
 void RFChipInterrupt()
 {
-    _packetAvailable = true;            // set the flag thar a package is available
+    _packetAvailable = true;         
    
 }
 
@@ -82,9 +81,12 @@ void lowBattInterrupt(void)
 void setup()
 {
     _sensorNode.setup();
-//    enableaLowBattInterrupt();
     enableRFChipInterrupt(); 
-    delay(5); //For the batteryLow System
+    
+// This is commented out when the the Kidney is powered with AA batteries
+//////////////////////////////////    
+//    enableaLowBattInterrupt();    
+//    delay(5); //For the batteryLow System
 }
 
 
@@ -92,10 +94,11 @@ void setup()
 //--- MAIN LOOP ---//
 /////////////////////
 
-// The loop method gets called on and on after the start of the system.
 void loop()
 {
-     
+ 
+// This function is commented out when the the Kidney is powered with AA batteries
+//////////////////////////////////
 //    if(_batteryIsLow)
 //    {
 //        _sensorNode.reportLowBatt();
@@ -122,8 +125,8 @@ void loop()
               
                if(oneNeighborIsClose())
                {
-                    _sensorNode.reportRSSI(); 
-                    updateLastMssgTimestamp();                  
+                    _sensorNode.reportDetectedNearNode(); 
+                    updateLastMssgTimestamp();                    
                 }     
                 
              }  
@@ -173,31 +176,31 @@ void loop()
 
 void checkAccelEventAndReport()
 {
-       if(_accel.wasShaken() && (kidneyState != shaken) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
+       if(_accel.wasShaken() && (_state != shaken) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
        {
            _sensorNode.reportShakeEvent();
            
            updateLastMssgTimestamp();
            
-           kidneyState = shaken;
+           _state = shaken;
            
            _lastStateChangeTime = millis();
        }
        else
        {
-           if(_accel.wasKicked() && (kidneyState != kicked) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
+           if(_accel.wasKicked() && (_state != kicked) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
            {
                _sensorNode.reportKickEvent();
                
                updateLastMssgTimestamp();
                
-               kidneyState = kicked;
+               _state = kicked;
            
                _lastStateChangeTime = millis();
            }
            else
            {
-               kidneyState = motionless;  
+               _state = motionless;  
            }
          
        }           

@@ -20,14 +20,10 @@
 #define NEARNODEID  2
 #define CHECKSUM    3 
 
-#define RSSI_OFFSET 74 
-
 #define BUFFERHASH 4 
 
 #define NULL 0
 
-
-//According to the Design Note DN505 http://www.ti.com/lit/an/swra114d/swra114d.pdf
 
 class CCSERVER: public CCNODE
 {
@@ -36,27 +32,23 @@ class CCSERVER: public CCNODE
                 CCSERVER(byte id);
                 ~CCSERVER();
 
-                void cleanBuffer();
-                void setup();  
+                void setup();
+                 
                 boolean ccGetNewPacket(void);
                 void ccHandle(void); 
-                int  ccRSSI(byte rawRSSI);
-                void checkRSSI();
                
+                void cleanBuffer();              
+                byte getBufferChecksum();
                 void setBuffer();
                 void setNearNodeBuffer();
-                void sendBufferToJavaServer();
+                void sendBufferToJavaServer();              
+
                 boolean newJavaCommand();
                 void getJavaCommand();
                 void setNewCommand();
                 void ccSendCommand(); 
-                byte getBufferChecksum();
-                   
-                //void setTestColorCommand(byte COLORR, byte COLORB, byte COLORG);
-                //void sendColorCommand(byte red1, byte blue1, byte green1);
-
-  
-         
+   
+        private:           
                 byte buffer[BUFFERLENGTH];                  
 };
 

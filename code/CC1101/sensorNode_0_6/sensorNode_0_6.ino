@@ -19,7 +19,6 @@
 #define NEIGHBOR_B                     KIDNEY_NEIGHBOR 
 #define NEIGHBOR_B_THRES               KIDNEY_RSSI_THRESHOLD 
 
-#define ACCEL_CHECK_PERIOD         22
 #define STATE_CHANGE_INTERVAL    1500 
 #define LAST_MESSAGE_TIMEOUT    30000 
 
@@ -50,8 +49,7 @@ enum state{
     shaken,
     kicked};
 
-state kidneyState = motionless;
-
+state _state = motionless;
 
 unsigned long _lastTimeAccelCheck = 0;
 unsigned long _lastMssgTime = 0;
@@ -96,7 +94,11 @@ void setup()
 // The loop method gets called on and on after the start of the system.
 void loop()
 {
-     
+///////////////////////////////////////////////////////
+// This is not used since the Egg 
+// is powered with AA batteries (not the Li-Po battery) 
+///////////////////////////////////////////////////////
+
 //    if(_batteryIsLow)
 //    {
 //        _sensorNode.reportLowBatt();
@@ -123,7 +125,7 @@ void loop()
                
                if(oneNeighborIsClose())
                {
-                   _sensorNode.reportRSSI(); 
+                   _sensorNode.reportDetectedNearNode(); 
                    updateLastMssgTimestamp();                  
                }              
                          
@@ -174,31 +176,31 @@ void loop()
 
 void checkAccelEventAndReport()
 {
-       if(_accel.wasShaken() && (kidneyState != shaken) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
+       if(_accel.wasShaken() && (_state != shaken) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
        {
            _sensorNode.reportShakeEvent();
            
            updateLastMssgTimestamp();
            
-           kidneyState = shaken;
+           _state = shaken;
            
            _lastStateChangeTime = millis();
        }
        else
        {
-           if(_accel.wasKicked() && (kidneyState != kicked) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
+           if(_accel.wasKicked() && (_state != kicked) && (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
            {
                _sensorNode.reportKickEvent();
                
                updateLastMssgTimestamp();
                
-               kidneyState = kicked;
+               _state = kicked;
            
                _lastStateChangeTime = millis();
            }
            else
            {
-               kidneyState = motionless;  
+               _state = motionless;  
            }
          
        }           

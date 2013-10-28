@@ -18,7 +18,6 @@
 #define NEIGHBOR_B                     EGG_NEIGHBOR 
 #define NEIGHBOR_B_THRES               EGG_RSSI_THRESHOLD 
 
-#define ACCEL_CHECK_PERIOD           22
 #define STATE_CHANGE_INTERVAL      2000  // send message state each 2 secs even though the state hasn't change during this time
 #define LAST_MESSAGE_TIMEOUT      30000 
 
@@ -48,7 +47,7 @@ enum state{
            shaken,
            kicked};
 
-state pearState = motionless;
+state _state = motionless;
     
 unsigned long _lastTimeAccelCheck = 0;
 unsigned long _lastMssgTime = 0;
@@ -91,7 +90,7 @@ void setup()
 //--- MAIN LOOP ---//
 /////////////////////
 
-// The loop method gets called on and on after the start of the system.
+
 void loop()
 {
      
@@ -111,7 +110,7 @@ void loop()
               
                 if(oneNeighborIsClose())
                 {
-                    _sensorNode.reportRSSI(); 
+                    _sensorNode.reportDetectedNearNode(); 
                     updateLastMssgTimestamp();                  
                 }
         
@@ -174,13 +173,13 @@ void checkAccelEventAndReport()
 {
        if(_accel.wasShaken())
        {
-         if((pearState != shaken) || (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
+         if((_state != shaken) || (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
          {
              _sensorNode.reportShakeEvent();
            
              updateLastMssgTimestamp();
            
-             pearState = shaken;
+             _state = shaken;
            
              _lastStateChangeTime = millis();
            
@@ -190,20 +189,20 @@ void checkAccelEventAndReport()
        {
            if(_accel.wasKicked())
            {
-             if((pearState != kicked) || (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
+             if((_state != kicked) || (millis() - _lastStateChangeTime > STATE_CHANGE_INTERVAL) )
              {
                  _sensorNode.reportKickEvent();
                
                  updateLastMssgTimestamp();
                
-                 pearState = kicked;
+                 _state = kicked;
                
                  _lastStateChangeTime = millis();       
               }                        
            }
            else 
            {
-               pearState = motionless;              
+               _state = motionless;              
            }
          
        }           
