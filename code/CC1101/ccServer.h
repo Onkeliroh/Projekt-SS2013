@@ -52,8 +52,8 @@ class CCSERVER: public CCNODE
                 void ccSendCommand(); 
                 byte getBufferChecksum();
                    
-                void setTestColorCommand(byte COLORR, byte COLORB, byte COLORG);
-                void sendColorCommand(byte red1, byte blue1, byte green1);
+                //void setTestColorCommand(byte COLORR, byte COLORB, byte COLORG);
+                //void sendColorCommand(byte red1, byte blue1, byte green1);
 
   
          
