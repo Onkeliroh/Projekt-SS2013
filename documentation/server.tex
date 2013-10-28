@@ -5,13 +5,19 @@ suit of eclipse\cite{eclipse} called swt\cite{swt} as our window-builder
 framework.%need to rephrase this Except for one library, the
 RxTx-Library\cite{rxtx}, we only used basic java libraries which came by default
 with the eclipse IDE\cite{ide} environment; in other words, the
-jdk7-openjdk\cite{open_jdk} package. %The heart of the communication is the
-server?
+jdk7-openjdk\cite{open_jdk} package. %The heart of the communication is the server?
 
 When the Panstamp server is connected to the Java server, the latter takes the data given by the Panstamp server thanks to the RxTx library \cite{rxtx} and passes the information to the parser for processing. %Each message is processed in a different thread, right?
 
 %Provided that the user connected through the interface with a serial It takes most of the information broadcasted by the panStamps\cite{panstamp} and processes them.
 %Provided the users connected through the interface with a serial port with the server-panStamp plugged in, the server takes the message with help of the RxTx-library %on a separate thread and passes the message, after receiving it, to the parser for processing and deciding.
+
+The server checkes with an external timed thread the state of each known device.
+This thread checks the current state of the device and, if nessesary, sets the
+state back to standby if to much time since the last change has passed. Therefor
+the thread compares the timestamp of the last state change with the current
+time. Furthermore it checks if the neighborhood realtionship is still exsisting
+or not.
 
 \begin{figure*}[ht]
 	\centerline{\includegraphics[width=\textwidth]{./graph/general.pdf}}
@@ -119,10 +125,14 @@ proper reaction fitting the current state. If the map holds no entry for the
 gven key, the reaction map returns a default reaction array from with a fitting
 reaction acording to the state will be returned. For this matter the default
 map structre was extended to fit those requirements.
-The possible reactions to each neighbor personality is also stored i a map. This
+The possible reactions to each neighbor personality is also stored in a map. This
 map contains the name of the personality as a key and one reaction as value. 
 %The personality class stores information about the states of the personality and the according patterns and colors. This class also provides ''get'' and ''set'' functions to retrieve or change values. Additionally the personality class stores map object of all known personalities and the appropriate response in form of pattern and colors to every possible neighbor. If the device and therefor the personality encounter a unknown personality as a neighbor a default response will be send. 
 %The neighbor map provides the ability to set reactions to neighbor personality, even if they don't exist yet.
+
+Reactions represened by a class called reaction. This class stores information
+about colos, patterns and the duration of one reaction. The duration determines
+the time a reaction will be at least visible on the hardware.
 
 To get the server and the project running without setting up every single device
 by hand a enumeration for pre defined personalities was created. One can select
@@ -140,18 +150,22 @@ We divided the keys in enumerations:
     \item system
     \begin{itemize}
          \item stores basic keys for transmitting status information (e.g. ''low battery'')
+				 \item enumeration: system\_keys
     \end{itemize}
     \item color
     \begin{itemize}
         \item stores byte values for every color hard coded to the actuator panStamp of the hardware device
+				\item enumeration: color
     \end{itemize}
     \item pattern
     \begin{itemize}
         \item stores byte values for every pattern hard coded to the actuator panStamp of the hardware device
+				\item enumeration: pattern
     \end{itemize}
-    \item keys
+    \item event key
     \begin{itemize}
         \item stores byte values for every possible action happening to the hardware device
+				\item enumeration : keys
     \end{itemize}
 \end{itemize} 
 
