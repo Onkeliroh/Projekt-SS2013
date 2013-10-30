@@ -14,10 +14,9 @@
 CCSERVER  _server = CCSERVER(SERVER_ID);
 
 boolean   _packetAvailable = false;
-boolean   testVariable = false;
 
 //////////////////////
-//--- INTERRUPTS ---//
+//--- INTERRUPTS ---//0
 //////////////////////
 
 // Handle interrupt from CC1101 (INT0)
@@ -55,15 +54,7 @@ void loop()
 //              _server.ledBlink(); 
 
 //             _server.ccPrintPacket();  //For debugging
-//              testVariable = !testVariable;
-//              if(testVariable)
-//              {
-//                  _server.sendTestLedCommand1();
-//               
-//              }
-//              else
-//                  _server.sendTestLedCommand2();
-            
+
           }
         
            _packetAvailable = false;   

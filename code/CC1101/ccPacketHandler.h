@@ -85,11 +85,11 @@ class ccPacketHandler
 
         void addToPacket(byte data);
 
+        void buildDetectedNodePacket(byte sender, byte neighbourID);
+
         void buildRSSIPacket(byte sender, byte rawRSSI, byte neighbourID);
  
         void buildPatternCommand(byte receiver, byte PatternKey, byte colorKey1, byte colorKey2);
-
-        void buildRGBCommand(byte Red01, byte Blue01, byte Green01);
 
         /// setters
 

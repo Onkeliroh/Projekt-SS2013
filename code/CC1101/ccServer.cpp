@@ -25,14 +25,6 @@ CCSERVER::~CCSERVER(void)
 }
 
 //METHODS
-void CCSERVER::cleanBuffer()
-{
-    for(int i=0;i<BUFFERLENGTH;i++) 
-    {   
-        buffer[i]= 0x00;       
-    }
-}
-
 void CCSERVER::setup()
 
 {
@@ -47,8 +39,8 @@ void CCSERVER::setup()
 }
 
 
-boolean CCSERVER::ccGetNewPacket(void)
 
+boolean CCSERVER::ccGetNewPacket(void)
 {   
 
     CCPACKET ccPacket; 
@@ -73,8 +65,8 @@ boolean CCSERVER::ccGetNewPacket(void)
 }
 
 
-void CCSERVER::ccHandle(void)
 
+void CCSERVER::ccHandle(void)
 {
  
     byte key = _ccPacketHandler.getAdminKey();
@@ -94,65 +86,61 @@ void CCSERVER::ccHandle(void)
         case NEAR_NODE_EVENT:   
             setNearNodeBuffer();
             sendBufferToJavaServer();
-            cleanBuffer();        
-            //checkRSSI();  
+            cleanBuffer();
             break;    
         case ACKNOWLEDGE:
             setBuffer();         
             sendBufferToJavaServer();
+            cleanBuffer();
             break;   
         case LOW_BATTERY:
             setBuffer();         
             sendBufferToJavaServer();
             cleanBuffer();
+            break;
         case INRANGE:
             setBuffer();         
             sendBufferToJavaServer(); 
-            cleanBuffer();      
-        default: // unknown packet received
-            //SEND MESSAGE TO ORDER A PACKAGE. NEED TO IMPLEMENT THIS
+            cleanBuffer();  
+            break;    
+        default:             
             break; 
     }
 }
 
-int CCSERVER::ccRSSI(byte rawRSSI)
 
+/////////////////////////////////////////
+///////// BUFFER and JAVA COMMAND////////
+/////////////////////////////////////////
+
+void CCSERVER::cleanBuffer()
 {
-    int rssi_dBm;
-
-    if (rawRSSI >= 128)
-        rssi_dBm = (((int)rawRSSI - 256) / 2) - RSSI_OFFSET;
-    else
-        rssi_dBm = ((int)rawRSSI / 2) - RSSI_OFFSET;
-    
-    return rssi_dBm;  
+    for(int i=0;i<BUFFERLENGTH;i++) 
+    {   
+        buffer[i]= NULL;       
+    }
 }
 
 
-void CCSERVER::checkRSSI()
+           
+byte CCSERVER::getBufferChecksum()
 {
+    byte checkSum = 0;
 
-    CCPACKET ccPacket = _ccPacketHandler.getPacket();
-    int rssi_dBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
-    byte emisorID = ccPacket.NEAR_NODE_ID;
-  
-    //if(rssi_dBm > 202)  //212 
-    //{
-        //setNearNodeBuffer();      
-        //sendBufferToJavaServer();
-        //cleanBuffer();           
+    for (byte i = 0; i < BUFFERLENGTH-1; ++i)
 
-        Serial.print("Near Node Nr " );
-        Serial.print(emisorID);
-        Serial.print(" Signal strength ");
-        Serial.println(rssi_dBm);
-    //}
-     
+    {
+
+        checkSum += buffer[i];
+
+    }
+
+    return checkSum;
 }
+
 
 
 void CCSERVER::setBuffer()
-
 {
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
     
@@ -163,11 +151,12 @@ void CCSERVER::setBuffer()
        
 }
 
+
+
 void CCSERVER::setNearNodeBuffer()
 {
     CCPACKET ccPacket = _ccPacketHandler.getPacket();
-    byte nearNodeRssiDBm = ccRSSI(ccPacket.NEAR_NODE_RSSI);
-      
+          
     buffer[SENDERID] = ccPacket.SENDER_ID;
     buffer[KEY] = ccPacket.ADMINKEY;
     buffer[NEARNODEID] = ccPacket.NEAR_NODE_ID;
@@ -176,16 +165,17 @@ void CCSERVER::setNearNodeBuffer()
 }
 
 
+ 
 void CCSERVER::sendBufferToJavaServer()
 {
     for(int i=0; i<BUFFERLENGTH; i++)
     {
-        Serial.write(buffer[i]); 
-        //Serial.println(buffer[i]); 
-                                   
+        Serial.write(buffer[i]);         
     }       
-    delay(1);      //Let's see if this is necessary 29-09       
+    delay(1);   //Otherwise the communication is kaputt     
 }
+
+
 
 boolean CCSERVER::newJavaCommand()
 {
@@ -198,6 +188,7 @@ boolean CCSERVER::newJavaCommand()
    
      return newCommand;
 } 
+
 
 
 void CCSERVER::getJavaCommand()
@@ -213,57 +204,20 @@ void CCSERVER::getJavaCommand()
     
 } 
 
+
+
+void CCSERVER::setNewCommand()
+{
+    _ccPacketHandler.buildPatternCommand(RECEIVERID, METAKEY, COLOR1, COLOR2); 
+}          
+
+
+
 void CCSERVER::ccSendCommand()
 {
     setNewCommand(); 
     ccSendPacket();
 }
-
-void CCSERVER::sendColorCommand(byte red1, byte blue1, byte green1)
-{
-   setTestColorCommand(red1, blue1, green1);
-   ccSendPacket();
-}
-
-
-
-void CCSERVER::setNewCommand()
-{
-    //Serial.write(RECEIVERID);   
-    //Serial.write(METAKEY);      
-    //Serial.write(COLOR1);       
-    //Serial.write(COLOR2);       
- 
-    _ccPacketHandler.buildPatternCommand(RECEIVERID, METAKEY, COLOR1, COLOR2); 
-}
-
-void CCSERVER::setTestColorCommand(byte COLORR, byte COLORB, byte COLORG)
-{
-    //Serial.write(RECEIVERID);   
-    //Serial.write(METAKEY);      
-    //Serial.write(COLOR1);       
-    //Serial.write(COLOR2);       
- 
-    _ccPacketHandler.buildRGBCommand(COLORR, COLORB, COLORG); 
-}
-            
-byte CCSERVER::getBufferChecksum()
-{
-    byte checkSum = 0;
-
-    for (byte i = 0; i < BUFFERLENGTH-1; ++i)
-
-    {
-
-        checkSum += buffer[i];
-
-    }
-
-    return checkSum;
-
-}
-           
-
 
 
 

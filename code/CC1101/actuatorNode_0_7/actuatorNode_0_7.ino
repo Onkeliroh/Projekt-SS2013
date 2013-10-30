@@ -26,8 +26,8 @@ EGGLEDS _eggLeds = EGGLEDS();
 ///////////////////
 
 boolean _packetAvailable = false;
-byte _patternKey = ONESTRIPE;
-byte _firstColor = 15;
+byte _patternKey = FADE;
+byte _firstColor = 13;
 byte _secondColor = 1;
 unsigned long  _patternPeriod = 0;
 

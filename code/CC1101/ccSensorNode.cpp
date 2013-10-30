@@ -200,6 +200,16 @@ void CCSENSORNODE::reportRSSI()
 }
 
 
+void CCSENSORNODE::reportDetectedNearNode()
+{
+    byte nearNodeId =  _ccPacketHandler.getPacketSender();
+
+    _ccPacketHandler.buildDetectedNodePacket(_id, nearNodeId);
+    ccSendPacket();   
+
+}
+
+
 
 void CCSENSORNODE::reportLowBatt()
 
