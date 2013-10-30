@@ -8,18 +8,26 @@ The User Interface is constituted by two parts: the Main Window and the Configur
 \subsubsection{Main Window}
 
 The Main Window has two sections: the first allows the connection set-up with the panstamp server while the second displays the overall state of each entity in the network (see Figure ~\ref{java-server-main}). 
-
+% latex does not insert anything
 To establish a connection, the user has to select the serial port, which the panstamp is attached to, and the corresponding baud-rate. Once the connection is set up, the "connect" button is substituted by a "disconnect" button. The user can disconnect and connect the panstamp at any time. 
-% For example if one decides to change the used seria port. 
+% For example if one decides to change the used serial port. 
 If the Java server does not detect a device in any of the serial ports, the "connect" button will be unavailable (i.e. grayed out). To prevent the user from constantly restarting the server, we implemented a refresh button, which can be pressed at any time. When a device is finally detected, both options (connect and disconnect) will be available for that device.
 
 The second section of the Main Window shows a table with the overall state of each entity in the network.
-Among the data displayed are: the name of the entity's personality, the entity's status and a timestamp.
+Among the data displayed are: the name of the entity's personality, the direct neighbour, the actual state, the last corresponding time to the server and the battery state. \newline
 %explain each possible status (standby, idle, etc)
+For this project we just used three standard personalities named "Paul" (which is always the default personality), "Tanja" and "Mama".\newline
+Mostly, a device won't have a direct neighbour so this space is filled with "none". When a device - panstamp is sending a contact to another device, the name of the neighboured device will be seen. \newline
+The state indicates how persistently a device is in use by kinetic input.\newline
+Standardly each device is in "stand-by". After the first input, the state will change immediately to "first contact", the states afterwards are "played" and "played (hard)". There cannot be a direct change from "first contact" to "played (hard)". So those states are changing incremently.
+The forth row is showing the time when the last communication between device and server has been.\newline
+The last row indicates the power of the battery. Here, just two states are sufficiently: "OK" and "low battery".\newline
+\newline
 %explain what the timestamp is for
 To reflect new detected entities in the network and changes in the entities' status, the information on the table is periodically updated; the table's refresh rate is configurable. 
 %More information in the interface architecture section. %insert link here
-
+Moreover it is possible to refresh the table manually by pressing the "refresh" - button.\newline
+In normal use it won't be necessary to use the "New Device"
 \begin{figure}[h!]
  \centering
  \includegraphics[width= 0.5\textwidth, clip=true  ,keepaspectratio=true]{./pic/java-server-main.png}
@@ -28,18 +36,21 @@ To reflect new detected entities in the network and changes in the entities' sta
  \label{java-server-main}
 \end{figure}
 
-If the server detects an entity in the network, the user can select it in the device-table and open a configuration dialog by either pressing the configuration button (located on the bottom of the table) or double clicking on the intended table's item. A configuration dialog will then be opened where this particular device and its personality can be altered.
+If the server detects an entity in the network, the user can select it in the device-table and open a configuration dialogue by either pressing the configuration button (located on the bottom of the table) or double clicking on the intended table's item. A configuration dialogue will then be opened where this particular device and its personality can be altered.
 
-\subsubsection{Configuration Dialog}
+\subsubsection{Configuration Dialogue}
 
-The Configuration Dialog provides all the information about the selected entity's state and allows the configuration of the entity's personality. 
+The Configuration Dialogue provides all the information about the selected entity's state and allows the configuration of the entity's personality. 
 
 The user can customize a personality or select one among the predefined personalities. But if the user creates a personality and then selects a predefined one, all the changes made so far will be overridden by the predefined personality. 
 
-To cancel all changes, the user has to click the ''close'' button located on the bottom-right corner of the Dialog Window (see Figure ~\ref{fig:java-server-config01}).   
+To cancel all changes, the user has to click the ''close'' button located on the bottom-right corner of the Dialogue Window (see Figure ~\ref{fig:java-server-config01}).   
 
-In the Configuration Dialog, the personality's settings are distributed in three different tabs. The tab ''Basic'' (see Figure ~\ref{fig:java-server-config01}) contains the personality's name, the addresses of the two nodes that constitute the entity and a table with all the possible action keys. Only the checked keys will be enabled in the entity; that is, the entity will only react to a certain action key if the latter has a check next to it in the table. Every key can be enabled and disabled by the user. 
-
+In the Configuration Dialogue, the personality's settings are distributed in three different tabs. The tab ''Basic'' (see Figure ~\ref{fig:java-server-config01}) contains the personality's name, the addresses of the two nodes that constitute the entity and a table with all the possible action keys. Only the checked keys will be enabled in the entity; that is, the entity will only react to a certain action key if the latter has a check next to it in the table. Every key can be enabled and disabled by the user. 
+\newline
+By clicking on a device in the table of the main window, this first view of the configuration window opens. In the Default Configuration part of the window the chosen device will be shown with its device name. Because the user can overwrite the name of a personality, it was necessary to show the actuators and the sensors ID.\newline
+Furthermore the actual state of the device is prompted so that the user can change the behaviour of a device in a special state. \newline
+\newline
 
 \begin{figure}[h!]
  \centering
@@ -49,14 +60,16 @@ In the Configuration Dialog, the personality's settings are distributed in three
  \label{fig:java-server-config01}
 \end{figure}
 
-The ''State-Options'' tab shows in a checkbox the current state of the personality, which can be changed by the user. Below the checkbox, a table with all the personality's states is displayed. Here, the user can change the pattern and both colors of a particular state (see Figure ~\ref{fig:java-server-config02}). 
+In the second tab of the Configuration Window the "Reaction Options" are set.\newline
+So the window is separated in an upper and a lower part. In the upper one the behaviour of the device can be set in the Standby (default) state. A personality's behaviour is interpolated by four objects: Once, there is a pattern (like blinking, fading, rainbow, ... ). This pattern needs two colours to switch between. At least, the behaviour needs a time (duration) for how long a pattern is.\newline
+In the lower part all other states can be manipulated.   
 
 
 \begin{figure}[h!]
  \centering
  \includegraphics[width= 0.5\textwidth, clip=true  ,keepaspectratio=true]{./pic/java-server-config02.png}
  % java-server-main.png: 0x0 pixel, 0dpi, nanxnan cm, bb=
- \caption{Configuration Dialog, 2nd Tab}
+ \caption{Configuration Dialogue, 2nd Tab}
  \label{fig:java-server-config02}
 \end{figure}
 
@@ -65,7 +78,7 @@ Finally, the third tab labelled ''Neighbor'' displays the actions to be performe
 
 In this tab, the user can set the pattern and colors that the entity and its found neighbor will display. For instance, according to the settings in Figure ~\ref{fig:java-server-config03}, if the entity ''Mama'' finds ''Tanja'', both entities will exhibit a blink pattern with white and black. On the other hand, when ''Tanja'' finds ''Mama'', the two entities will again display a blink pattern but with different colors, namely red and blue. 
 
-In order to save the changes made to the personality's settings, the user has to first press the ''apply'' and then the ''save|close'' button. Otherwise, if just the ''save|close'' button were pressed, no changes would be written and the device would keep the settings it had before the configuration process.
+In order to save the changes made to the personality's settings, the user has to press the ''save|close'' button. Otherwise, if just the ''save|close'' button were pressed, no changes would be written and the device would keep the settings it had before the configuration process.
 
 \begin{figure}[h!]
  \centering
@@ -79,7 +92,7 @@ In order to save the changes made to the personality's settings, the user has to
 The interface was created with the swt widget toolkit from eclipse. %insert cite
 To periodically update the device table, the main window uses a swt timerevent. Every event-based action, like button clicks or selection were also implemented with the built-in event-listener structure of the swt toolkit. %insert cite again
 
-When the dialog is opened, the entity will be passed as a parameter in the constructor, the dialog will then create the interface and afterwards read the entity's settings %Daniel, what do you mean by dialog here? The Configuration Dialog?
+When the dialogue is opened, the entity will be passed as a parameter in the constructor, the dialogue will then create the interface and afterwards read the entity's settings %Daniel, what do you mean by dialogue here? The Configuration Dialogue?
 
 After changing one or more settings, if the user presses the ''apply'' button, these are kept in a temporal device. Then, if the ''save|close'' button is pressed, the new settings will be stored in a device instance that will be passed to the Main Window. When the user wants to discard the changes instead, he or she has to press the ''close'' button; the close action will pass a null pointer to the Main Window instance to indicate that no changes were committed. 
 
