@@ -18,10 +18,10 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="346.5" y="137.0"/>
+          <y:Geometry height="231.78655670103092" width="266.9172783505154" x="179.58272164948454" y="-66.78655670103089"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="57.345703125" x="21.3271484375" y="3.0">ccNode<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="57.345703125" x="104.7857876127577" y="3.0">ccNode<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -29,8 +29,19 @@
             </y:ModelParameter>
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel/>
-            <y:MethodLabel/>
+            <y:AttributeLabel>+_id : byte
++_twinNode : byte
++_syncWord : byte                  
++_cc1101 : CC1101                         
++_ccPacketHandler : CCPACKETHANDLER</y:AttributeLabel>
+            <y:MethodLabel>+virtual setup(): void
++ledBlinkSetup(): void
++rfChipInit(): void
++ccSendPacket(): void
++ccPrintPacket(): void
++ledBlink(): void                
++virtual ccGetNewPacket(void) : boolean
++virtual ccHandle(void) : void</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
@@ -39,7 +50,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="349.04999999999995" y="243.20000000000002"/>
+          <y:Geometry height="28.0" width="100.0" x="263.04136082474224" y="243.20000000000002"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="67.705078125" x="16.1474609375" y="3.0">ccServer<y:LabelModel>
@@ -60,7 +71,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="145.0" x="494.0" y="243.20000000000007"/>
+          <y:Geometry height="28.0" width="145.0" x="393.04136082474224" y="243.20000000000007"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="120.9111328125" x="12.04443359375" y="3.0">ccActuatorNode<y:LabelModel>
@@ -81,7 +92,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="135.0" x="169.09999999999997" y="243.2"/>
+          <y:Geometry height="28.0" width="135.0" x="90.66898969072159" y="243.2"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="107.8603515625" x="13.56982421875" y="3.0">ccSensorNode<y:LabelModel>
@@ -102,7 +113,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="516.5" y="324.0"/>
+          <y:Geometry height="28.0" width="100.0" x="415.5413608247423" y="324.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="38.14404296875" x="30.927978515625" y="3.0">Leds<y:LabelModel>
@@ -123,7 +134,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="379.5" y="424.0"/>
+          <y:Geometry height="28.0" width="100.0" x="321.1795051546392" y="409.9226391752577"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="71.4501953125" x="14.27490234375" y="3.0">pearLeds<y:LabelModel>
@@ -144,7 +155,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="516.5" y="424.0"/>
+          <y:Geometry height="28.0" width="100.0" x="438.0413608247423" y="409.9226391752577"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="87.09716796875" x="6.451416015625" y="3.0">kidneyLeds<y:LabelModel>
@@ -165,7 +176,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="646.5" y="424.0"/>
+          <y:Geometry height="28.0" width="100.0" x="554.9032164948453" y="409.9226391752577"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="65.572265625" x="17.2138671875" y="3.0">eggLeds<y:LabelModel>
@@ -186,7 +197,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="102.98680412371135" y="345.2"/>
+          <y:Geometry height="28.0" width="100.0" x="26.56684536082477" y="335.1447422680412"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="41.45751953125" x="29.271240234375" y="3.0">accel<y:LabelModel>
@@ -207,7 +218,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="673.1999999999997" y="324.0"/>
+          <y:Geometry height="28.0" width="100.0" x="592.7579381443296" y="324.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="68.7841796875" x="15.60791015625" y="3.0">LPD6803<y:LabelModel>
@@ -228,7 +239,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="100.0" x="638.0065979381441" y="-30.228865979381396"/>
+          <y:Geometry height="28.0" width="100.0" x="715.4320824742265" y="35.10672164948457"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="55.59375" x="22.203125" y="3.0">cc1101<y:LabelModel>
@@ -249,7 +260,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="140.0" x="484.8223711340205" y="137.0"/>
+          <y:Geometry height="28.0" width="140.0" x="510.96604123711325" y="35.10672164948457"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="126.9921875" x="6.50390625" y="3.0">ccPacketHandler<y:LabelModel>
@@ -270,7 +281,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="87.91711340206189" width="210.60783505154632" x="673.1999999999997" y="168.2"/>
+          <y:Geometry height="87.91711340206189" width="210.60783505154632" x="476.4999999999999" y="93.10672164948457"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="68.873046875" x="70.86739408827316" y="3.0">ccpacket<y:LabelModel>
@@ -281,10 +292,10 @@
             </y:ModelParameter>
           </y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>+ byte length;
-+ byte data[CC1101_DATA_LEN];
-+ boolean crc_ok;
-+ byte rssi;</y:AttributeLabel>
+            <y:AttributeLabel>+length : byte
++data[CC1101_DATA_LEN] : byte
++crc_ok : boolean
++rssi: byte</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -294,7 +305,7 @@
       <data key="d4"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="28.0" width="119.19999999999993" x="227.2762886597938" y="345.2"/>
+          <y:Geometry height="28.0" width="119.19999999999993" x="156.5668453608248" y="335.1447422680412"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="94.81591796875" x="12.192041015624966" y="3.0">analogComp<y:LabelModel>
