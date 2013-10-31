@@ -12,11 +12,11 @@ When the Panstamp server is connected to the Java server, the latter takes the d
 %Provided that the user connected through the interface with a serial It takes most of the information broadcasted by the panStamps\cite{panstamp} and processes them.
 %Provided the users connected through the interface with a serial port with the server-panStamp plugged in, the server takes the message with help of the RxTx-library %on a separate thread and passes the message, after receiving it, to the parser for processing and deciding.
 
-The server checkes with an external timed thread the state of each known device.
-This thread checks the current state of the device and, if nessesary, sets the
+The server checks with an external timed thread the state of each known device.
+This thread checks the current state of the device and, if necessary, sets the
 state back to standby if to much time since the last change has passed. Therefor
 the thread compares the timestamp of the last state change with the current
-time. Furthermore it checks if the neighborhood realtionship is still exsisting
+time. Furthermore it checks if the neighborhood relationship is still existing
 or not.
 
 \begin{figure*}[ht]
