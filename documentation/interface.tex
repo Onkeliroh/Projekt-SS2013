@@ -5,20 +5,19 @@ The User Interface is constituted by two parts: the Main Window and the Configur
 \subsubsection{Main Window}
 
 The Main Window has two sections: the first allows the connection set-up with the panstamp server while the second displays the overall state of each entity in the network (see Figure ~\ref{java-server-main}). 
-To establish a connection, the user has to select the serial port, which the panstamp is attached to, and the corresponding baud-rate. Once the connection is set up, the "connect" button is substituted by a "disconnect" button. The user can disconnect and connect the panstamp at any time. 
-If the Java server does not detect a device in any of the serial ports, the "connect" button will be unavailable (i.e. grayed out). To prevent the user from constantly restarting the server, we implemented a refresh button, which can be pressed at any time. When a device is finally detected, both options (connect and disconnect) will be available for that device.
-
+To establish a connection, the user has to select the serial port, which the panstamp is attached to, and the corresponding baud-rate. When the user wants to create a new connection, he can click on the ''connect'' button. 
+If the Java server does not detect a device in any of the serial ports, the ''connect'' button will be unavailable (i.e. grayed out). To prevent the user from constantly restarting the server, we implemented a refresh button, which can be pressed at any time. 
 The second section of the Main Window shows a table with the overall state of each entity in the network.
 Among the data displayed are: the name of the entity's personality, the direct neighbour, the actual state, the last corresponding time to the server and the battery state. 
-For this project we implemented three standard personalities named "Paul" (which default personality), "Tanja" and "Mama".
-Mostly, a device won't have a direct neighbour so this space is filled with "none". In case a neighbor is detected the neighbor cell will display the name of the neighboring devices personality. 
+For this project we implemented three standard personalities named "Paul" (which is the default personality), "Tanja" and "Mama".
+Mostly, a device won't have a direct neighbour so this space is filled with "none". In case a neighbor is detected, the neighbor cell will display the name of the neighboring devices personality. 
 The state indicates how persistently a device is in use by kinetic input.
-Standardly each device is in "stand-by". After the first input, the state will change to "first contact", the states afterwards are "played" and "played (hard)". There cannot be a direct change from "first contact" to "played (hard)". So those states are changing incremently.
+Standardly each device is in "stand-by". After the first input, the state will change to "first contact", the states afterwards are "played" and "played (hard)". There cannot be a direct change from "first contact" to "played (hard)". So those states are changing incrementally.
 The forth row is showing the time when the last communication between device and server has been.
 The last row indicates the power of the battery. Here, just two states are sufficiently: "OK" and "low battery".
 
 To reflect new detected entities in the network and changes in the entities' status, the information on the table is periodically updated; the table's refresh rate is configurable. 
-The update process is implemented using a timed thread, which is periodicly checking the devices informations and then altering the shown information. In case the battery was set to "low" or the last received message was received long ago in comparisson to a configurable threshold, the main window will change the background of the devices corresponding table item to red to notify the user. 
+The update process is implemented using a timed thread, which is periodically checking the devices information and then altering the shown information. In case the battery was set to "low" or the last received message was received long ago in comparison to a configurable threshold, the main window will change the background of the devices corresponding table item to red to notify the user. 
 \begin{figure}[h!]
  \centering
  \includegraphics[width= 0.5\textwidth, clip=true  ,keepaspectratio=true]{./pic/java-server-main.png}
@@ -28,8 +27,8 @@ The update process is implemented using a timed thread, which is periodicly chec
 \end{figure}
 
 If the server detects an entity in the network, the user can select it in the device-table and open a configuration dialogue by either pressing the configuration button (located on the bottom of the table) or by clicking on the intended table's item. The configuration dialogue will then be opened where this particular device and its personality can be altered.
-
-%buttons erklären 
+In practical use, the ''New Device'' button won't be clicked because each detected device by clicking on ''connect'' will create an own entry in the table with the default personality ''Paul''. But the ''New Device'' button has its authorization to be there for implementing or debugging operations.\newline
+An other case are the ''Delete'' and ''Delete All'' buttons. They are really necessary to use in the daily employment. The ''Config''buttons functionality was already explained above. For an user, it is just quite easier to open a new dialogue via several ways.
 
 \subsubsection{Configuration Dialogue}
 
@@ -37,7 +36,7 @@ The Configuration Dialogue provides all the information about the selected entit
 
 The user can customize a personality or select one among the predefined personalities. But if the user creates a personality and then selects a predefined one, all the changes made so far will be overridden by the predefined personality. 
 
-To cancel all changes, the user has to click the ''close'' button located on the bottom-right corner of the Dialogue Window (see Figure ~\ref{fig:java-server-config01}).   
+To cancel all changes, the user just has to click the cross in the very top - right corner. Then all personalities have their default (or last saved)settings.(see Figure ~\ref{fig:java-server-config01}). But if the user wants to save his changes, he just have to click on the ''save|close'' button in the down - right corner.    
 
 In the Configuration Dialogue, the personality's settings are distributed in three different tabs. The tab ''Basic'' (see Figure ~\ref{fig:java-server-config01}) contains the personality's name, the addresses of the two nodes that constitute the entity and a table with all the possible action keys. Only the checked keys will be enabled in the entity; that is, the entity will only react to a certain action key if the latter has a check next to it in the table. Every key can be enabled and disabled by the user. 
 
@@ -69,9 +68,9 @@ In the lower part all other states can be manipulated.
 
 Finally, the third tab labelled ''Neighbor'' displays the actions to be performed when the entity detects a neighbor (see Figure ~\ref{fig:java-server-config03}). The table shows the personality of each entity that has been detected by the server. However, if an entity has a preset personality, it will not be displayed in this tab since its reaction towards a neighbour is already defined and is not configurable. 
 
-In this tab, the user can set the pattern and colors that the entity and its found neighbor will display. For instance, according to the settings in Figure ~\ref{fig:java-server-config03}, if the entity ''Mama'' finds ''Tanja'', both entities will exhibit a blink pattern with white and black. On the other hand, when ''Tanja'' finds ''Mama'', the two entities will again display a blink pattern but with different colors, namely red and blue. 
+In this tab, the user can set the pattern and colors that the entity and its found neighbor will display. For instance, according to the settings in Figure ~\ref{fig:java-server-config03}, if the entity ''Paul'' is clicked in the users interface to its configuration window and the device finds another ''Paul'', both entities will exhibit a blink pattern with green and blue. Here, the duration time is constant.
 
-In order to save the changes made to the personality's settings, the user has to press the ''save|close'' button. Otherwise, if just the ''save|close'' button were pressed, no changes would be written and the device would keep the settings it had before the configuration process.
+In order to save the changes made to the personality's settings, the user has to press the ''save|close'' button like in the main window. Otherwise, if the dialogue is closed by pressing the x in the very right - top corner, no changes will be saved and the entities settings fall back to the last saved changes or the default. 
 
 \begin{figure}[h!]
  \centering
