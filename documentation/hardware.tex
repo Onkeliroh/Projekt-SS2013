@@ -3,11 +3,10 @@
 The sensor node is constituted by the panstamp, an accelerometer and a voltage divisor circuit.
 
 \subsubsection{Accelerometer}
+\label{sec:Accelerometer}
 The ADXL335 is a small low power 3-axis accelerometer that measures acceleration with a range of at least +/- 3g; in other words, +/- 3g is the maximum amplitude that this accelerometer can detect before distorting or clipping its output signal. 1g is the acceleration due to the earth's gravity (9.8 m/sec2).
 
-According to the ADXL335 datasheet (add reference), the capacitors Cx, Cy and Cz connected to the accelerometer pins Xout, Yout and Zout determine the accelerometer's bandwidth. With these capacitors, a low pass-filter for anti-aliasing and noise reduction is implemented. In the board GY-61 (see Figure~\ref{fig:accelerometer}), Cx, Cy and Cz have a capacitance of 0.1uF that yields a bandwidth of 50 Hz (add reference). 	
-
-To minimize aliasing, the accelerometer's analog bandwidth must be no more than half the analog-to-digital sampling frequency. Therefore, the panstamp was programmed to sample the accelerometer's signal at a frequency of 200z (see Driver section), thus the analog-to-digital sampling frequency is 4 times the accelerometer's analog bandwidth. 
+According to the ADXL335 datasheet (add reference), the capacitors Cx, Cy and Cz connected to the accelerometer pins Xout, Yout and Zout determine the accelerometer's bandwidth. With these capacitors, a low pass-filter for anti-aliasing and noise reduction is implemented. Aliasing denotes the distortion and artifact that can appear when a signal is reconstructed from samples of the original signal (see reference XX and section~\ref{sec:Accel class}). In the board GY-61 (see Figure~\ref{fig:accelerometer}), Cx, Cy and Cz have a capacitance of 0.1uF that yields a bandwidth of 50 Hz (add reference). 	
 
 \begin{figure}[h!] 
  \centering
@@ -19,6 +18,7 @@ To minimize aliasing, the accelerometer's analog bandwidth must be no more than 
     
   
 \subsubsection{Voltage monitoring circuit}
+\label{sec:Voltage monitoring circuit}
 To detect when the Li-Po battery has low voltage, a voltage monitoring circuit was implemented with the Panstamp's analog comparator module (add reference to the data-sheet here) and a voltage divisor circuit (see Figure~\ref{fig:voltage-monitor}). According to the ATMEGA 328 data-sheet (add reference), the Analog Comparator compares the input values on the positive pin AIN0 and negative pin AIN1. 
 
 In our implementation, the Analog Comparator triggers an interruption in the sensor node when the voltage on the pin AIN0 decreases below the voltage in pin AIN1. With the configuration shown in Figure~\ref{fig:voltage-monitor}, the voltage in AIN1 is always 2.4 V. When the Li-po battery voltage falls below 9.5 Volts, the voltage in AIN0 (which is the same voltage in resistor R2) is less than the voltage in AIN1 and the Analog Compator activates as a result an interruption.
