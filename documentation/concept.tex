@@ -12,7 +12,7 @@ Due to Panstamps' open source nature, documentation and information about alread
 
 For all these reasons, our envisioned system is based on Panstamps. As depicted in Figure~\ref{fig:server-module}, each module in our system is constituted by a sensor and actuator node, both having a Panstamp as their nucleus. The server node has also a Panstamp as its main component, which communicates wirelessly with the other modules' panstamps. 
 
-The Java Server gets the data recollected by the server node, process it and gives a response to the server node that has to be sent to the appropriate node in the network. The feedback provided by the Java Server depends entirely on the \emph{personality} of each device.
+The Java Server gets the data recollected by the server node, process it and gives a response to the server node that has to be sent to the appropriate node in the network. The feedback provided by the Java Server depends entirely on the \emph{personality} of each device (module).
 
 \begin{figure}[h!]
  \centering
@@ -20,6 +20,15 @@ The Java Server gets the data recollected by the server node, process it and giv
  \caption{Interface's server and a module}
  \label{fig:server-module}
 \end{figure}
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[width= 0.4\textwidth, clip=true  ,keepaspectratio=true]{./graph/network.png}
+ \caption{Three different modules in the network and the server}
+ \label{fig:modules}
+\end{figure}
+
+
 
 To detect if they have been kicked or pushed, modules need to sense their own movement; therefore, an accelerometer is connected to the sensor node of each module as shown by Figure \ref{fig:sensor-node}. We used the ADXL335 \cite{ADXL335}, a small accelerometer that measures acceleration in each of the cardinal directions (x,y and z).
 
@@ -52,10 +61,10 @@ The Java Server is the heart of the interface; it is the orchestrator of all nod
 
 The Java server's main functions are:
 \begin{itemize}
-\item provide an interface that allows the configuration of modules' personalities
-\item analyse data transmitted by the sensor nodes
-\item generate responses to the sensed stimulus by sending commands to the actuator nodes
-\item store modules' personalities
+\item to provide an interface that allows the configuration of modules' personalities
+\item to analyse data transmitted by the sensor nodes
+\item to generate responses to the sensed stimulus by sending commands to the actuator nodes
+\item to store modules' personalities
 \end{itemize}
 
 

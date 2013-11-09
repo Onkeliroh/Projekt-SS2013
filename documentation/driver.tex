@@ -11,7 +11,7 @@ All the nodes classes' names start with "cc" to denote that their communication 
 \end{figure}  
 
 \subsection{ccpacket class}
-
+\label{sec:ccpacket class}
 The class ccpacket contains the backbone for all the messages (packages) shared by the network's nodes. As depicted in Figure~\ref{fig:driverUML}, this class' attributes are:
 \begin{itemize}
 \item length, which determines the size of each package
@@ -51,14 +51,13 @@ Table~\ref{Notification-packet} shows Notification packet's structure:
   \label{Notification-packet}
 \end{table}
 
-Depending on the value of "Receiver Id", a message is received by all nodes or just by a single one. To broadcast, "Receiver Id" has to be set to "0" (zero). In other words, a packet is broadcasted when packet.data[0] is set to "0" (see \url{http://code.google.com/p/panstamp/wiki/LowLevelLibrary}).
-When the packet has to be sent to just a single node, "Receiver id" holds the receiver node id.
+Depending on the value of "Receiver Id", a message is received by all nodes or just by a single one. To broadcast, "Receiver Id" has to be set to "0" (zero). In other words, a packet is broadcasted when packet.data[0] is set to "0" \cite{CC1101-ref}. When the packet has to be sent to just a single node, "Receiver id" holds the receiver node's id.
 
 The "Sender Id" indicates which node created and sent the packet. This data is important for interpreting any packet's meaning.
 
 "Admin Key" points out an specific event perceived by a node in the network. When a notification packet is received by the server, this node creates a new Panstamp-to-Java server message (see section~\ref{sec:Panstamp-to-Java server message}) to inform the Java server about the new event. Notification packets share the same keys as the Panstamp-to-Java server messages; to see all possible values that "Admin Key" can take, please refer to Table~\ref{Admin Keys}. 
 
-When a module is moved or kicked, its sensor node broadcasts a notification packet (with "Admin Key" equal to \emph{shake\_event} or to \emph{kick\_event}) that is received by the all sensor nodes and by the server node. Each sensor node compares the rssi of the received notification packet to a specific threshold to determine if the node that broadcasted the notification packet is near. When the rssi is strong enough, the sensor node sends a notification packet to the server node with "Admin Key" equal to \emph{Near\_Node\_Event}. In this Notification packet, data[3] contains the id of the sensor node that was detected to be near. For the rest of the Notification packets, data[3] doesn't contain any real data (is a dummy value). 
+When a module is moved or kicked, its sensor node broadcasts a notification packet (with "Admin Key" \emph{shake\_event} or \emph{kick\_event}) that is received by all the sensor nodes and by the server node. Each sensor node compares the rssi of the received notification packet to a specific threshold to determine if the node that broadcasted the notification packet is near. When the rssi is strong enough, the sensor node sends a notification packet to the server node with "Admin Key" equal to \emph{Near\_Node\_Event}. In this Notification packet, 'data[3]' contains the id of the sensor node that was detected to be near. For the rest of the Notification packets, 'data[3]' doesn't contain any real data (is a dummy value). 
 
 To keep the same length for all packets, the Notification packets has a dummy byte in his data array ("data[4]"). Nevertheless, this data byte contains real data in the Command packets. 
 
@@ -113,12 +112,12 @@ Most of the patterns displayed by the led strands have one or two colors. Fields
 
 \subsection{ccPacketHandler}
 \label{sec:ccPacketHandler}
-The ccPacketHandler class is in charge of managing the creation of packets and the access of data in received packets. For these tasks, the class contains the ccPacket class. 
+The ccPacketHandler class is in charge of managing the creation of packets and the access of data in received packets. For these tasks, the class contains an instance of the ccPacket class (see Section~\ref{sec:ccpacket class}	). 
 
 \subsection{ccNode}
-delivery and reception of packets
+As shown Figure~\ref{fig:driverUML}, the ccNode is an abstract class that contains the basic methods and attributes shared by all the different nodes' classes. 
 \subsubsection{ccNode methods}
-As shown Figure~\ref{fig:driverUML}, this abstract class is the base for all node classes. The most important methods in this superclass are:
+The most important methods in this superclass are:
 \begin{itemize}
 \item virtual setup() sets the node's attributes depending on its type. See section~\ref{sec:ccNode-attributes} 
 \item rfChipSetup() initializes and configures the CC1101 chip 
@@ -134,7 +133,7 @@ Every node in the network has the following attributes:
 \item \_id stores the node's id
 \item \_twinNode has the id of the other node contained in the same module. For instance, in a sensor node this attribute is the id of the actuator node contained in the same module.
 \item \_syncWord identifies the network. All nodes in our network share the same syncWord.  
-\item \_cc1101 is an instance of the cc1101 class with which the cc1101 transceiver is controlled.
+\item \_cc1101 is an instance of the cc1101 class that controls the panstamp's transceiver 
 \item \_ccPacketHandler is an instance of the ccPacketHandler class (see section~\ref{sec:ccPacketHandler}).
 \end{itemize}
                         
@@ -147,7 +146,7 @@ To perform its tasks, the ccSensorNode class uses the accel and analogComp class
 \label{sec:Accel class}
 The accel class reads the signals given by the accelerometer and determines, according to specific thresholds, if a module was shaken or kicked. Since each module has a different mass, the acceleration produced by the same force varies among the modules. Therefore, when an instance of the accel class is created, two thresholds are required: shakenThreshold and kickedThreshold. In our system, these thresholds were estimated by sampling and averaging the acceleration data in each different module (pear, kidney and egg).
 
-In section~\ref{sec:Accelerometer}, we mentioned that the accelerometer ADXL355 mounted in the board GY-61 has a bandwith of 50 Hz; i.e., its output signal has a frequency of 50 Hz. According to Nyquist–Shannon sampling theorem (see reference XXX), a band-limited signal can be reconstructed from a countable sequence of samples if the signal's bandwidth is no greater than half the sampling rate. Therefore, the accel class samples the accelerometer's signal at a frequency of 200 Hz (1 sample each 5 milliseconds). As a result, the analog-to-digital sampling frequency is 4 times the accelerometer's signal bandwidth, which is greater than two times the accelerometer's bandwidth. 
+In section~\ref{sec:Accelerometer}, we indicate that the accelerometer ADXL355 mounted in the board GY-61 has a bandwith of 50 Hz; i.e., its output signal has a frequency of 50 Hz. According to Nyquist–Shannon sampling theorem, a band-limited signal can be reconstructed from a countable sequence of samples if the signal's bandwidth is no greater than half the sampling rate. Therefore, the accel class samples the accelerometer's signal at a frequency of 200 Hz (1 sample each 5 milliseconds). As a result, the analog-to-digital sampling frequency is 4 times the accelerometer's signal bandwidth, which is greater than two times the accelerometer's bandwidth. 
 
 \subsubsection{AnalogComp class}
 With the AnalogComp class, the panstamps' Analog Comparator module can be activated and configured to enable interruptions. As explained in section~\ref{sec:Voltage monitoring circuit}, in our implementation, the Analog Comparator triggers an interruption in the sensor node when the voltage on the pin AIN0 (digital pin D6) decreases below the voltage in pin AIN1 (digital pin D7). 
@@ -157,7 +156,7 @@ The ccServer class' main purpose is to enable the communication between the Java
 
 First, this class receives Notification packets sent by the sensor nodes and transfers the data contained in these packets to the Java Server. Messages transferred from the panstamp server to the Java server are explained in section~\ref{sec:Panstamp-to-Java server message}. 
 
-Second, the ccServer class receives commands from the Java Server and creates Command packets accordingly to the corresponding actuator nodes. To see how the messages transferred from the Java server to the panstamp server are structured, please refer to section (this section is missing). 
+Second, the ccServer class receives commands from the Java Server and creates Command packets accordingly to the corresponding actuator nodes. 
 
 \subsection{ccActuatorNode class}	
 The ccActuatorNode class is in charge of receiving Command packets and of transferring the pattern data to the Leds class.  			

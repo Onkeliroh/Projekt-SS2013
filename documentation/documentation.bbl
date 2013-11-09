@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{LPD6803}
+{\sc adafruit}.
+\newblock {\em LPD6803 datasheet}.
+\newblock \url{http://www.adafruit.com/datasheets/LPD6803.pdf}.
+
 \bibitem{ADXL335}
 {\sc Analog devices}.
 \newblock {\em ADXL335 datasheet}, 2009.
@@ -55,6 +60,11 @@
 \newblock {\em Appropriateness of foot interaction for non-accurate spatial
   tasks}.
 \newblock New York, NY, USA, 2004.
+
+\bibitem{CC1101-ref}
+{\sc Panstamp}.
+\newblock {\em CC1101 Library}.
+\newblock \url{http://code.google.com/p/panstamp/wiki/LowLevelLibrary}.
 
 \bibitem{panstamp}
 {\sc Panstamp}.

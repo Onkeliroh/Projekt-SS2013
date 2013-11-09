@@ -87,39 +87,59 @@ server. If everything is correct, the parser then searches for a known device in
 the modules' list of the server. If it doesn't find a match, the parser will create a new device
 with default settings. 
 
-Once a device was found or created, the parser begins to compare the second byte of the message with the admin keys stored in the server data (see table~\ref{Admin Keys} ). For example, if the received message contains the number''52'' in its second byte, the parser will then recognize this as the ''the battery is low'' key and will toggle the boolean value battery\_low of the device to true. 
+Once a device was found or created, the parser begins to compare the second byte of the message with the admin keys stored in the server data (see table~\ref{Admin Keys} ). First all system\_keys will be compared. For example if the received message contains a ''52'' as second byte, the parser will then recognize this as the ''the battery is low'' key and will toggle the boolean value battery\_low of the device to true. 
+If no system key matched with the received one, the parser then checks the
+reaction keys of the device itself. This check only happens if the device it not
+currently engaged in a neighborhood relationship with another device and if the
+time of the last received state changing message lays back a certain time. For
+this checking and comparing procedure the device owns a map with all reaction
+keys stored to it and a associated boolean value, representing the choice of
+ignoring or reacting to the received key. If a appropriate key was found and
+according to the boolean value a reaction should happen, then the state of the
+devices personality will be increased and the new information about the pattern
+and both colors, depending on the received event key, will be send to the
+server-panStamp using the RxTx-library. 
 
-The keys 'Shake Event', 'Kick Event' and 'Near Node Event' can be ignored by a module if in its settings those events are disabled. In the Configuration Dialog Window, in the 'basic' tab, the user can activate or disable the effect each of those three keys produces in a specific device. 
-Therefore, when a message with one of these keys is received, the parser checks the configured settings of the corresponding device and verifies if the key should be attended to or ignored. 
- 
-When enabled, the keys 'Shake event' and 'Kick Event' change the module's state to the next stage and led pattern data (pattern and 2 colors) that corresponds to the new module's state will be sent to the server-panStamp using the RxTx-library. 
-
-When activated, the 'Near Node Event' key changes the led patterns of the two involved modules (a module and the neighbour it detected). For this, the Java server has to sent two messages (for the two devices) with the same led pattern data to the server-panstamp.  
-
-No matter if a correct message leads to a state change or not, the device's timestamp will be updated to the time of the last correct received message. If the module's state did change, the server also stores another timestamp that reflects the time when the last state change happened.
+No matter if a correct message lead to a state change or not, the device will
+get a new timestamp to memorize the time of the last received message. If a
+state change happend the device also gets a new timestamp revering to the time
+the last state change happend.
 
 \subsubsection{Device and Personality Structure}
-The device class contains an instance of the personality class and the server class holds a list of all known devices.
+The server itself and the according class holds a list of all known devices. Every lookup action depends on this list. The device class itself holds a instance of the personality class.
+Devices can be seen as a representation of the hardware devices with the two panStamps in them. It refers to the hardware and therefor stores the Id's of the panStamps and timestamps of the last received message either one of the hardware device panStamps, a second timestamp of the last state change and a third timestamp of the last ''neighborhood meeting''. All those information are accessible through ''get'' functions as well as mostly modifiable through ''set'' functions.
 
-Devices can be seen as a representation of the hardware modules with the two panStamps in them. It refers to the hardware and for this reason stores the Id's of the panStamps. Additionally, this class stores a first timestamp of the last received message from a module, a second timestamp of the last module's state change and a third timestamp of the last 'near neighbor' event. These data is accessible through ''get'' functions as well as mostly modifiable through ''set'' functions.
+The personality stores the reaction of a particular device depending on the
+event keys, neighbors and the state of the device. For the purpose of reaction
+to a certain event key the personality stores
+a map for reactions with the acording keys as key and an array of reaction class
+instances. If for example the parser received a message with an event key, the
+reaction map will be searched for this particular key. If this key exsists in
+the map the reaction array will be returned and the personality returns the
+proper reaction fitting the current state. If the map holds no entry for the
+gven key, the reaction map returns a default reaction array from with a fitting
+reaction acording to the state will be returned. For this matter the default
+map structre was extended to fit those requirements.
+The possible reactions to each neighbor personality is also stored in a map. This
+map contains the name of the personality as a key and one reaction as value. 
+%The personality class stores information about the states of the personality and the according patterns and colors. This class also provides ''get'' and ''set'' functions to retrieve or change values. Additionally the personality class stores map object of all known personalities and the appropriate response in form of pattern and colors to every possible neighbor. If the device and therefor the personality encounter a unknown personality as a neighbor a default response will be send. 
+%The neighbor map provides the ability to set reactions to neighbor personality, even if they don't exist yet.
 
-The personality class stores the reaction of a particular device depending on the admin keys, neighbors and the state of the device. To implement the set of possible reactions, this class stores a map of reactions (an array of instances of the class 'reaction') with the corresponding activator keys (instances of the enumeration 'keys').
-
-For instance, if the parser receives a message, the reaction map will be searched for the key given by the message. If the key exists in the map, the reaction array will be returned and the personality returns the proper reaction that fits the current state. If the map holds no entry for that key, the reaction map returns a default reaction array.
-
-The possible reactions for each detected neighbor are also stored in a map. This
-map contains the name of the neighbour' personality and its the corresponding reaction (when this neighbour is found). 
-
-Reactions in a device are represented by a class called reaction. This class stores information
-about colors, patterns and the duration of each reaction (for how long time the reaction will be visible).
+Reactions represened by a class called reaction. This class stores information
+about colos, patterns and the duration of one reaction. The duration determines
+the time a reaction will be at least visible on the hardware.
 
 To get the server and the project running without setting up every single device
-by hand, a enumeration for pre defined personalities was created. One can select
+by hand a enumeration for pre defined personalities was created. One can select
 between each of those personalities. Once a pre defined personality is selected,
-the previous personality of the current device will be overwritten. It is also possible to save the current devices to a file so that they can be loaded again after restarting the server.
+the previous personality of the current device will be overwritten. This
+approach saves time. It is also possible to save the current devices to a file
+so that they can be loaded again, for examlpe after restarting the server.
+Therefor the classes device, personality and reaction are extending the
+serialize class.
 
 \subsubsection{Key Structure}
-During the development of the system, we decided to use single byte keys to represent commands, messages, patterns and colors inside the Java server. To store these keys, several enumerations were created to separate related keys with their name and value depending on their purpose.
+During the development we thought of keys, single byte values, to represent commands, messages, patterns and colors. To store these keys several enumerations were created to seperate related keys with their name and value depending on their usage.
 We divided the keys in enumerations:
 \begin{itemize}
     \item system
@@ -144,4 +164,4 @@ We divided the keys in enumerations:
     \end{itemize}
 \end{itemize} 
 
-Every class or function that refers to those values calls only the enumeration item by its name. With this implementation, it is easier to change single values and it is quicker to get an overview.
+Every class or function referring to those values calls only the enumeration item by its name. The advantage of this approach is easier changing of single values as well as a quicker overview.

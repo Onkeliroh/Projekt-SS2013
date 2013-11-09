@@ -16,7 +16,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="network_all.png">
+   sodipodi:docname="network.svg">
   <defs
      id="defs4">
     <marker
@@ -207,10 +207,10 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1295"
+     inkscape:window-width="1301"
      inkscape:window-height="744"
-     inkscape:window-x="1985"
-     inkscape:window-y="336"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -220,7 +220,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -307,7 +307,7 @@
          id="tspan3028-9-0-0"
          x="140.74269"
          y="117.99432"
-         style="font-size:12px;font-weight:bold;-inkscape-font-specification:Sans Bold">Entity</tspan></text>
+         style="font-size:12px;font-weight:bold;-inkscape-font-specification:Sans Bold">Module</tspan></text>
     <path
        style="fill:none;stroke:#26aa00;stroke-width:1.461;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.922,1.461;stroke-dashoffset:0;marker-end:url(#Arrow1Mend-5);marker-start:url(#Arrow1Mstart-5)"
        d="M 382.90946,121.61083 331.5672,137.89942"
@@ -376,7 +376,7 @@
          id="tspan3028-9-0-0-5"
          x="391.87051"
          y="108.59296"
-         style="font-size:12px;font-weight:bold;-inkscape-font-specification:Sans Bold">Entity</tspan></text>
+         style="font-size:12px;font-weight:bold;-inkscape-font-specification:Sans Bold">Module</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -412,7 +412,7 @@
          id="tspan3028-9-0-0-9"
          x="267.3056"
          y="245.70334"
-         style="font-size:12px;font-weight:bold;-inkscape-font-specification:Sans Bold">Entity</tspan></text>
+         style="font-size:12px;font-weight:bold;-inkscape-font-specification:Sans Bold">Module</tspan></text>
     <path
        style="fill:none;stroke:#26aa00;stroke-width:1.39999998;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2.8, 1.4;stroke-dashoffset:0;marker-start:url(#Arrow1Mstart-5);marker-end:url(#Arrow1Mend-5)"
        d="m 296.91309,205.45526 0.45952,-37.95346"

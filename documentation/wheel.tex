@@ -61,7 +61,7 @@ In other words, we could have used pins PD3 and PD4 and configured interruptions
 
 As explained in the arduino official website \cite{arduino}, it is useful to steer a digital input pin to a known state if no input is present. Writing a HIGH value with digitalWrite() in a digital pin, if if the pin is configured as an INPUT, will enable an internal 20K pullup resistor (to Vcc). On the other hand, writing LOW will disable the pullup. In our implementation, adding the internal pullup was fundamental to obtain the right readings of the hall effect sensor's output signals. 
 
-Each time the panstamp detected movement in the wheel, it built a packet and sent it wirelessly to another panstamp that lit up a led strand. Two different packets were sent according to the direction of rotation and the leds in the led strand were lit in a way that reflected the two different directions. 
+Each time the panstamp detected movement in the wheel, it built a packet and sent it wirelessly to another panstamp that lit up a led strand. Two different packets were sent according to the direction of rotation and the leds in the led strand were lit in a way that reflected the two different directions. For debugging purposes, a led was lit when a certain direction of rotation was detected: the green led indicated clockwise rotation whereas the red one counter-clockwise rotation. 
 
 This mini-project is a simple example of how the hall effect sensors, along with a panstamp, can be used to produce interactive systems. 
 

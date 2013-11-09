@@ -3,49 +3,49 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: documentation.aux
 The style file: acm.bst
 Database file #1: sources.bib
-Repeated entry---line 91 of file sources.bib
+Repeated entry---line 97 of file sources.bib
  : @manual{panstamp
  :                 ,
 I'm skipping whatever remains of this entry
-You've used 18 entries,
+You've used 20 entries,
             2253 wiz_defined-function locations,
-            611 strings with 6018 characters,
-and the built_in function-call counts, 3343 in all, are:
-= -- 345
-> -- 77
+            620 strings with 6203 characters,
+and the built_in function-call counts, 3663 in all, are:
+= -- 379
+> -- 79
 < -- 0
-+ -- 40
++ -- 42
 - -- 22
-* -- 191
-:= -- 514
-add.period$ -- 54
-call.type$ -- 18
-change.case$ -- 61
+* -- 207
+:= -- 558
+add.period$ -- 60
+call.type$ -- 20
+change.case$ -- 67
 chr.to.int$ -- 0
-cite$ -- 18
-duplicate$ -- 180
-empty$ -- 329
+cite$ -- 20
+duplicate$ -- 200
+empty$ -- 365
 format.name$ -- 22
-if$ -- 721
+if$ -- 793
 int.to.chr$ -- 0
-int.to.str$ -- 18
+int.to.str$ -- 20
 missing$ -- 0
-newline$ -- 93
+newline$ -- 103
 num.names$ -- 8
-pop$ -- 61
+pop$ -- 69
 preamble$ -- 1
-purify$ -- 61
+purify$ -- 67
 quote$ -- 0
-skip$ -- 88
+skip$ -- 96
 stack$ -- 0
-substring$ -- 104
-swap$ -- 40
+substring$ -- 116
+swap$ -- 44
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 72
+type$ -- 80
 warning$ -- 0
 while$ -- 8
-width$ -- 20
-write$ -- 177
+width$ -- 22
+write$ -- 195
 (There was 1 error message)

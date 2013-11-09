@@ -42,12 +42,11 @@ The Configuration Dialogue provides all the information about the selected modul
 
 The user can customize a personality or select one among the predefined personalities. But if the user creates a personality and then selects a predefined one, all the changes made so far will be overridden by the predefined personality. 
 
-To cancel all changes, the user has to click the ''close'' button located on the bottom-right corner of the Dialogue Window (see Figure ~\ref{fig:java-server-config01}).   
+To cancel all changes, the user has to simply close the window by pressing the 'x' button located on the upper right corner.   
 
-In the Configuration Dialogue, the personality's settings are distributed in three different tabs. The tab ''Basic'' (see Figure ~\ref{fig:java-server-config01}) contains the personality's name, the addresses of the two nodes that constitute the entity and a table with all the possible action keys. Only the checked keys will be enabled in the entity; that is, the entity will only react to a certain action key if the latter has a check next to it in the table. Every key can be enabled and disabled by the user. 
+In the Configuration Dialogue, the personality's settings are distributed in three different tabs. The tab ''Basic'' (see Figure ~\ref{fig:java-server-config01}) contains the personality's name, the addresses of the two nodes that constitute the module (device) and a table with all the possible action keys. Only the checked keys will be enabled in the device; that is, the module will only react to a certain action key if the latter has a check next to it in the table. Every key can be enabled and disabled by the user. 
 
-By clicking on a device in the table of the main window, this first view of the configuration window opens. In the Default Configuration part of the window the chosen device will be shown with its device name. Because the user can overwrite the name of a personality, it was necessary to show the actuators and the sensors ID.
-Furthermore the actual state of the device is prompted so that the user can change the behaviour of a device in a special state. 
+By clicking on a device in the table of the main window, this view of the configuration window appears. In the 'Default Configurations' section in the window, the chosen device will be shown with its device name. Since the user can overwrite the name of a personality, it was necessary to show the actuators and the sensors IDs. Furthermore, the current state of the device is prompted so that the user can change the behaviour of a module in that particular state. 
 
 
 \begin{figure}[h!]
@@ -58,10 +57,9 @@ Furthermore the actual state of the device is prompted so that the user can chan
  \label{fig:java-server-config01}
 \end{figure}
 
-In the second tab of the Configuration Window the "Reaction Options" are set.
-So the window is separated in an upper and a lower part. In the upper one the behaviour of the device can be set in the Standby (default) state. A personality's behaviour is interpolated by four objects: Once, there is a pattern (like blinking, fading, rainbow, ... ). This pattern needs two colours to switch between. At least, the behaviour needs a time (duration) for how long a pattern is.
-In the lower part all other states can be manipulated.   
-
+In the second tab of the Configuration Window, the "Reaction Options" can be set.
+The window is divided in two sections. In the upper one, the behaviour of the device can be set to the Standby (default) state. A personality's behaviour consists of four elements: a pattern (l blinking, fading, rainbow, ... ), two colors used by the pattern and finally, the pattern's duration; how long a pattern lasts in time.
+In the lower part of the Configuration Window, all these elements can be configured by the user.
 
 \begin{figure}[h!]
  \centering
@@ -72,11 +70,11 @@ In the lower part all other states can be manipulated.
 \end{figure}
 
 
-Finally, the third tab labelled ''Neighbor'' displays the actions to be performed when the entity detects a neighbor (see Figure ~\ref{fig:java-server-config03}). The table shows the personality of each entity that has been detected by the server. However, if an entity has a preset personality, it will not be displayed in this tab since its reaction towards a neighbour is already defined and is not configurable. 
+Finally, the third tab labelled ''Neighbor'' displays the actions to be performed when the module detects a neighbor (see Figure ~\ref{fig:java-server-config03}). The table shows the personality of each device that has been detected so far by the server. However, if a module has a preset personality, it will not be displayed in this tab since its reaction towards a neighbour is already defined and is not configurable. 
 
-In this tab, the user can set the pattern and colors that the entity and its found neighbor will display. For instance, according to the settings in Figure ~\ref{fig:java-server-config03}, if the entity ''Mama'' finds ''Tanja'', both entities will exhibit a blink pattern with white and black. On the other hand, when ''Tanja'' finds ''Mama'', the two entities will again display a blink pattern but with different colors, namely red and blue. 
+In this tab, the user can set the pattern and colors that the device and its found neighbor will display. For instance, according to the settings in Figure ~\ref{fig:java-server-config03}, if the current module (that is being configured) finds ''Paul'', both modules will blink alternating the colors 'green' and 'blue'. 
 
-In order to save the changes made to the personality's settings, the user has to press the ''save|close'' button. Otherwise, if just the ''save|close'' button were pressed, no changes would be written and the device would keep the settings it had before the configuration process.
+In order to save the changes made to the personality's settings, the user has to press the ''save|close'' button. Otherwise, if the window is closed without pressing this button before, no changes would be written and the device would keep the settings it had before the configuration process.
 
 \begin{figure}[h!]
  \centering
@@ -87,12 +85,11 @@ In order to save the changes made to the personality's settings, the user has to
 \end{figure}
 
 \subsubsection{Interface Architecture}
-The interface was created with the swt widget toolkit from eclipse. %insert cite
-To periodically update the device table, the main window uses a swt timerevent. Every event-based action, like button clicks or selection were also implemented with the built-in event-listener structure of the swt toolkit. %insert cite again
+The interface was created with the swt widget toolkit from eclipse. To periodically update the device's table, the main window uses a swt timerevent. Every event-based action, like button clicks or selection were also implemented with the built-in event-listener structure of the swt toolkit. 
 
-When the dialogue is opened, the entity will be passed as a parameter in the constructor, the dialogue will then create the interface and afterwards read the entity's settings %Daniel, what do you mean by dialogue here? The Configuration Dialogue?
+When the Configuration Dialogue window is opened, the module will be passed as a parameter in the Dialogue constructor; the Dialogue constructor will then create the interface and afterwards read the module's settings 
 
-Every change will be written to a new device class instance, witch chares the same configuration as the selected device, so that the if the users closes the configuration dialog via clicking the "save|close" button this instance replaces the previously selected device.
+Every change will be written to a new device class instance, which shares the same configuration as the selected device, so that if the users closes the configuration dialog via clicking the "save|close" button this instance replaces the previously selected device.
 
-The interface was designed to be highly felxible, if one decides to add new colors or add an extra state to the device and personality structure, the inferface widgets don't need to be changed. They are dynamicly created at startup and therefor hold all availably informations.
-% vim: spell spelllang=en_gb 
+The interface was designed to be highly flexible; if one decides to add new colors or add an extra state to the device and personality structure, the inferface widgets don't need to be changed. They are dynamically created at startup and therefore hold all availably information.
+
