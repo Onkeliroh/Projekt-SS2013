@@ -1,0 +1,7 @@
+pinMode(hallSensor1, INPUT );
+digitalWrite( hallSensor1, HIGH ); 
+PCintPort::attachInterrupt( hallSensor1, &rpm_interrupt1, CHANGE );
+
+pinMode(hallSensor2, INPUT );
+digitalWrite( hallSensor2, HIGH );
+

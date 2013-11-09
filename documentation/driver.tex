@@ -165,6 +165,10 @@ The ccActuatorNode class is in charge of receiving Command packets and of transf
 \subsection{Leds class}	
 The Leds class controls the led strand connected to the actuator node. It receives pattern data from the ccActuatorNode class and reproduces the expected led pattern in the module. Since each module type has a different number and spatial distribution of leds, a subclass of the Led class was created for each type of module, namely pearLeds, kidneyLeds and eggLeds. 
 
+\subsubsection{LPD6803 class}	
+This class, published originally by ladyada in github \cite{lady_ada_LPD6803}, provides the methods for settting-up and for controlling each led in the led strands we used in our system. 
+
+
 
 
 

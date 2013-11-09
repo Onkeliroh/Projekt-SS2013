@@ -1,0 +1,10 @@
+\subsection{First development steps}
+As explained in the Software Concept section, the Java server receives from the server node all the data gathered in the network, produces a response according to each module’s personality and sends the corresponding commands to the intended actuator nodes through the server node.
+
+To develop the Java server, we first divided its envisioned structure into subcomponents and worked with each part at a time. The first subcomponent was a serial port communication system, the second was the graphical user interface. Later, we learned about threads and runnable concepts in Java to implement another subcomponent dedicated to the management of the different nodes in the network. 
+
+As a first step, we implemented a basic serial port communication routine for learning and experimenting purposes. For this, we worked with the RxTx-library to get a better understanding of the tools it provided. The small application only wrote information to the serial outputstream and if there were available data coming from the serial port, it read the data and printed them in the console.
+
+After understanding the ground principles of the library, we began to design and implement the Java server.
+
+

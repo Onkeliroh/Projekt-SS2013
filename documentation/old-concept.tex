@@ -1,4 +1,4 @@
-\section{Concept}
+%\section{old Concept}
 \subsection{Basic Concept}
 Feet are used in many real world tasks together with the rest of the body, but in computer environments they are almost completely put aside as an interaction possibility \cite{pakkanen}. For instance, Ubicomp researches have developed different types of interfaces for public spaces where users' hands are the protagonists and feet are partly or completely neglected. 
 
@@ -46,18 +46,6 @@ All the elements in a module are powered by a 11 volts Li-Po battery. This batte
 
 
 \subsection{Software Concept} 
-\subsubsection{Java server}
-
-The Java Server is the heart of the interface; it is the orchestrator of all nodes in the system's network. The server node transfers all the data gathered in the network to the Java Server, which produces a response according to each module's personality and sends it to the intended actuator nodes through the server node (See Figure~\ref{fig:server-module}).  
-
-The Java server's main functions are:
-\begin{itemize}
-\item provide an interface that allows the configuration of modules' personalities
-\item analyse data transmitted by the sensor nodes
-\item generate responses to the sensed stimulus by sending commands to the actuator nodes
-\item store modules' personalities
-\end{itemize}
-
 
 \subsubsection{Driver} 
 Since we used the Arduino IDE to program the Panstamps, all the nodes' drivers in the network were written in C++. These drivers were designed to allow \textbf{expandability}; as a result, new nodes can be added to the network by coping the basic drivers and changing them slightly. 
@@ -70,3 +58,27 @@ In short, the drivers are in charge of:
 \item operating the led strands
 \item setting up the communication with the Java Server on the Panstamp' side
 \end{itemize}
+
+\subsubsection{Java server}
+
+The Java Server is the heart of the interface; it is the orchestrator of all nodes in the system's network. The server node transfers all the data gathered in the network to the Java Server, which produces a response according to each module's personality and sends it to the intended actuator nodes through the server node (See Figure~\ref{fig:server-module}).  
+
+
+
+The kinetic inputs "first contact", "played" and "played hard" are triggered by each other:
+So when the device gets kicked, his state will change from "standby" to "first contact", then when the threshold is high enough, the state changes directly to "played". There cannot be a change from "first contact" to "played hard". 
+
+Those data will be send to the panstamp of the server where this data will be analyzed and compared to the corresponding personality of the device. The personality then outputs the behaviour for the device. A behaviour consists two colors (which can be the same) and a pattern. This pattern describes the appearance of the colors. (Like a blinking or fading of the LEDs)
+The idea was to create typical characters for the devices. Below you can see the table which describes how a device reacts to kinetic inputs into his environment. So if it is in his default state the device "Paul" is fading blue. By changing input the state will change perhaps to the state "hard played". Those behaviour can be manipulated using the servers graphical interface. 
+
+
+So by using this technique the following rules shown in this table can be implemented.
+When the servers got from the device panstamp the data with which other device it is confronted, the server looks up in the data of the presetpersonalities.java file and returns the matching pattern. For this use it is necessary to define which personality is more dominant than another.
+
+
+So when the server has received the data of its state and his neighbourhood of the sending device it will send a new pattern for the LEDs chain actuator when the situation of the sending device has changed.
+When the device hadn't send its data packet for two minutes a warning will pop up in the graphical interface. Apparently this will happen when the device is out of range of the sending area of the panstamp antennas (approximately ~50 metres).
+This very functionality is illustrated in the following graphic.
+
+
+

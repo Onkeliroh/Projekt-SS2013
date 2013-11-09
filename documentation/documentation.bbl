@@ -1,9 +1,24 @@
 \begin{thebibliography}{10}
 
+\bibitem{ADXL335}
+{\sc Analog devices}.
+\newblock {\em ADXL335 datasheet}, 2009.
+\newblock \url{https://www.sparkfun.com/datasheets/Components/SMD/adxl335.pdf}.
+
 \bibitem{open_jdk}
 {\sc Arch Linux}.
 \newblock {\em JRE7-Openjdk Arch Linux official repository entry}.
 \newblock \url{https://www.archlinux.org/packages/?name=jdk7-openjdk}.
+
+\bibitem{arduino}
+{\sc arduino}.
+\newblock {\em Arduino official website}, April 27, 2012 11:17.
+\newblock \url{http://arduino.cc/en/Tutorial/DigitalPins}.
+
+\bibitem{atmega328}
+{\sc Atmel}.
+\newblock {\em ATMEGA328 webpage}, 2013.
+\newblock \url{http://www.atmel.com/devices/atmega328.aspx}.
 
 \bibitem{xbee}
 {\sc Digi International Inc.}
@@ -15,6 +30,11 @@
 \newblock {\em SWT Homepage}, 2013.
 \newblock \url{http://www.eclipse.org/swt/}.
 
+\bibitem{lady_ada_LPD6803}
+{\sc ladyada}.
+\newblock {\em Lady Ada LPD6803 driver}, 2011.
+\newblock \url{https://github.com/adafruit/LPD6803-RGB-Pixels}.
+
 \bibitem{lady_ada_arduino_tutorial}
 {\sc ladyada}.
 \newblock {\em Lady Ada Arduino Tutorial}, April 27, 2012 11:17.
@@ -25,6 +45,11 @@
 \newblock {\em Java Homepage}.
 \newblock \url{https://www.java.com/en/}.
 
+\bibitem{paelke}
+{\sc Paelke, V., Reimann, C., and Stichling, D.}
+\newblock {\em Foot-based mobile interaction with games}.
+\newblock New York, NY, USA, 2004.
+
 \bibitem{pakkanen}
 {\sc Pakkanen, T., and Raisamo, R.}
 \newblock {\em Appropriateness of foot interaction for non-accurate spatial
@@ -32,9 +57,24 @@
 \newblock New York, NY, USA, 2004.
 
 \bibitem{panstamp}
-{\sc panStamp S.L.U}.
-\newblock {\em panStamp Website}.
-\newblock \url{http://www.panstamp.com/}.
+{\sc Panstamp}.
+\newblock {\em Panstamp official website}, April 27, 2012 11:17.
+\newblock \url{http://www.panstamp.com/home}.
+
+\bibitem{seitinger-2}
+{\sc Seitinger, S., Perry, D.~S., and Mitchell, W.~J.}
+\newblock {\em Urban pixels: painting the city with light}.
+\newblock New York, NY, USA, 2009.
+
+\bibitem{seitinger}
+{\sc Seitinger, S., Taub, D.~M., and Taylor, A.~S.}
+\newblock {\em Light bodies: exploring interactions with responsive lights}.
+\newblock New York, NY, USA, 2010.
+
+\bibitem{cc1101}
+{\sc Texas instruments}.
+\newblock {\em CC1101 datasheet}, 2013.
+\newblock \url{http://www.ti.com/lit/ds/symlink/cc1101.pdf}.
 
 \bibitem{eclipse}
 {\sc the Eclipse Foundation}.

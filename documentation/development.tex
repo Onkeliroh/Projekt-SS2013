@@ -1,18 +1,12 @@
 \section{Development}
-In order to find ideas of possible ''KickandFlickable'' devices/interfaces, we first started to learn about the technological components we had at hand, such as the arduino. For example, we made some of the start-up projects published in the lady ada tutorial \cite{lady_ada_arduino_tutorial}.
+In order to find ideas of how to implement 'KickandFlickable' devices/interfaces, we first started to learn about the technological components we had at hand, such as the arduino. For example, we made some of the start-up projects published in the lady ada tutorial \cite{lady_ada_arduino_tutorial}.
 
+We learned how to use basic components like LEDs and tilt-sensors. Later, we worked with more complicated components such as the hall effect sensors (See section~\ref{sec:the-wheel}).
+Meanwhile, we did experiments with XBees\cite{xbee} and found that its signal range was relatively short for our purposes (the maximum range we obtained was approximately 5 meters). Thus, we decided to start working with Panstamps \cite{panstamp}, which are a compact wireless versions of the Arduino devices.
 
+After exploring different options, we chose the accelerometer for sensing movement in the modules because its output signal is not binary (as the tilt sensor) but continuous and this property gives more flexibility, since not only two but many states can be defined with its data. 
 
+For making the detection between modules possible, we decided to take advantage of the RSSI of the signals produced by the panstamps. Since precision was not a critical factor in our interface, RSSI measurements suited our technical needs. 
 
-The creative process of finding an idea how to create something ''kickflickable'' began with a small introduction to arduino. Mainly we were thought the workflow and usage of an arduino, and therefore of an microcontroller in general, by the lady ada tutorial. \cite{lady_ada_arduino_tutorial}
-We learned how to use basic components like LEDs and tilt-sensores. Very early we recognized, that sensores for position measurement were needed to recognize the position of the future device. But we also experimented with a skate-wheel to for example wether it turns one way or the other. To make sure that the finished prototypes and the concept are expandebel in terms of new sensors and/or actuators.
-After we found the right sensors we needed to find a way to communicate with the devices. We experimented with panStamps \cite{panstamp} and XBee\cite{xbee}-shields. In the end we settled with the panStamps because of their larger range results and the fact of them combining a arduino with a wireless module to one device instead of additionally getting one more interface to work on.
+To give feedback to the users when they kicked or slightly moved the modules, we decided to use multi color led strands. Light stimulus catches easily user's attention, specially in the night. Moreover, led strands allow the implementation of different color patterns and as a result, different light responses can be given to the users depending on the different ways the move the modules with their feet. 
 
-Form this point on, we had an idea of how to realise the position detection and communication parts. We still needed to create some sort of feedback for the user to realize. 
-At first we wanted to give feedback via audio, vibration and light, but because of limitations in time and processing power of the ATmega %cite genauer bautyp
- chip we decided to keep the most obvious of the three feedback ideas and settled with the light.
-
-The finished prototypes now run on two panStamps with a ATmega<bla> each. On panStamps controlls the sensors and the other is meant to create the feedback. 
-A RGB LED Chain was selected to create light patterns, because of the convenient usage and the brightness of the LEDs. 
-
-% vim: spell spelllang=en_gb 

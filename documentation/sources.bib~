@@ -1,20 +1,91 @@
-@Manual{Pakkanen,
+@Manual{seitinger,
+ author = {Seitinger, Susanne and Taub, Daniel M. and Taylor, Alex S.},
+ title = {Light bodies: exploring interactions with responsive lights},
+ booktitle = {Proceedings of the fourth international conference on Tangible embedded and embodied interaction},
+ year = {2010},
+ pages = {113--120},
+ publisher = {ACM},
+ address = {New York, NY, USA}
+ } 
+
+@Manual{seitinger-2,
+ author = {Seitinger, Susanne and Perry, Daniel S. and Mitchell, William J.},
+ title = {Urban pixels: painting the city with light},
+ booktitle = {Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
+ year = {2009},
+ pages = {839--848},
+ publisher = {ACM},
+ address = {New York, NY, USA}
+}
+
+@Manual{paelke,
+ author = {Paelke, Volker and Reimann, Christian and Stichling, Dirk},
+ title = {Foot-based mobile interaction with games},
+ booktitle = {Proceedings of the 2004 ACM SIGCHI International Conference on Advances in computer entertainment technology},
+ year = {2004},
+ pages = {321--324},
+ publisher = {ACM},
+ address = {New York, NY, USA}
+} 
+
+@Manual{pakkanen,
  author = {Pakkanen, Toni and Raisamo, Roope},
  title = {Appropriateness of foot interaction for non-accurate spatial tasks},
- booktitle = {CHI 04 Extended Abstracts on Human Factors in Computing Systems},
- series = {CHI EA 04},
+ booktitle = {CHI '04 Extended Abstracts on Human Factors in Computing Systems},
  year = {2004},
  pages = {1123--1126},
  publisher = {ACM},
  address = {New York, NY, USA}
 } 
 
+@Manual{panstamp,
+	title = {Panstamp official website},
+	organization = {Panstamp},
+	year = {April 27, 2012 11:17},
+	note = {\url{http://www.panstamp.com/home}}
+}
+
+@Manual{cc1101,
+	title = {CC1101 datasheet},
+	organization = {Texas instruments},
+	year = {2013},
+	note = {\url{http://www.ti.com/lit/ds/symlink/cc1101.pdf}}
+}
+
+@Manual{atmega328,
+	title = {ATMEGA328 webpage},
+	organization = {Atmel},
+	year = {2013},
+	note = {\url{http://www.atmel.com/devices/atmega328.aspx}}
+}
+
+@Manual{ADXL335,
+	title = {ADXL335 datasheet},
+	organization = {Spark fun electronics},
+	year = {2013},
+	note = {\url{http://www.atmel.com/devices/atmega328.aspx}}
+}
+
 
 @Manual{lady_ada_arduino_tutorial,
 	title = {Lady Ada Arduino Tutorial},
 	organization = {ladyada},
 	year = {April 27, 2012 11:17},
-	note = {\url{http://www.ladyada.net/learn/arduino/}},
+	note = {\url{http://www.ladyada.net/learn/arduino/}}
+}
+
+@Manual{lady_ada_LPD6803,
+	title = {Lady Ada LPD6803 driver},
+	organization = {ladyada},
+	year = {2011},
+	note = {\url{https://github.com/adafruit/LPD6803-RGB-Pixels}}
+}
+
+@Manual{arduino,
+	title = {Arduino official website},
+	organization = {arduino},
+	year = {April 27, 2012 11:17},
+	note = {\url{http://arduino.cc/en/Tutorial/DigitalPins}}
 }
 
 @Manual{panstamp,
@@ -32,7 +103,7 @@
 @Manual{rxtx,
     title = {RxTx Library Wiki},
     organization = {Trent Jarvi},
-    note = {\url{http://rxtx.qbang.org/wiki/index.php/Main_Page}},
+    note = {\url{http://rxtx.qbang.org/wiki/index.php/Main_Page}}
 }
 
 @Manual{java,
@@ -45,24 +116,24 @@
     title = {Eclipse Homepage},
     organization = {the Eclipse Foundation},
     year = {2013},
-    note = {\url{http://eclipse.org//}},
+    note = {\url{http://eclipse.org//}}
 }
 
 @Manual{ide,
     title = {IDE Wikipedia Entry},
     organization = {Wikimedia Foundation},
-    note = {\url{https://en.wikipedia.org/wiki/Integrated_Development_Environment}},
+    note = {\url{https://en.wikipedia.org/wiki/Integrated_Development_Environment}}
 }
 
 @Manual{swt,
     title = {SWT Homepage},
     organization = {Eclipse Foundation},
     year = {2013},
-    note = {\url{http://www.eclipse.org/swt/}},
+    note = {\url{http://www.eclipse.org/swt/}}
 }
 
 @Manual{open_jdk,
     title = {JRE7-Openjdk Arch Linux official repository entry},
     organization = {Arch Linux},
-    note = {\url{https://www.archlinux.org/packages/?name=jdk7-openjdk}},
+    note = {\url{https://www.archlinux.org/packages/?name=jdk7-openjdk}}
 }
