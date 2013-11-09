@@ -160,6 +160,7 @@ Second, the ccServer class receives commands from the Java Server and creates Co
 
 \subsection{ccActuatorNode class}	
 The ccActuatorNode class is in charge of receiving Command packets and of transferring the pattern data to the Leds class.  			
+\newline 
 
 \subsection{Leds class}	
 The Leds class controls the led strand connected to the actuator node. It receives pattern data from the ccActuatorNode class and reproduces the expected led pattern in the module. Since each module type has a different number and spatial distribution of leds, a subclass of the Led class was created for each type of module, namely pearLeds, kidneyLeds and eggLeds. 
