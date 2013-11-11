@@ -88,7 +88,7 @@ public class personality implements Serializable
     //requires to set the state first
     public void set_current_reaction(keys k)
     {
-        System.out.println("Setting current reaction");
+        //System.out.println("Setting current reaction");
         this.current_reaction_key = k;
     }
 
@@ -230,6 +230,11 @@ public class personality implements Serializable
     {
         //ToDo set default value somehow
         this.Reactions_ = new DefaultHashMap<keys, reaction[]>(new reaction[4]);
+    }
+
+    public void set_Reactions(Map<keys,reaction[]> tmp_map)
+    {
+        this.Reactions_=tmp_map;
     }
 
 }

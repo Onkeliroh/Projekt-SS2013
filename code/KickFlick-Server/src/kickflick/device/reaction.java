@@ -3,7 +3,9 @@ package kickflick.device;
 import kickflick.utility.color;
 import kickflick.utility.pattern;
 
-public class reaction {
+import java.io.Serializable;
+
+public class reaction implements Serializable {
     private color color1_;
     private color color2_;
     private pattern pattern_;

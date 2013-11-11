@@ -581,6 +581,7 @@ public class Device_Config_Dialog extends Dialog
     //sets state table AND standby items
     private void set_state_combos(personality p)
     {
+        result.get_Personality().set_Reactions(p.get_reactions());
         for ( int i = 0 ; i < p.state_count ; ++i)
         {
             reaction tmp = p.get_reaction(find_keys_element(key_select_combo.getText()), i);
@@ -610,6 +611,12 @@ public class Device_Config_Dialog extends Dialog
     {
     	apply_state();
     	apply_neighborhood();
+
+        result.get_Personality().set_current_reaction(find_keys_element(key_select_combo.getText()));
+
+        if (Device.has_neighbor())
+            result.set_neighbor(Device.get_neightbor());
+
     	
     	result.get_Personality().set_standby( new reaction(
     			find_color_element(color1_combo_list.get(0).getText()),
