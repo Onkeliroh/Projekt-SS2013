@@ -8,7 +8,6 @@ import kickflick.utility.color;
 import kickflick.utility.keys;
 import kickflick.utility.pattern;
 
-import org.eclipse.help.ui.internal.views.ComboPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TableEditor;
